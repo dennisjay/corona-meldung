@@ -117,7 +117,7 @@ module.exports = {
     {
       resolve: 'gatsby-plugin-mailchimp',
       options: {
-        endpoint: '',
+        endpoint: 'blubb',
       },
     },
     {
