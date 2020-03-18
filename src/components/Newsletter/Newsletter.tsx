@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import addToMailchimp from "gatsby-plugin-mailchimp"
-import Input from "../../components/Input/Input"
-import Button from "../../components/Button/Button"
+import Input from "../Input/Input"
+import Button from "../Button/Button"
 import {
   NewsletterWrapper,
   NewsletterInnerWrapper,
