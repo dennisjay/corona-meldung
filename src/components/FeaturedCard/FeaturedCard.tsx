@@ -11,7 +11,7 @@ import {
   PostMeta,
   ReadMore,
   Excerpt,
-} from './featuredCard.style';
+} from './FeaturedCard.style';
 
 interface FeaturedCardProps {
   image?: any;

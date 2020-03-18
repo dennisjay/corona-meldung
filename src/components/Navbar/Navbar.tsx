@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { Link } from "gatsby"
 import { IoIosSearch, IoIosClose } from "react-icons/io"
-import { DrawerProvider } from "../Drawer/drawerContext"
+import { DrawerProvider } from "../Drawer/DrawerContext"
 import Menu from "./Menu"
 import MobileMenu from "./MobileMenu"
 import SearchContainer from "../../containers/SearchContainer/SearchContainer"
