@@ -1,8 +1,8 @@
 import * as React from "react"
 import { Formik, FormikActions, FormikProps, Form } from "formik"
 import * as Yup from "yup"
-import Input from "components/Input/Input"
-import Button from "components/Button/Button"
+import Input from "../../components/Input/Input"
+import Button from "../../components/Button/Button"
 import {
   ContactWrapper,
   ContactPageTitle,

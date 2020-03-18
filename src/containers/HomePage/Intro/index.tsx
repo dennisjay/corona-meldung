@@ -1,7 +1,7 @@
 import React from "react"
 import { useStaticQuery, graphql } from "gatsby"
 import Image from "gatsby-image"
-import SocialProfile from "components/SocialProfile/SocialProfile"
+import SocialProfile from "../../../components/SocialProfile/SocialProfile"
 import {
   IntroWrapper,
   IntroImage,
