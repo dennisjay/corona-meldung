@@ -36,6 +36,10 @@ const MenuItems = [
   {
     label: "Login",
     url: "/login"
+  },
+  {
+    label: "Register",
+    url: "/register"
   }
   // {
   //   label: "404 Page",
