@@ -1,18 +1,18 @@
-import React from "react"
-import Sticky from "react-stickynode"
-import { ThemeProvider } from "styled-components"
-import ScrollToTop from "react-scroll-up"
-import Navbar from "./Navbar/Navbar"
-import Newsletter from "./Newsletter/Newsletter"
-import Footer from "./Footer/Footer"
-import ScrollUpButton from "./ScrollUpButton/ScrollUpButton"
-import InstagramShowcase from "../containers/InstagramShowcase"
-import ResetCss from "./resetCSS"
-import { theme } from "../theme"
+import React from "react";
+import Sticky from "react-stickynode";
+import { ThemeProvider } from "styled-components";
+import ScrollToTop from "react-scroll-up";
+import Navbar from "./Navbar/Navbar";
+import Newsletter from "./Newsletter/Newsletter";
+import Footer from "./Footer/Footer";
+import ScrollUpButton from "./ScrollUpButton/ScrollUpButton";
+import InstagramShowcase from "../containers/InstagramShowcase";
+import ResetCss from "./resetCSS";
+import { theme } from "../theme";
 
 type LayoutProps = {
-  children: React.ReactNode
-}
+  children: React.ReactNode;
+};
 
 const Layout: React.FunctionComponent<LayoutProps> = ({ children }) => {
   return (
@@ -41,7 +41,7 @@ const Layout: React.FunctionComponent<LayoutProps> = ({ children }) => {
         </ScrollToTop>
       </>
     </ThemeProvider>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

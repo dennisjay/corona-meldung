@@ -1,10 +1,10 @@
-import React, { useState } from "react"
-import { Link } from "gatsby"
-import { IoIosSearch, IoIosClose } from "react-icons/io"
-import { DrawerProvider } from "../Drawer/DrawerContext"
-import Menu from "./Menu"
-import MobileMenu from "./MobileMenu"
-import SearchContainer from "../../containers/SearchContainer/SearchContainer"
+import React, { useState } from "react";
+import { Link } from "gatsby";
+import { IoIosSearch, IoIosClose } from "react-icons/io";
+import { DrawerProvider } from "../Drawer/DrawerContext";
+import Menu from "./Menu";
+import MobileMenu from "./MobileMenu";
+import SearchContainer from "../../containers/SearchContainer/SearchContainer";
 import HeaderWrapper, {
   NavbarWrapper,
   Logo,
@@ -12,32 +12,36 @@ import HeaderWrapper, {
   NavSearchButton,
   NavSearchWrapper,
   SearchCloseButton,
-  NavSearchFromWrapper,
-} from "./Navbar.style"
-import LogoImage from "../../images/logo.png"
+  NavSearchFromWrapper
+} from "./Navbar.style";
+import LogoImage from "../../images/logo.png";
 
 type NavbarProps = {
-  className?: string
-}
+  className?: string;
+};
 
 const MenuItems = [
   {
     label: "Home",
-    url: "/",
+    url: "/"
   },
   {
     label: "Team",
-    url: "/about",
+    url: "/about"
   },
   {
     label: "Kontakt",
-    url: "/contact",
+    url: "/contact"
   },
+  {
+    label: "Login",
+    url: "/login"
+  }
   // {
   //   label: "404 Page",
   //   url: "/404",
   // },
-]
+];
 
 const Navbar: React.FunctionComponent<NavbarProps> = ({
   className,
@@ -45,22 +49,22 @@ const Navbar: React.FunctionComponent<NavbarProps> = ({
 }) => {
   const [state, setState] = useState({
     toggle: false,
-    search: "",
-  })
+    search: ""
+  });
 
   const toggleHandle = () => {
     setState({
       ...state,
-      toggle: !state.toggle,
-    })
-  }
+      toggle: !state.toggle
+    });
+  };
 
   // Add all classs to an array
-  const addAllClasses = ["header"]
+  const addAllClasses = ["header"];
 
   // className prop checking
   if (className) {
-    addAllClasses.push(className)
+    addAllClasses.push(className);
   }
 
   return (
@@ -99,7 +103,7 @@ const Navbar: React.FunctionComponent<NavbarProps> = ({
         </NavSearchFromWrapper>
       </NavSearchWrapper>
     </HeaderWrapper>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
