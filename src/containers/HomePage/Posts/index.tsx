@@ -57,37 +57,38 @@ const Posts: React.FunctionComponent<PostsProps> = props => {
   const CurrentPage = Data.allSitePage.nodes[0].context.currentPage
 
   return (
-    <BlogPostsWrapper>
-      <SecTitle>Leatest Stories</SecTitle>
-      {Posts.map(({ node }: any) => {
-        const title = node.frontmatter.title || node.fields.slug
-        return (
-          <PostCardMinimal
-            key={node.fields.slug}
-            title={title}
-            image={
-              node.frontmatter.cover == null
-                ? null
-                : node.frontmatter.cover.childImageSharp.fluid
-            }
-            url={node.fields.slug}
-            description={node.frontmatter.description || node.excerpt}
-            date={node.frontmatter.date}
-            tags={node.frontmatter.tags}
-          />
-        )
-      })}
+    // <BlogPostsWrapper>
+    //   <SecTitle>Leatest Stories</SecTitle>
+    //   {Posts.map(({ node }: any) => {
+    //     const title = node.frontmatter.title || node.fields.slug
+    //     return (
+    //       <PostCardMinimal
+    //         key={node.fields.slug}
+    //         title={title}
+    //         image={
+    //           node.frontmatter.cover == null
+    //             ? null
+    //             : node.frontmatter.cover.childImageSharp.fluid
+    //         }
+    //         url={node.fields.slug}
+    //         description={node.frontmatter.description || node.excerpt}
+    //         date={node.frontmatter.date}
+    //         tags={node.frontmatter.tags}
+    //       />
+    //     )
+    //   })}
 
-      {TotalPage >> 1 ? (
-        <Pagination
-          nextLink="/page/2"
-          currentPage={CurrentPage}
-          totalPage={TotalPage}
-        />
-      ) : (
-        ""
-      )}
-    </BlogPostsWrapper>
+    //   {TotalPage >> 1 ? (
+    //     <Pagination
+    //       nextLink="/page/2"
+    //       currentPage={CurrentPage}
+    //       totalPage={TotalPage}
+    //     />
+    //   ) : (
+    //     ""
+    //   )}
+    // </BlogPostsWrapper>
+    <></>
   )
 }
 

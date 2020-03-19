@@ -51,12 +51,9 @@ const Contact: React.SFC<{}> = () => {
           <Form>
             <ContactWrapper>
               <ContactPageTitle>
-                <h2>Contact</h2>
+                <h2>Kontakt</h2>
                 <p>
-                  StoryHub theme comes with a contact form built-in. You can use
-                  this form with Gatsbay Js service and get up to 50 submissions
-                  for free per form per month. Also, you can easily switch to
-                  another service if you want.
+                  Schreiben Sie uns jederzeit gerne über das Formular oder schicken Sie uns eine Mail.
                 </p>
               </ContactPageTitle>
               <ContactFromWrapper>
@@ -80,7 +77,7 @@ const Contact: React.SFC<{}> = () => {
                     value={`${values.email}`}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    label="Email"
+                    label="Mail"
                     notification={`${
                       errors.email && touched.email ? errors.email : ""
                     }`}
@@ -92,7 +89,7 @@ const Contact: React.SFC<{}> = () => {
                   value={`${values.message}`}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  label="Message"
+                  label="Ihre Nachricht"
                   notification={
                     errors.message && touched.message ? errors.message : ""
                   }

@@ -70,10 +70,10 @@ const Intro: React.FunctionComponent<IntroProps> = props => {
       </IntroImage>
       <IntroInfo>
         <IntroTitle>
-          Hey! I’m <b>{author}</b>
+          Willkommen auf Corona-Meldung.de!
         </IntroTitle>
-        <Desciption>{about}</Desciption>
-        <SocialProfile items={SocialLinks} />
+        <Desciption>Corona-Meldung.de ist eine Platform, auf der Sie Ihre Standortdaten spenden können. Alle Daten werden ausschließlich anonym zu Forschungszwecken ausgewertet.</Desciption>
+        {/* <SocialProfile items={SocialLinks} /> */}
       </IntroInfo>
     </IntroWrapper>
   )

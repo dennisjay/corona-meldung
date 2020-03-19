@@ -60,7 +60,7 @@ const FeaturedPosts: React.FunctionComponent<FeaturedPostsProps> = props => {
 
   return (
     <FeaturedPostWrapper>
-      <SecTitle>Featured Stories</SecTitle>
+      <SecTitle>Hintergrund</SecTitle>
       <FeaturedPostRow>
         {Posts.map(({ node }: any) => {
           const title = node.frontmatter.title || node.fields.slug

@@ -26,17 +26,17 @@ const MenuItems = [
     url: "/",
   },
   {
-    label: "About",
+    label: "Team",
     url: "/about",
   },
   {
-    label: "Contact",
+    label: "Kontakt",
     url: "/contact",
   },
-  {
-    label: "404 Page",
-    url: "/404",
-  },
+  // {
+  //   label: "404 Page",
+  //   url: "/404",
+  // },
 ]
 
 const Navbar: React.FunctionComponent<NavbarProps> = ({

@@ -63,11 +63,9 @@ const About: React.FunctionComponent<AboutProps> = props => {
   return (
     <AboutWrapper>
       <AboutPageTitle>
-        <h2>About StoryHub</h2>
+        <h2>Über uns und das Projekt</h2>
         <p>
-          StoryHub is a beautiful Gatsby Blog theme designed to showcase your
-          work in style. Perfect for designers, artists, photographers and
-          developers to use for their portfolio website.
+          Corona-Meldung ist als Non-Profit-Projekt enstanden, um einen positiven Beitrag zu leisten.
         </p>
       </AboutPageTitle>
 
@@ -76,23 +74,14 @@ const About: React.FunctionComponent<AboutProps> = props => {
       </AboutImage>
 
       <AboutDetails>
-        <h2>Hey there, what’s up?</h2>
+        <h2>Team</h2>
         <p>
-          RedQ Team is a creative agency specializing in building scalable,
-          high-performance web & mobile application. Our main concern is
-          creating more value into the application so that can help our
-          customers to grow their business.
-        </p>
-        <p>
-          RedQ Team is a creative agency specializing in building scalable,
-          high-performance web & mobile application. Our main concern is
-          creating more value into the application so that can help our
-          customers to grow their business.
+          (...)
         </p>
 
-        <SocialProfiles>
+        {/* <SocialProfiles>
           <SocialProfile items={SocialLinks} />
-        </SocialProfiles>
+        </SocialProfiles> */}
       </AboutDetails>
     </AboutWrapper>
   )
