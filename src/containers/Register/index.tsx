@@ -9,6 +9,7 @@ import {
   ContactFromWrapper,
   InputGroup,
 } from "./style"
+import { AuthenticationService } from "../../services/authentication.service"
 
 interface MyFormValues {
   email: string
@@ -26,11 +27,19 @@ const SignupSchema = Yup.object().shape({
   passwordConfirm: Yup.string().required("Required").oneOf([Yup.ref("password"), null], "Passwords missmatch"),
 })
 
-const Login: React.SFC<{}> = () => {
-  return (
-    <Formik
-      initialValues={{ email: "", emailConfirm: "", password: "", passwordConfirm: "" }}
-      onSubmit={(
+function handleSubmit(values: MyFormValues, formikActions: FormikActions<MyFormValues>) {
+  AuthenticationService.register(values.email, values.password)
+    .then(
+      success => {
+        console.log(" Registered ");
+        //event.preventDefault();
+      },
+      error => {
+        console.log(" Error ");
+        console.log(error);
+      }
+    )
+  /* (
         values: MyFormValues,
         actions: FormikActions<MyFormValues>
       ) => {
@@ -39,7 +48,14 @@ const Login: React.SFC<{}> = () => {
           alert(JSON.stringify(values, null, 2))
           actions.setSubmitting(false)
         }, 700)
-      }}
+      } */
+}
+
+const Login: React.SFC<{}> = () => {
+  return (
+    <Formik
+      initialValues={{ email: "", emailConfirm: "", password: "", passwordConfirm: "" }}
+      onSubmit={handleSubmit}
       validationSchema={SignupSchema}
       render={({
         handleChange,

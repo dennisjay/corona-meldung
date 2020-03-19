@@ -3,6 +3,7 @@ import { Formik, FormikActions, FormikProps, Form } from "formik"
 import * as Yup from "yup"
 import Input from "../../components/Input/Input"
 import Button from "../../components/Button/Button"
+import { AuthenticationService } from "../../services/authentication.service"
 import {
   ContactWrapper,
   ContactPageTitle,
@@ -22,11 +23,19 @@ const SignupSchema = Yup.object().shape({
   password: Yup.string().required("Required"),
 })
 
-const Login: React.SFC<{}> = () => {
-  return (
-    <Formik
-      initialValues={{ email: "", password: "" }}
-      onSubmit={(
+function handleSubmit(values: MyFormValues, formikActions: FormikActions<MyFormValues>) {
+  AuthenticationService.login(values.email, values.password)
+    .then(
+      success => {
+        console.log(" Login OK ");
+        //event.preventDefault();
+      },
+      error => {
+        console.log(" Login Error ");
+        console.log(error);
+      }
+    )
+  /* (
         values: MyFormValues,
         actions: FormikActions<MyFormValues>
       ) => {
@@ -35,7 +44,14 @@ const Login: React.SFC<{}> = () => {
           alert(JSON.stringify(values, null, 2))
           actions.setSubmitting(false)
         }, 700)
-      }}
+      } */
+}
+
+const Login: React.SFC<{}> = () => {
+  return (
+    <Formik
+      initialValues={{ email: "", password: "" }}
+      onSubmit={handleSubmit}
       validationSchema={SignupSchema}
       render={({
         handleChange,
