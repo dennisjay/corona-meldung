@@ -24,8 +24,16 @@ const ImpressumPage: React.FunctionComponent<ImpressumPageProps> = props => {
       <AboutPageTitle>
         <h2>Impressum</h2>
         <p>
-          (...)
+          nach § 5 Telemediengesetz
         </p>
+
+        <p>(Name / Adresse ...)</p>
+
+        <p><b>Mail:</b> (...)</p>
+
+        <p><b>Tel.:</b> (...)</p>
+
+        <p>Inhaltlicher Verantwortlicher gemäß § 6 MDStV: (...)</p>
       </AboutPageTitle>
     </AboutWrapper>
 
