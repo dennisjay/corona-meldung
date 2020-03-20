@@ -17,11 +17,15 @@ import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 
 import TextField from '@material-ui/core/TextField';
-import { Divider, Button } from '@material-ui/core';
+import { Divider, Button, Box,Typography } from '@material-ui/core';
+import AttachFileIcon from '@material-ui/icons/AttachFile';
+import Dropzone from "react-dropzone";
 
 type FragebogenPageProps = {}
 
 const FragebogenPage: React.FunctionComponent<FragebogenPageProps> = props => {
+
+    const onDrop = () => {return true}
 
     return (
         <Layout>
@@ -137,7 +141,25 @@ const FragebogenPage: React.FunctionComponent<FragebogenPageProps> = props => {
                         </RadioGroup>
                     </FormControl>
 
-                    <br /><br />
+                    <br />
+
+                    {/* Dropzone */}
+                    <Box mb={1} />
+                    <Dropzone onDrop={onDrop}>
+                    {({ getRootProps, getInputProps }) => (
+                        <section className="container">
+                        <div {...getRootProps({ className: 'dropzone' })}
+                            style={{ minHeight: 30, width: 400, alignItems: "center", borderWidth: 1, borderRadius: 3, borderColor: "#eeeee", borderStyle: "dashed", backgroundColor: "#fafafa", color: "#bdbdbd", transition: "border .24s ease-in-out", cursor: "pointer" }}
+                        >
+                            <input {...getInputProps()} />
+                            <Typography align="center" style={{marginTop: 3}}><AttachFileIcon fontSize="small" style={{width: 20, verticalAlign:"middle"}}/> Drop the <b>data</b> here, or click to select.</Typography>
+                            {/* {new_post_files.length!==0 ? (<Typography variant="body2" style={{marginLeft: 15, color: lightGreen["800"]}}>attached: {new_post_files[0]} </Typography>) : (<Typography align="center" style={{marginTop: 3}}><AttachFileIcon fontSize="small" style={{width: 20, verticalAlign:"middle"}}/> Drop an <b>attachment</b> here, or click to select.</Typography>)} */}
+                        </div>
+                        </section>
+                    )}
+                    </Dropzone>
+
+                    <br />
 
                     <Button variant="contained"><b>senden</b></Button>
 
