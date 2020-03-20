@@ -4,16 +4,33 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
-
 import TextField from '@material-ui/core/TextField';
 import { Divider, Button, Box,Typography } from '@material-ui/core';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 import Dropzone from "react-dropzone";
+import { lightGreen } from "@material-ui/core/colors";
 
 export default (
     class CodeView extends Component {
         constructor() {
             super();
+            this.onDrop = (files) => {
+                this.setState({ files: { files } })
+              };
+            this.state = {
+                vorname: "",
+                nachname: "",
+                mail: "",
+                geburtsdatum: "",
+                wohnort: "",
+                telefonnummer: "",
+                gebiet: undefined,
+                kontakt: undefined,
+                erkrankt: undefined,
+                begleiterkrankungen: undefined,
+                berufstaetig: undefined,
+                files: []
+            }
         }
 
         onDrop = () => {return true}
@@ -39,7 +56,7 @@ export default (
                     <Divider />
                     <br />
             
-                    <FormControl component="fieldset">
+                    {/* <FormControl component="fieldset">
                         <FormLabel component="legend">Waren Sie in den letzten 14 Tagen in einem <b>Risikogebiet</b>?</FormLabel>
                         <RadioGroup>
                             <FormControlLabel control={<Radio />} value="0" label="Nein." />
@@ -52,9 +69,9 @@ export default (
 
                     <br />
                     <Divider />
-                    <br />
+                    <br /> */}
 
-                    <FormControl component="fieldset">
+                    <FormControl component="fieldset" onChange={event => { this.setState({ gebiet: event.target.value.localeCompare("0")!==0 }) }}>
                         <FormLabel component="legend">Waren Sie in den letzten 14 Tagen in einem <b>Gebiet</b>, in dem <b>COVID-19-Fälle aufgetreten</b> sind?</FormLabel>
                         <RadioGroup>
                             <FormControlLabel control={<Radio />} value="0" label="Nein." />
@@ -66,7 +83,7 @@ export default (
                     <Divider />
                     <br />
 
-                    <FormControl component="fieldset">
+                    <FormControl component="fieldset" onChange={event => { this.setState({ kontakt: event.target.value.localeCompare("0")!==0 }) }}>
                         <FormLabel component="legend">Hatten Sie <b>Kontakt</b> (min. 15min, unter 2 Meter Entfernung) zu einer nachweislich an COVID-19 erkrankten Person?</FormLabel>
                         <RadioGroup>
                             <FormControlLabel control={<Radio />} value="0" label="Nein." />
@@ -75,10 +92,18 @@ export default (
                     </FormControl>
 
                     <br />
+
+                    {this.state.kontakt && (
+                        <>
+                            <TextField variant="outlined" label="Wo?" />&nbsp;&nbsp;
+                            <TextField variant="outlined" label="Wann?" />
+                        </>
+                    )}
+
                     <Divider />
                     <br />
 
-                    <FormControl component="fieldset">
+                    <FormControl component="fieldset" onChange={event => { this.setState({ erkrankt: event.target.value.localeCompare("0")!==0 }) }}>
                         <FormLabel component="legend">Sind Sie <b>erkrankt</b>?</FormLabel>
                         <RadioGroup>
                             <FormControlLabel control={<Radio />} value="0" label="Nein." />
@@ -87,6 +112,11 @@ export default (
                     </FormControl>
 
                     <br />
+
+                    {this.state.erkrankt && (
+                        <TextField variant="outlined" label="Seit wann?" />
+                    )}
+
                     <Divider />
                     <br />
 
@@ -107,7 +137,7 @@ export default (
                     <Divider />
                     <br />
 
-                    <FormControl component="fieldset">
+                    <FormControl component="fieldset" onChange={event => { this.setState({ begleiterkrankungen: event.target.value.localeCompare("0")!==0 }) }}>
                         <FormLabel component="legend">Begleiterkrankungen?</FormLabel>
                         <RadioGroup>
                             <FormControlLabel control={<Radio />} value="0" label="Nein." />
@@ -116,10 +146,15 @@ export default (
                     </FormControl>
 
                     <br />
+
+                    {this.state.begleiterkrankungen && (
+                        <TextField variant="outlined" label="Welche?" />
+                    )}
+
                     <Divider />
                     <br />
 
-                    <FormControl component="fieldset">
+                    <FormControl component="fieldset" onChange={event => { this.setState({ berufstaetig: event.target.value.localeCompare("0")!==0 }) }}>
                         <FormLabel component="legend">Berufstätig?</FormLabel>
                         <RadioGroup>
                             <FormControlLabel control={<Radio />} value="0" label="Nein." />
@@ -129,17 +164,21 @@ export default (
 
                     <br />
 
+                    {this.state.berufstaetig && (
+                        <TextField variant="outlined" label="Welcher Beruf?" />
+                    )}
+
                     {/* Dropzone */}
                     <Box mb={1} />
                     <Dropzone onDrop={this.onDrop}>
                     {({ getRootProps, getInputProps }) => (
                         <section className="container">
                         <div {...getRootProps({ className: 'dropzone' })}
-                            style={{ minHeight: 30, width: 400, alignItems: "center", borderWidth: 1, borderRadius: 3, borderColor: "#eeeee", borderStyle: "dashed", backgroundColor: "#fafafa", color: "#bdbdbd", transition: "border .24s ease-in-out", cursor: "pointer" }}
+                            style={{ minHeight: 30, width: 450, alignItems: "center", borderWidth: 1, borderRadius: 3, borderColor: "#eeeee", borderStyle: "dashed", backgroundColor: "#fafafa", color: "#bdbdbd", transition: "border .24s ease-in-out", cursor: "pointer" }}
                         >
                             <input {...getInputProps()} />
-                            <Typography align="center" style={{marginTop: 3}}><AttachFileIcon fontSize="small" style={{width: 20, verticalAlign:"middle"}}/> Drop the <b>data</b> here, or click to select.</Typography>
-                            {/* {new_post_files.length!==0 ? (<Typography variant="body2" style={{marginLeft: 15, color: lightGreen["800"]}}>attached: {new_post_files[0]} </Typography>) : (<Typography align="center" style={{marginTop: 3}}><AttachFileIcon fontSize="small" style={{width: 20, verticalAlign:"middle"}}/> Drop an <b>attachment</b> here, or click to select.</Typography>)} */}
+                            {/* <Typography align="center" style={{marginTop: 3}}><AttachFileIcon fontSize="small" style={{width: 20, verticalAlign:"middle"}}/> Drop the <b>data</b> here, or click to select.</Typography> */}
+                            {this.state.files.length!==0 ? (<Typography variant="body2" style={{marginLeft: 15, marginTop: 5, color: lightGreen["800"]}}><b>erfolgreich hochgeladen!</b></Typography>) : (<Typography align="center" style={{marginTop: 3}}><AttachFileIcon fontSize="small" style={{width: 20, verticalAlign:"middle"}}/> Klicken, um <b>Dateien</b> hochzuladen, oder hierein ziehen.</Typography>)}
                         </div>
                         </section>
                     )}
