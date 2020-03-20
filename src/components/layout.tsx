@@ -3,7 +3,7 @@ import Sticky from "react-stickynode"
 import { ThemeProvider } from "styled-components"
 import ScrollToTop from "react-scroll-up"
 import Navbar from "./Navbar/Navbar"
-import Newsletter from "./Newsletter/Newsletter"
+//import Newsletter from "./Newsletter/Newsletter"
 import Footer from "./Footer/Footer"
 import ScrollUpButton from "./ScrollUpButton/ScrollUpButton"
 import InstagramShowcase from "../containers/InstagramShowcase"
@@ -24,9 +24,7 @@ const Layout: React.FunctionComponent<LayoutProps> = ({ children }) => {
         </Sticky>
 
         {children}
-
-        {process.env.INSTAGRAM_TOKEN == "" ? "" : <InstagramShowcase />}
-        <Newsletter />
+        
         <Footer>
           <a href="./impressum">Impressum</a>  <a href="./datenschutz">Datenschutz</a>
           {/* Copyright &copy; {new Date().getFullYear()} */}
