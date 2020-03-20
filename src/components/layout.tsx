@@ -28,8 +28,9 @@ const Layout: React.FunctionComponent<LayoutProps> = ({ children }) => {
         {process.env.INSTAGRAM_TOKEN == "" ? "" : <InstagramShowcase />}
         <Newsletter />
         <Footer>
-          Copyright &copy; {new Date().getFullYear()}
-          <a href="https://redq.io/"> RedQ, Inc.</a>
+          <a href="./impressum">Impressum</a>  <a href="./datenschutz">Datenschutz</a>
+          {/* Copyright &copy; {new Date().getFullYear()} */}
+          {/* <a href="https://redq.io/"> RedQ, Inc.</a> */}
         </Footer>
         <ScrollToTop
           showUnder={300}
