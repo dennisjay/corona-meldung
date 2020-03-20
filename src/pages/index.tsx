@@ -13,7 +13,11 @@ const PersonalBlogPage = (props: any) => {
         title="Personal Blog Minimal"
         description={data.site.siteMetadata.description}
       />
+
+
+
       <PersonalBlog />
+
     </Layout>
   )
 }
