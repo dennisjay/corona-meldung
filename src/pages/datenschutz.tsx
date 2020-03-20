@@ -16,7 +16,7 @@ const DatenschutzPage: React.FunctionComponent<DatenschutzPageProps> = props => 
   return (
     <Layout>
       <SEO
-        title="Impressum"
+        title="Datenschutz"
         description=""
       />
     
