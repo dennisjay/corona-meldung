@@ -31,8 +31,7 @@ const ImpressumPage: React.FunctionComponent<ImpressumPageProps> = props => {
             76227 Karlsruhe</p>
 
           <p><strong>Vertreten durch:</strong><br />
-            Dennis J&ouml;st<br />
-            Malte D&uuml;meland</p>
+            Dennis J&ouml;st</p>
 
           <h2>Kontakt</h2>
           <p>Telefon: wird beantragt<br />

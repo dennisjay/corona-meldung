@@ -24,7 +24,7 @@ const Layout: React.FunctionComponent<LayoutProps> = ({ children }) => {
         </Sticky>
 
         {children}
-        
+
         <Footer>
           <a href="./impressum">Impressum</a>  <a href="./datenschutz">Datenschutz</a>
           {/* Copyright &copy; {new Date().getFullYear()} */}
