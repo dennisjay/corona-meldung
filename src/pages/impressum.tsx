@@ -52,14 +52,6 @@ const ImpressumPage: React.FunctionComponent<ImpressumPageProps> = props => {
 
           <p>Quelle: <a href="https://www.e-recht24.de">eRecht24</a></p>
         </p>
-
-        <p>(Name / Adresse ...)</p>
-
-        <p><b>Mail:</b> (...)</p>
-
-        <p><b>Tel.:</b> (...)</p>
-
-        <p>Inhaltlicher Verantwortlicher gemäß § 6 MDStV: (...)</p>
       </AboutPageTitle>
     </AboutWrapper>
 
