@@ -32,8 +32,7 @@ const MenuItems = [
   {
     label: "Kontakt",
     url: "/contact",
-  },
-  // {
+  }
   //   label: "404 Page",
   //   url: "/404",
   // },
