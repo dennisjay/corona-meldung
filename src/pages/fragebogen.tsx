@@ -17,6 +17,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 
 import TextField from '@material-ui/core/TextField';
+import { Divider, Button } from '@material-ui/core';
 
 type FragebogenPageProps = {}
 
@@ -40,55 +41,67 @@ const FragebogenPage: React.FunctionComponent<FragebogenPageProps> = props => {
 
                     <TextField variant="outlined" label="Geburtsdatum" /><br /><br />
 
+                    <TextField variant="outlined" label="Wohnort" /><br /><br />
+
                     <TextField variant="outlined" label="Telefonnummer" /><br />
 
-                    <br /><br />
-
+                    <br />
+                    <Divider />
+                    <br />
+            
                     <FormControl component="fieldset">
-                        <FormLabel component="legend">Waren Sie in den letzten 14 Tagen in einem Risikogebiet?</FormLabel>
+                        <FormLabel component="legend">Waren Sie in den letzten 14 Tagen in einem <b>Risikogebiet</b>?</FormLabel>
                         <RadioGroup>
                             <FormControlLabel control={<Radio />} value="0" label="Nein." />
                             <FormControlLabel control={<Radio />} value ="1" label="Ja, in China: in Hubei, z.B. in Wuhan" />
                             <FormControlLabel control={<Radio />} value ="2" label="Ja, im Iran: in Ghom, Stadt Teheran" />
                             <FormControlLabel control={<Radio />} value ="3" label="Ja, in Italien: Region Emilia-Romagna, Region Lombardei, oder in der Stadt Vo (Provinz Padua, Venetien)" />
-                            <FormControlLabel control={<Radio />} value ="4" label="Ja, im Iran: in Südkorea: in Gyeongsangbuk-do (Nord-Gyeongsang)" />
+                            <FormControlLabel control={<Radio />} value ="4" label="Ja, in Südkorea: in Gyeongsangbuk-do (Nord-Gyeongsang)" />
                         </RadioGroup>
                     </FormControl>
 
-                    <br /><br />
+                    <br />
+                    <Divider />
+                    <br />
 
                     <FormControl component="fieldset">
-                        <FormLabel component="legend">Waren Sie in den letzten 14 Tagen in einem Gebiet, in dem <b>COVID-19-Fälle aufgetreten</b> sind?</FormLabel>
+                        <FormLabel component="legend">Waren Sie in den letzten 14 Tagen in einem <b>Gebiet</b>, in dem <b>COVID-19-Fälle aufgetreten</b> sind?</FormLabel>
                         <RadioGroup>
                             <FormControlLabel control={<Radio />} value="0" label="Nein." />
                             <FormControlLabel control={<Radio />} value ="1" label="Ja." />
                         </RadioGroup>
                     </FormControl>
                     
-                    <br /><br />
+                    <br />
+                    <Divider />
+                    <br />
 
                     <FormControl component="fieldset">
-                        <FormLabel component="legend">Hatten Sie<b>Kontakt</b> (min. 15min, unter 2 Meter Entfernung) zu einer nachweislich an COVID-19 erkrankten Person?</FormLabel>
+                        <FormLabel component="legend">Hatten Sie <b>Kontakt</b> (min. 15min, unter 2 Meter Entfernung) zu einer nachweislich an COVID-19 erkrankten Person?</FormLabel>
                         <RadioGroup>
                             <FormControlLabel control={<Radio />} value="0" label="Nein." />
                             <FormControlLabel control={<Radio />} value ="1" label="Ja." />
                         </RadioGroup>
                     </FormControl>
 
-                    <br /><br />
+                    <br />
+                    <Divider />
+                    <br />
 
                     <FormControl component="fieldset">
-                        <FormLabel component="legend">Sind Sie erkrankt?</FormLabel>
+                        <FormLabel component="legend">Sind Sie <b>erkrankt</b>?</FormLabel>
                         <RadioGroup>
                             <FormControlLabel control={<Radio />} value="0" label="Nein." />
                             <FormControlLabel control={<Radio />} value ="1" label="Ja." />
                         </RadioGroup>
                     </FormControl>
 
-                    <br /><br />
+                    <br />
+                    <Divider />
+                    <br />
 
                     <FormControl component="fieldset">
-                        <FormLabel component="legend">Welche Symptome bestehen?</FormLabel>
+                        <FormLabel component="legend">Welche <b>Symptome</b> bestehen?</FormLabel>
                         <RadioGroup>
                             <FormControlLabel control={<Radio />} value="0" label="Fieber" />
                             <FormControlLabel control={<Radio />} value ="1" label="Schnupfen" />
@@ -100,7 +113,9 @@ const FragebogenPage: React.FunctionComponent<FragebogenPageProps> = props => {
                         </RadioGroup>
                     </FormControl>
 
-                    <br /><br />
+                    <br />
+                    <Divider />
+                    <br />
 
                     <FormControl component="fieldset">
                         <FormLabel component="legend">Begleiterkrankungen?</FormLabel>
@@ -110,7 +125,9 @@ const FragebogenPage: React.FunctionComponent<FragebogenPageProps> = props => {
                         </RadioGroup>
                     </FormControl>
 
-                    <br /><br />
+                    <br />
+                    <Divider />
+                    <br />
 
                     <FormControl component="fieldset">
                         <FormLabel component="legend">Berufstätig?</FormLabel>
@@ -119,6 +136,10 @@ const FragebogenPage: React.FunctionComponent<FragebogenPageProps> = props => {
                             <FormControlLabel control={<Radio />} value ="1" label="Ja." />
                         </RadioGroup>
                     </FormControl>
+
+                    <br /><br />
+
+                    <Button variant="contained"><b>senden</b></Button>
 
                 </AboutPageTitle>
             </AboutWrapper>
