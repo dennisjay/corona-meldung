@@ -2,6 +2,7 @@ import React from "react"
 import { useStaticQuery, graphql } from "gatsby"
 import Image from "gatsby-image"
 import SocialProfile from "../../../components/SocialProfile/SocialProfile"
+import Button from "../../../components/Button/Button"
 import {
   IntroWrapper,
   IntroImage,
@@ -73,6 +74,7 @@ const Intro: React.FunctionComponent<IntroProps> = props => {
           Mit Deinen Daten Leben retten
         </IntroTitle>
         <Desciption>Forscher finden effektiver Maßnahmen gegen COVID-19 dank Deinen anonymisierten Standordaten.</Desciption>
+        <Button title="Jetzt Daten spenden"></Button>
         {/* <SocialProfile items={SocialLinks} /> */}
       </IntroInfo>
     </IntroWrapper>
