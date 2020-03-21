@@ -14,7 +14,13 @@ import {
   AboutPageTitle,
   AboutDetails,
   SocialProfiles,
+  IntroWrapper,
+  IntroImage,
+  IntroTitle,
+  Desciption,
+  IntroInfo,
 } from "./style"
+// import Image from "gatsby-image"
 
 const SocialLinks = [
   {
@@ -61,29 +67,100 @@ const About: React.FunctionComponent<AboutProps> = props => {
   `)
 
   return (
+   <> 
     <AboutWrapper>
+
       <AboutPageTitle>
         <h2>Über uns und das Projekt</h2>
         <p>
-          Corona-Meldung ist als Non-Profit-Projekt enstanden, um einen positiven Beitrag zu leisten.
+          Corona-Meldung.de ist als Non-Profit-Projekt enstanden, um einen positiven Beitrag zur aktuellen Situation leisten.
         </p>
       </AboutPageTitle>
 
-      <AboutImage>
-        <Image fluid={Data.avatar.childImageSharp.fluid} alt="author" />
-      </AboutImage>
-
-      <AboutDetails>
-        <h2>Team</h2>
-        <p>
-          (...)
-        </p>
-
-        {/* <SocialProfiles>
-          <SocialProfile items={SocialLinks} />
-        </SocialProfiles> */}
-      </AboutDetails>
     </AboutWrapper>
+     
+    <IntroWrapper>
+      <IntroImage>
+        {/* <Image fluid={} alt="author" /> */}
+      </IntroImage>
+      <IntroInfo>
+        <IntroTitle>
+          Dennis Jöst
+        </IntroTitle>
+        <Desciption>Dennis Jöst ist Data Scientist, Cloud Expert und Lead Machine Learning Engineer bei DEFINE MEDIA und glaubt, dass neben Ärzten, Polizei und Pflegekräften auch die Data Science wichtige Beiträge im Kampf gegen den Coronavirus liefern kann.</Desciption>
+        {/* <SocialProfile items={SocialLinks} /> */}
+      </IntroInfo>
+    </IntroWrapper>
+
+    <IntroWrapper>
+      <IntroImage>
+        {/* <Image fluid={} alt="author" /> */}
+      </IntroImage>
+      <IntroInfo>
+        <IntroTitle>
+          Tim Baumgartner
+        </IntroTitle>
+        <Desciption>Tim Baumgartner studiert Mathe und ist der Gründer von Unitedclasses.com. Er engagiert sich für das Projekt als Software-Entwickler, weil sich in seinen Augen der Data-Science-Ansatz in der aktuellen Situation praktisch aufdrängt.</Desciption>
+        {/* <SocialProfile items={SocialLinks} /> */}
+      </IntroInfo>
+    </IntroWrapper>
+
+    <IntroWrapper>
+      <IntroImage>
+        {/* <Image fluid={} alt="author" /> */}
+      </IntroImage>
+      <IntroInfo>
+        <IntroTitle>
+          Bogdan Magureanu
+        </IntroTitle>
+        <Desciption>Bogdan Magureanu ist IT Unternehmer (bcmsolutions.de und Ferendia.com) und programmiert für sein Leben gern. Im Kampf gegen der Epidemie soll jeder helfen so gut er kann.</Desciption>
+        {/* <SocialProfile items={SocialLinks} /> */}
+      </IntroInfo>
+    </IntroWrapper>
+
+    <IntroWrapper>
+      <IntroImage>
+        {/* <Image fluid={} alt="author" /> */}
+      </IntroImage>
+      <IntroInfo>
+        <IntroTitle>
+          Malte Dümeland
+        </IntroTitle>
+        <Desciption>Malte Dümeland ist Rechtsanwalt mit Schwerpunkt Datenschutz & IT Recht und zertifizierter Datenschutzbeauftragter. Je sensibler die Daten, desto wichtiger ist die Berücksichtigung der Rechte jedes einzelnen.</Desciption>
+        {/* <SocialProfile items={SocialLinks} /> */}
+      </IntroInfo>
+    </IntroWrapper>
+
+    <IntroWrapper>
+      <IntroImage>
+        {/* <Image fluid={} alt="author" /> */}
+      </IntroImage>
+      <IntroInfo>
+        <IntroTitle>
+          Tobias Twardon
+        </IntroTitle>
+        <Desciption>Tobias Twardon ist IT Consultant im eCommerce-Bereich und medizinischer Informatik und unterstützt in diesem Projekt beratend sowie im Bereich Anforderungsanalyse und Projektmanagement.</Desciption>
+        {/* <SocialProfile items={SocialLinks} /> */}
+      </IntroInfo>
+    </IntroWrapper>
+
+    <IntroWrapper>
+      <IntroImage>
+        {/* <Image fluid={} alt="author" /> */}
+      </IntroImage>
+      <IntroInfo>
+        <IntroTitle>
+          Tobias Budig
+        </IntroTitle>
+        <Desciption>Tobias Budig studiert Wirtschaftsingenieurwesen am Karlsruher Institut für Technologie (KIT). Er ist außerdem selbständig im IT Bereich und will mit seiner Expertise im Kampf gegen Corona unterstützen.</Desciption>
+        {/* <SocialProfile items={SocialLinks} /> */}
+      </IntroInfo>
+    </IntroWrapper>
+
+    
+
+    
+   </> 
   )
 }
 
