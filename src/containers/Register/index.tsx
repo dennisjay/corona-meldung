@@ -8,6 +8,7 @@ import {
   ContactPageTitle,
   ContactFromWrapper,
   InputGroup,
+  RegisterResult,
 } from "./style"
 import { AuthenticationService } from "../../services/authentication.service"
 
@@ -27,31 +28,32 @@ const SignupSchema = Yup.object().shape({
   passwordConfirm: Yup.string().required("Required").oneOf([Yup.ref("password"), null], "Passwords missmatch"),
 })
 
-function handleSubmit(values: MyFormValues, formikActions: FormikActions<MyFormValues>) {
-  AuthenticationService.register(values.email, values.password)
-    .then(
-      success => {
-        console.log(" Registered ");
-        //event.preventDefault();
-      },
-      error => {
-        console.log(" Error ");
-        console.log(error);
-      }
-    )
-  /* (
-        values: MyFormValues,
-        actions: FormikActions<MyFormValues>
-      ) => {
-        setTimeout(() => {
-          console.log({ values, actions })
-          alert(JSON.stringify(values, null, 2))
-          actions.setSubmitting(false)
-        }, 700)
-      } */
-}
+const Register: React.SFC<{}> = () => {
+  let registerStatus: [boolean, string];
+  const [success, setSuccess] = React.useState()
+  const [error, setError] = React.useState()
 
-const Login: React.SFC<{}> = () => {
+  const handleSubmit = (values: MyFormValues, formikActions: FormikActions<MyFormValues>) => {
+    //function handleSubmit(values: MyFormValues, formikActions: FormikActions<MyFormValues>) {
+    AuthenticationService.register(values.email, values.password)
+      .then(
+        success => {
+          console.log(" Registered ");
+          setError("");
+          setSuccess("Thank you! Please check your inbox for email confirmation.");
+        },
+        error => {
+          console.log(" Error ");
+          console.log(error);
+          registerStatus = [false, 'Something went wrong with the registration.'];
+          setError("Something went wrong with the registration.");
+          setSuccess("");
+        }
+      )
+      .finally(() => {
+        formikActions.setSubmitting(false);
+      })
+  }
   return (
     <Formik
       initialValues={{ email: "", emailConfirm: "", password: "", passwordConfirm: "" }}
@@ -63,13 +65,13 @@ const Login: React.SFC<{}> = () => {
         errors,
         handleBlur,
         touched,
-        isSubmitting,
+        isSubmitting
       }: FormikProps<MyFormValues>) => (
           <>
             <Form>
               <ContactWrapper>
                 <ContactPageTitle>
-                  <h2>Login</h2>
+                  <h2>Register</h2>
                 </ContactPageTitle>
                 <ContactFromWrapper>
                   <InputGroup>
@@ -85,7 +87,7 @@ const Login: React.SFC<{}> = () => {
                         }`}
                     />
                     <Input
-                      type="emailConfirm"
+                      type="email"
                       name="emailConfirm"
                       value={`${values.emailConfirm}`}
                       onChange={handleChange}
@@ -110,7 +112,7 @@ const Login: React.SFC<{}> = () => {
                       }
                     />
                     <Input
-                      type="passwordConfirm"
+                      type="password"
                       name="passwordConfirm"
                       value={`${values.passwordConfirm}`}
                       onChange={handleChange}
@@ -128,13 +130,23 @@ const Login: React.SFC<{}> = () => {
                     isLoading={isSubmitting ? true : false}
                     loader="Submitting.."
                   />
+
+                  {success && (
+                    <div style={{ color: 'green' }}>{success} 🙂</div>
+                  )}
+                  {error && (
+                    <div style={{ color: 'red' }}>{error}</div>
+                  )}
+
                 </ContactFromWrapper>
               </ContactWrapper>
             </Form>
           </>
         )}
+
     />
+
   )
 }
 
-export default Login
+export default Register

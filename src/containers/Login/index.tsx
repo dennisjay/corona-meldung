@@ -35,16 +35,6 @@ function handleSubmit(values: MyFormValues, formikActions: FormikActions<MyFormV
         console.log(error);
       }
     )
-  /* (
-        values: MyFormValues,
-        actions: FormikActions<MyFormValues>
-      ) => {
-        setTimeout(() => {
-          console.log({ values, actions })
-          alert(JSON.stringify(values, null, 2))
-          actions.setSubmitting(false)
-        }, 700)
-      } */
 }
 
 const Login: React.SFC<{}> = () => {

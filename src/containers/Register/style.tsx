@@ -61,3 +61,21 @@ export const InputGroup = styled.div`
     }
   }
 `
+
+export const RegisterResult = styled.div`
+  .errorMessage {
+    display: block;
+    color: #d8000c;
+    font - size: 14px;
+    padding - top: 0.5em;
+  }
+
+  .successMessage {
+    display: block;
+    color: #4F8A10;
+    font - size: 14px;
+    padding - top: 0.5em;
+  }
+`
+
+
