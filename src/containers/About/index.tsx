@@ -22,6 +22,8 @@ import {
 } from "./style"
 import TobiasBudig from "../../images/tobiasb.jpg"
 import Tim from "../../images/tim.jpg"
+import Malte from "../../images/malte.jpg"
+import Dennis from "../../images/dennis.jpg"
 
 const SocialLinks = [
   {
@@ -83,6 +85,7 @@ const About: React.FunctionComponent<AboutProps> = props => {
     <IntroWrapper>
       <IntroImage>
         {/* <Image fluid={} alt="author" /> */}
+        <img src={Dennis} alt="Dennis" />
       </IntroImage>
       <IntroInfo>
         <IntroTitle>
@@ -121,7 +124,7 @@ const About: React.FunctionComponent<AboutProps> = props => {
 
     <IntroWrapper>
       <IntroImage>
-        {/* <Image fluid={} alt="author" /> */}
+        <img src={Malte} alt="Malte" />
       </IntroImage>
       <IntroInfo>
         <IntroTitle>
@@ -147,7 +150,7 @@ const About: React.FunctionComponent<AboutProps> = props => {
 
     <IntroWrapper>
       <IntroImage>
-        <img src={TobiasBudig} alt="author" />
+        <img src={TobiasBudig} alt="Tobias" />
       </IntroImage>
       <IntroInfo>
         <IntroTitle>
