@@ -4,7 +4,7 @@ require('dotenv').config({
 
 module.exports = {
   siteMetadata: {
-    title: `StoryHub`,
+    title: `Corona-Meldung.de`,
     author: `David`,
     about: `Breakfast procuring no end happiness allowance assurance frank. Met simplicity nor difficulty unreserved who. Entreaties mr conviction dissimilar me
     astonished estimating cultivated.`,
@@ -94,7 +94,7 @@ module.exports = {
       resolve: `gatsby-plugin-manifest`,
       options: {
         name: `StoryHub - Personal Blog Minimal`,
-        short_name: `StoryHub`,
+        short_name: `Corona-Meldung.de`,
         start_url: `/`,
         background_color: `#ffffff`,
         theme_color: `#663399`,
