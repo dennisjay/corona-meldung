@@ -4,12 +4,11 @@ require('dotenv').config({
 
 module.exports = {
   siteMetadata: {
-    title: `StoryHub`,
-    author: `David`,
-    about: `Breakfast procuring no end happiness allowance assurance frank. Met simplicity nor difficulty unreserved who. Entreaties mr conviction dissimilar me
-    astonished estimating cultivated.`,
-    description: `A Gatsby Blog`,
-    siteUrl: `https://storyhub-minimal-tarex.redq.now.sh`,
+    title: `Mit Deinen Daten Leben retten`,
+    author: `Corona Meldung GbR`,
+    about: `Forscher finden effektiver Maßnahmen gegen COVID-19 dank Deinen anonymisierten Standortdaten.`,
+    description: `Forscher finden effektiver Maßnahmen gegen COVID-19 dank Deinen anonymisierten Standortdaten.`,
+    siteUrl: `https://www.corona-meldung.de/`,
   },
   plugins: [
     {
