@@ -36,7 +36,7 @@ const ImpressumPage: React.FunctionComponent<ImpressumPageProps> = props => {
           <p><strong>Vertreten durch:</strong><br />
             Dennis J&ouml;st<br />
             Tobias Twardon<br />
-            Tim Baumgärtner<br />
+            Tim Baumgartner<br />
             Jonas Bruns<br />
           </p>
 
