@@ -37,8 +37,8 @@ const PersonalBlog: React.FunctionComponent<PersonalBlogProps> = ({
           </SectionTitle>
           <SectionContent>
             <p>
-              Herauszufinden, wer wann wo und wie lange war hilft den Weg des
-              Virus nachzuvollziehen und die Effektivität von Gegenmaßnahmen zu
+              Herauszufinden, wer wann, wo und wie lange war, hilft den Weg des
+              Virus' nachzuvollziehen und die Effektivität von Gegenmaßnahmen zu
               messen. Mit einer ausreichend großen Menge an Daten können
               Forschungseinrichtungen besser gegen COVID-19 vorgehen.
             </p>
@@ -61,10 +61,10 @@ const PersonalBlog: React.FunctionComponent<PersonalBlogProps> = ({
             <p>
               Data Science und machinelles Lernen ist seit dem Aufkommen hoher
               Rechenleistung in den letzten Jahren möglich. Damit haben wir als
-              Gesamtgesellschaft heute neue Werkzeuge um gegen eine Pandemie
+              Gesamtgesellschaft heute mehr neue Werkzeuge um gegen eine Pandemie
               vorzugehen als jemals zuvor. Zugleich stehen wir mit der
               Corona-Krise vor einem Virus wie niemals zuvor. Kämpfen wir also
-              gegen einen neuen Virus nicht mit alten Mitteln sondern nutzen wir
+              gegen einen neuen Virus nicht mit alten Mitteln, sondern nutzen wir
               neue Wege der Forschung und des Handelns.
             </p>
           </SectionContent>
@@ -74,21 +74,22 @@ const PersonalBlog: React.FunctionComponent<PersonalBlogProps> = ({
       <SectionWrapper>
         <SectionText>
           <SectionTitle>
-            <h2>Deutsche Datenschutz mit Anwalt und Zertifizierung</h2>
+            <h2>Deutscher Datenschutz mit Anwalt und Zertifizierung</h2>
           </SectionTitle>
           <SectionContent>
             <p>
               Datenschutz ist unsere Priorität. Bewegungsdaten sind hochsensible
               und sehr persönliche Auskünfte über uns selbst. Deswegen werden
-              diese nur anonymisiert gespeichert. Diese für die Forschung bereit
-              zu stellen gibt uns eine hohe Verantwortung der wir Bewusst
+              diese nur anonymisiert gespeichert. Diese für die Forschung bereitzustellen 
+              gibt uns eine hohe Verantwortung, der wir bewusst
               begegnen. Wir sind deshalb in ständigem Austausch mit
               Datenschutz-Anwälten und Internet-Verbänden und arbeiten streng
               nach deutschen Datenschutzrichtlinien. Die Daten werden
-              zeilenweise verlüsselt wobei der Schlüssel unabhänig von den Daten
-              gespeichert werden. Nur renomierte Forschungsinstitutionen haben
+              zeilenweise (d.h. mit einem eigenen Schlüssel für jeden Nutzer) verlüsselt, wobei 
+              der Schlüssel unabhänig von den Daten
+              gespeichert wird. Nur renomierte Forschungsinstitutionen haben
               Zugriff auf die Daten. Für Fragen zum Datenschutz stehen wir unter
-              Datenschutz@corona.mx zur vollen Verfügung.]
+              Datenschutz@corona-meldung.de jederzeit zur Verfügung.]
             </p>
           </SectionContent>
         </SectionText>
@@ -111,15 +112,20 @@ const PersonalBlog: React.FunctionComponent<PersonalBlogProps> = ({
               Softwareentwickler, die einen Beitrag zur Bekämpfung von COVID-19
               liefern wollen. Wir haben bereits in verschiedenen Projekten für
               die Industrie zusammengearbeitet und arbeiten jetzt das erste Mal
-              vollends remote an einem Projekt zusammen. Wenn Ihr Mithelfen
+              vollends remote an einem Projekt zusammen. Wenn Ihr mithelfen
               wollt modernste Technologie gegen Corona zu nutzen, dann
-              kontaktiert uns gerne unter corona@corona.mx]
+              kontaktiert uns gerne unter corona@corona-meldung.de.
             </p>
           </SectionContent>
         </SectionText>
       </SectionWrapper>
 
-      <Button title="Jetzt Daten spenden"></Button>
+      <SectionWrapper>
+        <SectionContent>
+          <Button title="Jetzt Daten spenden" />
+        </SectionContent>
+      </SectionWrapper>
+      <br />
 
       <FeaturedPosts />
       <Posts />
