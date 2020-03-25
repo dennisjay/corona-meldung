@@ -7,3 +7,5 @@ public/
 
 .cache/
 package-lock.json
+
+src/.DS_Store
