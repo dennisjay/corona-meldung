@@ -1,5 +1,4 @@
 import styled from "styled-components"
-import { themeGet } from "styled-system"
 
 const PersonalBlogWrapper = styled.div``
 
@@ -17,7 +16,7 @@ margin-bottom: 45px;
 h2 {
   font-size: 30px;
   font-weight: 700;
-  color: ${themeGet("colors.textColor", "#292929")};
+  color: #292929;
   line-height: 1.53;
   margin-bottom: 10px;
   @media (max-width: 990px) {
@@ -40,7 +39,7 @@ export const SectionContent = styled.div`
   h2 {
     font-size: 21px;
     font-weight: 500;
-    color: ${themeGet("colors.textColor", "#292929")};
+    color: #292929;
     margin-bottom: 40px;
     @media (max-width: 990px) {
       margin-bottom: 30px;
@@ -81,7 +80,6 @@ export const SectionImage = styled.div`
   padding: 30px;
   border-radius: 0%;
   margin: 0 auto;
-  border: 1px solid ${themeGet("colors.lightBorderColor", "#ededed")};
   flex-shrink: 0;
   @media (max-width: 990px) {
     width: 220px;

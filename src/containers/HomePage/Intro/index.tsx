@@ -3,6 +3,9 @@ import { useStaticQuery, graphql } from "gatsby"
 import Image from "gatsby-image"
 import SocialProfile from "../../../components/SocialProfile/SocialProfile"
 import Button from "../../../components/Button/Button"
+
+import img_mask from "../../../images/undraw_social_distancing_2g0u(1).svg";
+
 import {
   IntroWrapper,
   IntroImage,
@@ -61,13 +64,13 @@ const Intro: React.FunctionComponent<IntroProps> = props => {
     }
   `)
 
-  const { author, about } = Data.site.siteMetadata
-  const AuthorImage = Data.avatar.childImageSharp.fluid
+  //const { author, about } = Data.site.siteMetadata
+  //const AuthorImage = Data.avatar.childImageSharp.fluid
 
   return (
     <IntroWrapper>
       <IntroImage>
-        <Image fluid={AuthorImage} alt="author" />
+        <img src={img_mask}></img>
       </IntroImage>
       <IntroInfo>
         <IntroTitle>

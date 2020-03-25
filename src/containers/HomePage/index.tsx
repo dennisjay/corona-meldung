@@ -5,6 +5,14 @@ import Posts from "./Posts";
 import FeaturedPosts from "./FeaturedPost";
 import Button from "../../components/Button/Button";
 
+import img_data from "../../images/undraw_data_xmfy.svg";
+import img_map from "../../images/undraw_Map_light_3hjy.svg";
+import img_medicine from "../../images/undraw_medicine_b1ol.svg";
+import img_security from "../../images/undraw_security_o890.svg";
+import img_security_on from "../../images/undraw_Security_on_ff2u.svg";
+import img_server from "../../images/undraw_server_cluster_jwwq.svg";
+
+
 import {
   SectionWrapper,
   SectionText,
@@ -37,13 +45,13 @@ const PersonalBlog: React.FunctionComponent<PersonalBlogProps> = ({
           </SectionContent>
         </SectionText>
         <SectionImage>
-          <p>Image</p>
+          <img src={img_data} alt="Data"></img>
         </SectionImage>
       </SectionWrapper>
 
       <SectionWrapper>
         <SectionImage>
-          <p>Image</p>
+        <img src={img_server} alt="Server"></img>
         </SectionImage>
         <SectionText>
           <SectionTitle>
@@ -85,13 +93,13 @@ const PersonalBlog: React.FunctionComponent<PersonalBlogProps> = ({
           </SectionContent>
         </SectionText>
         <SectionImage>
-          <p>Image</p>
+        <img src={img_security} alt="Security"></img>
         </SectionImage>
       </SectionWrapper>
 
       <SectionWrapper>
         <SectionImage>
-          <p>Image</p>
+        <img src={img_map} alt="Data"></img>
         </SectionImage>
         <SectionText>
           <SectionTitle>

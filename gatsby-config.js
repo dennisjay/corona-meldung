@@ -93,7 +93,7 @@ module.exports = {
       resolve: `gatsby-plugin-manifest`,
       options: {
         name: `StoryHub - Personal Blog Minimal`,
-        short_name: `StoryHub`,
+        short_name: `Corona-Meldung.de`,
         start_url: `/`,
         background_color: `#ffffff`,
         theme_color: `#663399`,
