@@ -27,16 +27,23 @@ const ImpressumPage: React.FunctionComponent<ImpressumPageProps> = props => {
 
           <h2>Angaben gem&auml;&szlig; &sect; 5 TMG</h2>
           <p>Corona-Meldung GbR<br />
-            Gr&ouml;tzingerstr. 73<br />
-            76227 Karlsruhe</p>
+            z.Hd. Tobias Twardon<br />
+            FUX<br/>
+            Alter Schlachthof 33<br />
+            76131 Karlsruhe<br />
+          </p>
 
           <p><strong>Vertreten durch:</strong><br />
-            Dennis J&ouml;st</p>
+            Dennis J&ouml;st<br />
+            Tobias Twardon<br />
+            Tim Baumgärtner<br />
+            Jonas Bruns<br />
+          </p>
 
           <h2>Kontakt</h2>
-          <p>Telefon: wird beantragt<br />
-            Telefax: wird beantragt<br />
-            E-Mail: djprivat@googlemail.com</p>
+          <p>Telefon: +49 721 95791947<br />
+            Telefax: +49 721 95791948<br />
+            E-Mail: info@corona-meldung.de</p>
 
           <h2>Verantwortlich f&uuml;r den Inhalt nach &sect; 55 Abs. 2 RStV</h2>
           <p>Dennis J&ouml;st<br />
