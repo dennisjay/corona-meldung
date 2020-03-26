@@ -5,9 +5,17 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
-import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
+import TextField from '@material-ui/core/TextField';
+import { Divider, Button, Box, Typography, Link } from '@material-ui/core';
+import AttachFileIcon from '@material-ui/icons/AttachFile';
+import Dropzone from "react-dropzone";
+import { lightGreen } from "@material-ui/core/colors";
 
 const styles = theme => ({
 //   root: {
@@ -59,9 +67,29 @@ function getStepContent(step) {
 }
 
 class VerticalLinearStepper extends React.Component {
-  state = {
-    activeStep: 0,
-  };
+    constructor() {
+        super();
+        this.onDrop = (files) => {
+            this.setState({ files: { files } })
+            };
+        this.state = {
+            vorname: "",
+            nachname: "",
+            mail: "",
+            geburtsdatum: "",
+            wohnort: "",
+            telefonnummer: "",
+            gebiet: undefined,
+            kontakt: undefined,
+            erkrankt: undefined,
+            begleiterkrankungen: undefined,
+            berufstaetig: undefined,
+            files: [],
+            activeStep: 0
+        }
+    }
+
+    onDrop = () => {return true}
 
   handleNext = () => {
     this.setState(state => ({
@@ -102,13 +130,157 @@ class VerticalLinearStepper extends React.Component {
                     );
                 })}
                 </Stepper>
+
                 {/* get step content: */}
                 {/* active step is zero based. */}
-                <div>
-                    {activeStep}
-                </div>
+                
+                {/* step 1: mail: */}
+                {activeStep===0 && (
+                    <Box>
+                        <Typography>Wie wir dich erreichen können:</Typography>
+                        <TextField variant="outlined" label="Mail" />
+                        <Typography>Ich akzeptiere die <Link href="https://corona-meldung.de/datenschutz">Datenschutzerklärung</Link>.</Typography>
+                    </Box>
+                )}
+
+                {/* step 2: data: */}
+                {activeStep===1 && (
+                    <Box>
+                        <Typography>Über dich</Typography>
+                        
+                        <TextField variant="outlined" label="Vorname" />&nbsp;&nbsp;
+                        <TextField variant="outlined" label="Nachname" /><br /><br />
+
+                        <TextField variant="outlined" label="Mail" /><br /><br />
+
+                        <TextField variant="outlined" label="Geburtsdatum" /><br /><br />
+
+                        <TextField variant="outlined" label="Wohnort" /><br /><br />
+
+                    </Box>
+                )}
+
+                {/* step 3: medical info */}
+                {activeStep===2 && (
+                    <Box>
+
+                        <FormControl component="fieldset" onChange={event => { this.setState({ gebiet: event.target.value.localeCompare("0")!==0 }) }}>
+                            <FormLabel component="legend">Waren Sie in den letzten 14 Tagen in einem <b>Gebiet</b>, in dem <b>COVID-19-Fälle aufgetreten</b> sind?</FormLabel>
+                            <RadioGroup>
+                                <FormControlLabel control={<Radio />} value="0" label="Nein." />
+                                <FormControlLabel control={<Radio />} value ="1" label="Ja." />
+                            </RadioGroup>
+                        </FormControl>
+                        
+                        <br />
+                        <Divider />
+                        <br />
+
+                        <FormControl component="fieldset" onChange={event => { this.setState({ kontakt: event.target.value.localeCompare("0")!==0 }) }}>
+                            <FormLabel component="legend">Hatten Sie <b>Kontakt</b> (min. 15min, unter 2 Meter Entfernung) zu einer nachweislich an COVID-19 erkrankten Person?</FormLabel>
+                            <RadioGroup>
+                                <FormControlLabel control={<Radio />} value="0" label="Nein." />
+                                <FormControlLabel control={<Radio />} value ="1" label="Ja." />
+                            </RadioGroup>
+                        </FormControl>
+
+                        <br />
+
+                        {this.state.kontakt && (
+                            <>
+                                <TextField variant="outlined" label="Wo?" />&nbsp;&nbsp;
+                                <TextField variant="outlined" label="Wann?" />
+                            </>
+                        )}
+
+                        <Divider />
+                        <br />
+
+                        <FormControl component="fieldset" onChange={event => { this.setState({ erkrankt: event.target.value.localeCompare("0")!==0 }) }}>
+                            <FormLabel component="legend">Sind Sie <b>erkrankt</b>?</FormLabel>
+                            <RadioGroup>
+                                <FormControlLabel control={<Radio />} value="0" label="Nein." />
+                                <FormControlLabel control={<Radio />} value ="1" label="Ja." />
+                            </RadioGroup>
+                        </FormControl>
+
+                        <br />
+
+                        {this.state.erkrankt && (
+                            <TextField variant="outlined" label="Seit wann?" />
+                        )}
+
+                        <Divider />
+                        <br />
+
+                        <FormControl component="fieldset">
+                            <FormLabel component="legend">Welche <b>Symptome</b> bestehen?</FormLabel>
+                            <RadioGroup>
+                                <FormControlLabel control={<Radio />} value="0" label="Fieber" />
+                                <FormControlLabel control={<Radio />} value ="1" label="Schnupfen" />
+                                <FormControlLabel control={<Radio />} value ="2" label="Luftnot" />
+                                <FormControlLabel control={<Radio />} value ="3" label="Husten" />
+                                <FormControlLabel control={<Radio />} value ="4" label="Halsschmerzen" />
+                                <FormControlLabel control={<Radio />} value ="5" label="Durchfall" />
+                                <FormControlLabel control={<Radio />} value ="6" label="sonstige" />
+                            </RadioGroup>
+                        </FormControl>
+
+                        <br />
+                        <Divider />
+                        <br />
+
+                        <FormControl component="fieldset" onChange={event => { this.setState({ begleiterkrankungen: event.target.value.localeCompare("0")!==0 }) }}>
+                            <FormLabel component="legend">Begleiterkrankungen?</FormLabel>
+                            <RadioGroup>
+                                <FormControlLabel control={<Radio />} value="0" label="Nein." />
+                                <FormControlLabel control={<Radio />} value ="1" label="Ja." />
+                            </RadioGroup>
+                        </FormControl>
+
+                        <br />
+
+                        {this.state.begleiterkrankungen && (
+                            <TextField variant="outlined" label="Welche?" />
+                        )}
+
+                        <Divider />
+                        <br />
+
+                        <FormControl component="fieldset" onChange={event => { this.setState({ berufstaetig: event.target.value.localeCompare("0")!==0 }) }}>
+                            <FormLabel component="legend">Berufstätig?</FormLabel>
+                            <RadioGroup>
+                                <FormControlLabel control={<Radio />} value="0" label="Nein." />
+                                <FormControlLabel control={<Radio />} value ="1" label="Ja." />
+                            </RadioGroup>
+                        </FormControl>
+
+                        <br />
+
+                        {this.state.berufstaetig && (
+                            <TextField variant="outlined" label="Welcher Beruf?" />
+                        )}
+
+                        {/* Dropzone */}
+                        {/* <Box mb={1} />
+                        <Dropzone onDrop={this.onDrop}>
+                        {({ getRootProps, getInputProps }) => (
+                            <section className="container">
+                            <div {...getRootProps({ className: 'dropzone' })}
+                                style={{ minHeight: 30, width: 450, alignItems: "center", borderWidth: 1, borderRadius: 3, borderColor: "#eeeee", borderStyle: "dashed", backgroundColor: "#fafafa", color: "#bdbdbd", transition: "border .24s ease-in-out", cursor: "pointer" }}
+                            >
+                                <input {...getInputProps()} />
+                                {this.state.files.length!==0 ? (<Typography variant="body2" style={{marginLeft: 15, marginTop: 5, color: lightGreen["800"]}}><b>erfolgreich hochgeladen!</b></Typography>) : (<Typography align="center" style={{marginTop: 3}}><AttachFileIcon fontSize="small" style={{width: 20, verticalAlign:"middle"}}/> Klicken, um <b>Dateien</b> hochzuladen, oder hierein ziehen.</Typography>)}
+                            </div>
+                            </section>
+                        )}
+                        </Dropzone> */}
+
+                    </Box>
+                )}
+
                 {/* weiter und zurueck: */}
-                <div>
+                <div style={{marginTop: 25}}>
                     <div>
                     <Button
                         disabled={activeStep === 0}
