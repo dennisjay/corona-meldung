@@ -47,7 +47,7 @@ const styles = theme => ({
 });
 
 function getSteps() {
-  return ['Mail', 'Person', 'Fragen', 'Bewegungsdaten'];
+  return ['Mail', 'Verifikation', 'Person', 'Fragen', 'Bewegungsdaten'];
 }
 
 function getStepContent(step) {
@@ -150,8 +150,20 @@ class VerticalLinearStepper extends React.Component {
                   </Grid>
                 )}
 
-                {/* step 2: data: */}
+                {/* step 2: enter mail verification code */}
                 {activeStep===1 && (
+                    <Grid container>  
+                    <Box style={{margin: "auto"}}>
+                        <Typography variant="h5" color="primary" >Schau in deine Mails</Typography><br />
+                        <Typography> und gib den <b>Code</b> ein, den wir dir geschickt haben:</Typography><br />
+                        <TextField variant="outlined" label="Code" style={{minWidth: 300}} />
+                    </Box>
+                  </Grid>
+
+                )}
+
+                {/* step 3: data: */}
+                {activeStep===2 && (
                     <Grid container>
                         <Box style={{ margin: "auto" }}>
                             <Typography variant="h5" color="primary" >Über dich</Typography><br />
@@ -169,8 +181,8 @@ class VerticalLinearStepper extends React.Component {
                     </Grid>
                 )}
 
-                {/* step 3: medical info */}
-                {activeStep===2 && (
+                {/* step 4: medical info */}
+                {activeStep===3 && (
                   <Grid container>  
                     <Box style={{margin: "auto"}}>
                     <Typography variant="h5" color="primary" >Wie es dir geht</Typography><br />
@@ -291,7 +303,8 @@ class VerticalLinearStepper extends React.Component {
                   </Grid>
                 )}
 
-                {activeStep===3 && (
+                {/* step 3: upload */}
+                {activeStep===4 && (
                     <Grid container>
                         <Box style={{margin: "auto"}}>
 
@@ -318,7 +331,8 @@ class VerticalLinearStepper extends React.Component {
                     </Grid>
                 )}
 
-                {activeStep===4 && (
+                {/* thank you page */}
+                {activeStep===5 && (
                   <Grid container>  
                     <Box style={{margin: "auto"}}>
                         <center>
@@ -334,7 +348,7 @@ class VerticalLinearStepper extends React.Component {
                 )}
 
                 {/* weiter und zurueck: */}
-                {activeStep<4 && (
+                {activeStep<5 && (
                     <Box style={{marginTop: 25 }}>
                         <center>
                         <Button
