@@ -209,7 +209,7 @@ class VerticalLinearStepper extends React.Component {
                         <br />
 
                         <FormControl component="fieldset" onChange={event => { this.setState({ erkrankt: event.target.value.localeCompare("0")!==0 }) }}>
-                            <FormLabel component="legend">Bist Du nachweislich an Covid-19 <b>erkrankt</b>?</FormLabel>
+                            <FormLabel component="legend">Bist Du nachweislich an COVID-19 <b>erkrankt</b>?</FormLabel>
                             <RadioGroup>
                                 <FormControlLabel control={<Radio />} value="0" label="Nein." />
                                 <FormControlLabel control={<Radio />} value ="1" label="Ja." />
