@@ -47,7 +47,7 @@ const styles = theme => ({
 });
 
 function getSteps() {
-  return ['Mail', 'Daten', 'Fragen'];
+  return ['Mail', 'Person', 'Fragen', 'Bewegungsdaten'];
 }
 
 function getStepContent(step) {
@@ -86,6 +86,7 @@ class VerticalLinearStepper extends React.Component {
             erkrankt: undefined,
             begleiterkrankungen: undefined,
             berufstaetig: undefined,
+            quarantaene: undefined,
             files: [],
             activeStep: 0
         }
@@ -175,7 +176,7 @@ class VerticalLinearStepper extends React.Component {
                     <Typography variant="h5" color="primary" >Wie es dir geht</Typography><br />
 
                         <FormControl component="fieldset" onChange={event => { this.setState({ kontakt: event.target.value.localeCompare("0")!==0 }) }}>
-                            <FormLabel component="legend">Hattest Du <b>Kontakt</b> (min. 15min, unter 2 Meter Entfernung) zu einer nachweislich an COVID-19 erkrankten Person?</FormLabel>
+                            <FormLabel component="legend">Hattest Du <b>Kontakt</b> (min. 15min, unter 1,5 Meter Entfernung) zu einer nachweislich an COVID-19 erkrankten Person?</FormLabel>
                             <RadioGroup>
                                 <FormControlLabel control={<Radio />} value="0" label="Nein." />
                                 <FormControlLabel control={<Radio />} value ="1" label="Ja." />
@@ -214,6 +215,26 @@ class VerticalLinearStepper extends React.Component {
                         <Divider style={{marginTop: 15}} />
                         <br />
 
+                        <FormControl component="fieldset" onChange={event => { this.setState({ quarantaene: event.target.value.localeCompare("0")!==0 }) }}>
+                            <FormLabel component="legend">Wurde dir vom Arzt <b>Quarantäne verordnet</b>?</FormLabel>
+                            <RadioGroup>
+                                <FormControlLabel control={<Radio />} value="0" label="Nein." />
+                                <FormControlLabel control={<Radio />} value ="1" label="Ja." />
+                            </RadioGroup>
+                        </FormControl>
+
+                        <br />
+
+                        {this.state.quarantaene && (
+                            <>
+                                <TextField variant="outlined" label="Wann wurde sie verordnet?" />&nbsp;&nbsp;
+                                <TextField variant="outlined" label="Wann soll sie enden?" />
+                            </>
+                        )}
+
+                        <Divider style={{marginTop: 15}} />
+                        <br />
+
                         <FormControl component="fieldset">
                             <FormLabel component="legend">Welche <b>Symptome</b> bestehen?</FormLabel>
                             {/* <RadioGroup> */}
@@ -223,7 +244,11 @@ class VerticalLinearStepper extends React.Component {
                                 <FormControlLabel control={<Checkbox />} value ="3" label="Husten" />
                                 <FormControlLabel control={<Checkbox />} value ="4" label="Halsschmerzen" />
                                 <FormControlLabel control={<Checkbox />} value ="5" label="Durchfall" />
-                                <FormControlLabel control={<Checkbox />} value ="6" label="sonstige" />
+                                <FormControlLabel control={<Checkbox />} value ="6" label="Übelkeit" />
+                                <FormControlLabel control={<Checkbox />} value ="7" label="Erbrechen" />
+                                <FormControlLabel control={<Checkbox />} value ="8" label="Brustenge" />
+                                <FormControlLabel control={<Checkbox />} value ="9" label="Riechen oder Schmecken beeinträchtigt" />
+                                <FormControlLabel control={<Checkbox />} value ="10" label="sonstige" />
                             {/* </RadioGroup> */}
                         </FormControl>
 
@@ -262,26 +287,38 @@ class VerticalLinearStepper extends React.Component {
                             <TextField variant="outlined" label="Welcher Beruf?" />
                         )}
 
-                        {/* Dropzone */}
-                        {/* <Box mb={1} />
-                        <Dropzone onDrop={this.onDrop}>
-                        {({ getRootProps, getInputProps }) => (
-                            <section className="container">
-                            <div {...getRootProps({ className: 'dropzone' })}
-                                style={{ minHeight: 30, width: 450, alignItems: "center", borderWidth: 1, borderRadius: 3, borderColor: "#eeeee", borderStyle: "dashed", backgroundColor: "#fafafa", color: "#bdbdbd", transition: "border .24s ease-in-out", cursor: "pointer" }}
-                            >
-                                <input {...getInputProps()} />
-                                {this.state.files.length!==0 ? (<Typography variant="body2" style={{marginLeft: 15, marginTop: 5, color: lightGreen["800"]}}><b>erfolgreich hochgeladen!</b></Typography>) : (<Typography align="center" style={{marginTop: 3}}><AttachFileIcon fontSize="small" style={{width: 20, verticalAlign:"middle"}}/> Klicken, um <b>Dateien</b> hochzuladen, oder hierein ziehen.</Typography>)}
-                            </div>
-                            </section>
-                        )}
-                        </Dropzone> */}
-
                     </Box>
                   </Grid>
                 )}
 
                 {activeStep===3 && (
+                    <Grid container>
+                        <Box style={{margin: "auto"}}>
+
+                        <Typography variant="h5" color="primary">Füge deine Bewegungsdaten hinzu</Typography><br />
+                        <Typography style={{color: "#757575"}}>Deine Daten werden noch vor der Übertragung verschlüsselt.</Typography>
+                        <Typography style={{color: "#757575", marginTop: 10}}>Sie werden ausschließlich pseudonymisiert von rennomierten<br />Forschungseinrichtungen im Gesamtbild ausgewertet.</Typography><br />
+
+                            {/* Dropzone */}
+                            <Box mb={1} />
+                            <Dropzone onDrop={this.onDrop}>
+                            {({ getRootProps, getInputProps }) => (
+                                <section className="container">
+                                <div {...getRootProps({ className: 'dropzone' })}
+                                    style={{ minHeight: 30, width: 450, alignItems: "center", borderWidth: 1, borderRadius: 3, borderColor: "#eeeee", borderStyle: "dashed", backgroundColor: "#fafafa", color: "#bdbdbd", transition: "border .24s ease-in-out", cursor: "pointer" }}
+                                >
+                                    <input {...getInputProps()} />
+                                    {this.state.files.length!==0 ? (<Typography variant="body2" style={{marginLeft: 15, marginTop: 5, color: lightGreen["800"]}}><b>erfolgreich hochgeladen!</b></Typography>) : (<Typography align="center" style={{marginTop: 3}}><AttachFileIcon fontSize="small" style={{width: 20, verticalAlign:"middle"}}/> Klicken, um <b>Dateien</b> hochzuladen, oder hierein ziehen.</Typography>)}
+                                </div>
+                                </section>
+                            )}
+                            </Dropzone>
+
+                        </Box>
+                    </Grid>
+                )}
+
+                {activeStep===4 && (
                   <Grid container>  
                     <Box style={{margin: "auto"}}>
                         <center>
@@ -297,7 +334,7 @@ class VerticalLinearStepper extends React.Component {
                 )}
 
                 {/* weiter und zurueck: */}
-                {activeStep<3 && (
+                {activeStep<4 && (
                     <Box style={{marginTop: 25 }}>
                         <center>
                         <Button
