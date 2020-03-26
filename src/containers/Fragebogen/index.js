@@ -19,6 +19,7 @@ import { lightGreen } from "@material-ui/core/colors";
 import Checkbox from '@material-ui/core/Checkbox';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import HelpIcon from '@material-ui/icons/Help';
+import WarningIcon from '@material-ui/icons/Warning';
 
 const styles = theme => ({
 //   root: {
@@ -89,7 +90,8 @@ class VerticalLinearStepper extends React.Component {
             berufstaetig: undefined,
             quarantaene: undefined,
             files: [],
-            activeStep: 0
+            activeStep: 0,
+            noFilesWarning: false
         }
         this.state = this.defaultState
     }
@@ -98,8 +100,8 @@ class VerticalLinearStepper extends React.Component {
 
   handleNext = () => {
     this.setState(state => ({
-      activeStep: state.activeStep + 1,
-    }));
+        activeStep: state.activeStep + 1,
+        }));
     window.scrollTo(0,0)
   };
 
@@ -145,7 +147,7 @@ class VerticalLinearStepper extends React.Component {
                   <Grid container>  
                     <Box style={{margin: "auto"}}>
                         <Typography variant="h5" color="primary" >Starte mit deiner Mail-Adresse:</Typography><br />
-                        <TextField variant="outlined" label="Mail" style={{minWidth: 300}} />
+                        <TextField variant="outlined" label="Mail" style={{minWidth: 300}} onChange={event=> { this.setState({mail: event.target.value}) }} />
                         <Typography style={{marginTop: 10}}>Ich akzeptiere die <Link href="https://corona-meldung.de/datenschutz">Datenschutzerklärung</Link>.</Typography>
                     </Box>
                   </Grid>
@@ -328,6 +330,21 @@ class VerticalLinearStepper extends React.Component {
                             )}
                             </Dropzone>
 
+                            {/* soft no files warning: */}
+                            {this.state.noFilesWarning && (
+                                <Grid container style={{marginTop: 10}}>
+                                    <div style={{ maxWidth: 450, borderWidth: 1, borderStyle: "solid", borderRadius: 3, backgroundColor: "#fff3e0", 
+                                                color: "#ff9800", transition: "border .24s ease-in-out", margin: "auto" }}>
+                                        <Box display="flex" flexDirection="row" style={{ marginLeft: 10, marginTop: 7, marginBottom: 10}}>
+                                            <WarningIcon fontSize="small" style={{color: "#ff9800"}} />&nbsp;
+                                            <Typography style={{color: "#ff9800", fontSize: 13 }}><strong>Keine Daten hochgeladen</strong></Typography>
+                                        </Box>
+                                        <Typography style={{color: "#ff9800", marginLeft: 10, marginRight: 10, marginBottom: 7, fontSize: 12 }}>Du hast keine Bewegungsdaten hochgeladen. Du kannst das Formular zwar ohne Bewegungsdaten abschicken. Das hilft der Forschung aber kaum, weil die Bewegungsdaten am wertvollsten für uns sind.</Typography>
+                                    </div>
+                                </Grid>
+                            )}
+
+
                         </Box>
                     </Grid>
                 )}
@@ -364,7 +381,18 @@ class VerticalLinearStepper extends React.Component {
                         <Button
                             variant="contained"
                             color="primary"
-                            onClick={this.handleNext}
+                            onClick={() => {
+                                // input check
+                                if (this.state.mail.length<5) {
+                                    return window.confirm("Bitte gib eine gültige Mail-Adresse ein.")
+                                }
+                                else {
+                                    if (activeStep===4 && this.state.files.length===0 && !this.state.noFilesWarning) {
+                                        this.setState({ noFilesWarning: true })
+                                    } 
+                                    else return this.handleNext()
+                                }
+                            }}
                             className={classes.button}
                             style={{textTransform: "none"}}
                         >
@@ -377,15 +405,15 @@ class VerticalLinearStepper extends React.Component {
                 {/* further explanations: */}
                 {activeStep===4 && (
                     <Grid container style={{marginTop: 80}}>
-                    <div style={{ maxWidth: 450, borderWidth: 1, borderStyle: "solid", borderRadius: 3, borderColor: "#eeeee", 
-                                  backgroundColor: "", color: "#c5cae9", transition: "border .24s ease-in-out", margin: "auto" }}>
-                        <Box display="flex" flexDirection="row" style={{ marginLeft: 10, marginTop: 7, marginBottom: 10}}>
-                            <HelpIcon fontSize="small" style={{color: "#5c6bc0"}} />&nbsp;
-                            <Typography style={{color: "#5c6bc0", fontSize: 13 }}><strong>Was bedeutet "pseudonymisiert"?</strong></Typography>
-                        </Box>
-                        <Typography style={{color: "#9fa8da", marginLeft: 10, marginRight: 10, marginBottom: 7, fontSize: 12 }}>Das heißt, dass wir deinen Daten eine Identifikationsnummer zuordnen. Es wird nur verarbeitet, dass z.B. jemand mit bestimmten 
-                        Symptomen ein bestimmtes Alter hat. Eine Verbindung zu dir persönlich wird nicht offengelegt.</Typography>
-                    </div>
+                        <div style={{ maxWidth: 450, borderWidth: 1, borderStyle: "solid", borderRadius: 3, borderColor: "#eeeee", 
+                                    backgroundColor: "", color: "#c5cae9", transition: "border .24s ease-in-out", margin: "auto" }}>
+                            <Box display="flex" flexDirection="row" style={{ marginLeft: 10, marginTop: 7, marginBottom: 10}}>
+                                <HelpIcon fontSize="small" style={{color: "#5c6bc0"}} />&nbsp;
+                                <Typography style={{color: "#5c6bc0", fontSize: 13 }}><strong>Was bedeutet "pseudonymisiert"?</strong></Typography>
+                            </Box>
+                            <Typography style={{color: "#9fa8da", marginLeft: 10, marginRight: 10, marginBottom: 7, fontSize: 12 }}>Das heißt, dass wir deinen Daten eine Identifikationsnummer zuordnen. Es wird nur verarbeitet, dass z.B. jemand mit bestimmten 
+                            Symptomen ein bestimmtes Alter hat. Eine Verbindung zu dir persönlich wird nicht offengelegt.</Typography>
+                        </div>
                     </Grid>
                 )}
             </div>
