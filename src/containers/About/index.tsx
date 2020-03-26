@@ -24,6 +24,7 @@ import TobiasBudig from "../../images/tobiasb.jpg"
 import Tim from "../../images/tim.jpg"
 import Malte from "../../images/malte.jpg"
 import Dennis from "../../images/dennis.jpg"
+import Florian from "../../images/florian.jpg"
 
 const SocialLinks = [
   {
@@ -157,6 +158,19 @@ const About: React.FunctionComponent<AboutProps> = props => {
           Tobias Budig
         </IntroTitle>
         <Desciption>Tobias Budig studiert Wirtschaftsingenieurwesen am Karlsruher Institut für Technologie (KIT). Er ist außerdem selbständig im IT Bereich und will mit seiner Expertise im Kampf gegen Corona unterstützen.</Desciption>
+        {/* <SocialProfile items={SocialLinks} /> */}
+      </IntroInfo>
+    </IntroWrapper>
+
+    <IntroWrapper>
+      <IntroImage>
+        <img src={Florian} alt="Florian" />
+      </IntroImage>
+      <IntroInfo>
+        <IntroTitle>
+          Florian Abel
+        </IntroTitle>
+        <Desciption>Florian Abel, Ingenieur und Softwareentwickler, möchte mit Software und Data Science helfen Pandemien besser verständlich und greifbarer zu machen.</Desciption>
         {/* <SocialProfile items={SocialLinks} /> */}
       </IntroInfo>
     </IntroWrapper>
