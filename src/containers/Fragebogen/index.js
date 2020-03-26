@@ -74,7 +74,10 @@ class VerticalLinearStepper extends React.Component {
     constructor() {
         super();
         this.onDrop = (files) => {
-            this.setState({ files: { files } })
+            this.setState({
+                files: { files },
+                noFilesWarning: false
+            })
             };
         this.defaultState = {
             vorname: "",
@@ -315,18 +318,30 @@ class VerticalLinearStepper extends React.Component {
                             <Typography style={{color: "#757575"}}>Deine Daten werden noch vor der Übertragung verschlüsselt.</Typography>
                             <Typography style={{color: "#757575", marginTop: 10}}>Sie werden ausschließlich pseudonymisiert von renomierten<br />Forschungseinrichtungen im Gesamtbild ausgewertet.</Typography><br />
 
+                            {/* explanation: */}
+                            <Paper elevation={10} style={{maxWidth: 450, backgroundColor: "#f7f9ff"}}>
+                                <Typography variant="subtitle1" style={{fontSize: 17, color: "#3f51b5", paddingTop: 10, paddingLeft: 10, paddingBottom: 5 }}><b>So einfach geht's</b></Typography><Divider />
+                                <Typography style={{color: "#5c6bc0", padding: 10}}>
+                                    Geh auf <Link href="https://takeout.google.com" target="_blank" style={{textDecoration: "underline"}}>takeout.google.com</Link>.<br /><br />
+                                    Wähle <strong>Auswahl aufheben</strong> und setze nur bei <strong>Standortverlauf</strong> (fast ganz unten) einen Haken.<br /><br />
+                                    Klicke auf <strong>nächster Schritt</strong> und dann auf <strong>Export</strong>.<br /><br />
+                                    Klicke auf den Link in der <strong>Mail</strong>, die du max. 5 Minuten später erhälst.<br /><br />
+                                    Lade die zip-Datei dann hier hoch:
+                                </Typography>
+                            </Paper>
+                            <br /><br />
+
                             {/* Dropzone */}
-                            <Box mb={1} />
                             <Dropzone onDrop={this.onDrop}>
                             {({ getRootProps, getInputProps }) => (
-                                <section className="container">
+                            <section className="container">
                                 <div {...getRootProps({ className: 'dropzone' })}
-                                    style={{ minHeight: 30, width: 450, alignItems: "center", borderWidth: 1, borderRadius: 3, borderColor: "#eeeee", borderStyle: "dashed", backgroundColor: "#fafafa", color: "#757575", transition: "border .24s ease-in-out", cursor: "pointer" }}
+                                    style={{ minHeight: 30, width: 450, alignItems: "center", borderWidth: 1, borderRadius: 3, borderColor: "#eeeee", borderStyle: "dashed", backgroundColor: "#edf2ff", color: "#757575", transition: "border .24s ease-in-out", cursor: "pointer" }}
                                 >
                                     <input {...getInputProps()} />
-                                    {this.state.files.length!==0 ? (<Typography variant="body2" style={{marginLeft: 15, marginTop: 5, color: lightGreen["800"]}}><b>erfolgreich hochgeladen!</b></Typography>) : (<Typography align="center" style={{marginTop: 3}}><AttachFileIcon fontSize="small" style={{width: 20, verticalAlign:"middle"}}/> Klicken, um <b>Dateien</b> hochzuladen, oder hierein ziehen.</Typography>)}
+                                    {this.state.files.length!==0 ? (<Typography variant="body2" style={{marginLeft: 15, marginTop: 5, color: lightGreen["800"]}}><b>erfolgreich hochgeladen!</b></Typography>) : (<Typography align="center" style={{marginTop: 3}}><AttachFileIcon fontSize="small" style={{width: 20, verticalAlign:"middle"}}/> Klicken zum <strong>Auswählen</strong>, oder <strong>hierein ziehen.</strong></Typography>)}
                                 </div>
-                                </section>
+                            </section>
                             )}
                             </Dropzone>
 
