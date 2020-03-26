@@ -125,6 +125,19 @@ class VerticalLinearStepper extends React.Component {
     const steps = getSteps();
     const { activeStep } = this.state;
 
+    const handleWeiter = () => {
+        // input check:
+        if (this.state.mail.length<5) {
+            return window.confirm("Bitte gib eine gültige Mail-Adresse ein.")
+        }
+        else {
+            if (activeStep===4 && this.state.files.length===0 && !this.state.noFilesWarning) {
+                this.setState({ noFilesWarning: true })
+            } 
+            else return this.handleNext()
+        }
+    }
+
     return (
         <>
             {/* steps: */}
@@ -150,7 +163,7 @@ class VerticalLinearStepper extends React.Component {
                   <Grid container>  
                     <Box style={{margin: "auto"}}>
                         <Typography variant="h5" color="primary" >Starte mit deiner Mail-Adresse:</Typography><br />
-                        <TextField variant="outlined" label="Mail" style={{minWidth: 300}} onChange={event=> { this.setState({mail: event.target.value}) }} />
+                        <TextField variant="outlined" label="Mail" style={{minWidth: 300}} onChange={event=> { this.setState({mail: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { handleWeiter() } }} />
                         <Typography style={{marginTop: 10}}>Ich akzeptiere die <Link href="https://corona-meldung.de/datenschutz">Datenschutzerklärung</Link>.</Typography>
                     </Box>
                   </Grid>
@@ -162,7 +175,7 @@ class VerticalLinearStepper extends React.Component {
                     <Box style={{margin: "auto"}}>
                         <Typography variant="h5" color="primary" >Schau in deine Mails</Typography><br />
                         <Typography> und gib den <b>Code</b> ein, den wir dir geschickt haben:</Typography><br />
-                        <TextField variant="outlined" label="Code" style={{minWidth: 300}} />
+                        <TextField variant="outlined" label="Code" style={{minWidth: 300}} onKeyDown={key=>{ if (key.keyCode===13) { handleWeiter() } }} />
                     </Box>
                   </Grid>
 
@@ -182,7 +195,7 @@ class VerticalLinearStepper extends React.Component {
                             <TextField variant="outlined" label="Monat" style={{width: 66}} />&nbsp;
                             <TextField variant="outlined" label="Jahr" style={{width: 68}} /><br /><br />
 
-                            <TextField variant="outlined" label="Postleitzahl" /><br /><br />
+                            <TextField variant="outlined" label="Postleitzahl" onKeyDown={key=>{ if (key.keyCode===13) { handleWeiter() } }}/><br /><br />
                         </Box>
                     </Grid>
                 )}
@@ -396,18 +409,7 @@ class VerticalLinearStepper extends React.Component {
                         <Button
                             variant="contained"
                             color="primary"
-                            onClick={() => {
-                                // input check
-                                if (this.state.mail.length<5) {
-                                    return window.confirm("Bitte gib eine gültige Mail-Adresse ein.")
-                                }
-                                else {
-                                    if (activeStep===4 && this.state.files.length===0 && !this.state.noFilesWarning) {
-                                        this.setState({ noFilesWarning: true })
-                                    } 
-                                    else return this.handleNext()
-                                }
-                            }}
+                            onClick={() => { return handleWeiter() }}
                             className={classes.button}
                             style={{textTransform: "none"}}
                         >
