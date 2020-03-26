@@ -18,6 +18,7 @@ import Dropzone from "react-dropzone";
 import { lightGreen } from "@material-ui/core/colors";
 import Checkbox from '@material-ui/core/Checkbox';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import HelpIcon from '@material-ui/icons/Help';
 
 const styles = theme => ({
 //   root: {
@@ -171,7 +172,7 @@ class VerticalLinearStepper extends React.Component {
                             <TextField variant="outlined" label="Vorname" />&nbsp;&nbsp;
                             <TextField variant="outlined" label="Nachname" /><br /><br />
 
-                            <Typography variant="caption" color="primary"><b>Geburtsdatum:</b></Typography><br />
+                            <Typography variant="caption" color="primary" style={{marginLeft: 3}}><b>Geburtsdatum:</b></Typography><br />
                             <TextField variant="outlined" label="Tag" style={{width: 66}} />&nbsp;
                             <TextField variant="outlined" label="Monat" style={{width: 66}} />&nbsp;
                             <TextField variant="outlined" label="Jahr" style={{width: 68}} /><br /><br />
@@ -279,7 +280,7 @@ class VerticalLinearStepper extends React.Component {
                         <br />
 
                         {this.state.begleiterkrankungen && (
-                            <TextField variant="outlined" label="Welche?" />
+                            <TextField variant="outlined" label="Welche?" style={{width: 400}} />
                         )}
 
                         <Divider style={{marginTop: 15}} />
@@ -308,9 +309,9 @@ class VerticalLinearStepper extends React.Component {
                     <Grid container>
                         <Box style={{margin: "auto"}}>
 
-                        <Typography variant="h5" color="primary">Füge deine Bewegungsdaten hinzu</Typography><br />
-                        <Typography style={{color: "#757575"}}>Deine Daten werden noch vor der Übertragung verschlüsselt.</Typography>
-                        <Typography style={{color: "#757575", marginTop: 10}}>Sie werden ausschließlich pseudonymisiert von rennomierten<br />Forschungseinrichtungen im Gesamtbild ausgewertet.</Typography><br />
+                            <Typography variant="h5" color="primary">Füge deine Bewegungsdaten hinzu</Typography><br />
+                            <Typography style={{color: "#757575"}}>Deine Daten werden noch vor der Übertragung verschlüsselt.</Typography>
+                            <Typography style={{color: "#757575", marginTop: 10}}>Sie werden ausschließlich pseudonymisiert von renomierten<br />Forschungseinrichtungen im Gesamtbild ausgewertet.</Typography><br />
 
                             {/* Dropzone */}
                             <Box mb={1} />
@@ -318,7 +319,7 @@ class VerticalLinearStepper extends React.Component {
                             {({ getRootProps, getInputProps }) => (
                                 <section className="container">
                                 <div {...getRootProps({ className: 'dropzone' })}
-                                    style={{ minHeight: 30, width: 450, alignItems: "center", borderWidth: 1, borderRadius: 3, borderColor: "#eeeee", borderStyle: "dashed", backgroundColor: "#fafafa", color: "#bdbdbd", transition: "border .24s ease-in-out", cursor: "pointer" }}
+                                    style={{ minHeight: 30, width: 450, alignItems: "center", borderWidth: 1, borderRadius: 3, borderColor: "#eeeee", borderStyle: "dashed", backgroundColor: "#fafafa", color: "#757575", transition: "border .24s ease-in-out", cursor: "pointer" }}
                                 >
                                     <input {...getInputProps()} />
                                     {this.state.files.length!==0 ? (<Typography variant="body2" style={{marginLeft: 15, marginTop: 5, color: lightGreen["800"]}}><b>erfolgreich hochgeladen!</b></Typography>) : (<Typography align="center" style={{marginTop: 3}}><AttachFileIcon fontSize="small" style={{width: 20, verticalAlign:"middle"}}/> Klicken, um <b>Dateien</b> hochzuladen, oder hierein ziehen.</Typography>)}
@@ -341,7 +342,7 @@ class VerticalLinearStepper extends React.Component {
                             <Typography style={{color: "#757575"}}>Deine Daten wurden erfolgreich und sicher übermittelt.</Typography><br />
                             <Typography style={{color: "#757575"}}>Du kannst zusätzlich helfen, indem du<br /> das Projekt in deinem Umfeld bekannt machst.</Typography>
                         
-                            <Button variant="outlined" size="small" onClick={()=>{this.setState(this.defaultState)}} style={{marginTop: 30, textTransform: "none"}}>eine weitere Person hinzufügen</Button>
+                            <Button variant="outlined" size="small" onClick={()=>{this.setState(this.defaultState)}} style={{marginTop: 30, textTransform: "none", color: "#9e9e9e"}}>eine weitere Person hinzufügen</Button>
                         </center>
                     </Box>
                   </Grid>
@@ -371,6 +372,21 @@ class VerticalLinearStepper extends React.Component {
                         </Button>
                         </center>
                     </Box>
+                )}
+
+                {/* further explanations: */}
+                {activeStep===4 && (
+                    <Grid container style={{marginTop: 80}}>
+                    <div style={{ maxWidth: 450, borderWidth: 1, borderStyle: "solid", borderRadius: 3, borderColor: "#eeeee", 
+                                  backgroundColor: "", color: "#c5cae9", transition: "border .24s ease-in-out", margin: "auto" }}>
+                        <Box display="flex" flexDirection="row" style={{ marginLeft: 10, marginTop: 7, marginBottom: 10}}>
+                            <HelpIcon fontSize="small" style={{color: "#5c6bc0"}} />&nbsp;
+                            <Typography style={{color: "#5c6bc0", fontSize: 13 }}><strong>Was bedeutet "pseudonymisiert"?</strong></Typography>
+                        </Box>
+                        <Typography style={{color: "#9fa8da", marginLeft: 10, marginRight: 10, marginBottom: 7, fontSize: 12 }}>Das heißt, dass wir deinen Daten eine Identifikationsnummer zuordnen. Es wird nur verarbeitet, dass z.B. jemand mit bestimmten 
+                        Symptomen ein bestimmtes Alter hat. Eine Verbindung zu dir persönlich wird nicht offengelegt.</Typography>
+                    </div>
+                    </Grid>
                 )}
             </div>
         </>
