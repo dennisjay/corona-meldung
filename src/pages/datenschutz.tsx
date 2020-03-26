@@ -40,7 +40,7 @@ const DatenschutzPage: React.FunctionComponent<DatenschutzPageProps> = props => 
         Vertreten durch die Gesellschafter<br/>
         Dennis Jöst<br/>
         Tobias Twardon<br/>
-        Tim Baumgärtner<br/>
+        Tim Baumgartner<br/>
         Jonas Bruns<br/>
         (nachfolgend „Verantwortlicher“ oder „wir“)<br/>
         <br/>
