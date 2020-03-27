@@ -26,7 +26,7 @@ const Layout: React.FunctionComponent<LayoutProps> = ({ children }) => {
         {children}
 
         <Footer>
-          <a href="./impressum">Impressum</a>&nbsp;&nbsp;&nbsp;<a href="./datenschutz">Datenschutz</a>
+          <a href="https://corona-meldung.de/impressum">Impressum</a>&nbsp;&nbsp;&nbsp;<a href="https://corona-meldung.de/datenschutz">Datenschutz</a>
           {/* Copyright &copy; {new Date().getFullYear()} */}
           {/* <a href="https://redq.io/"> RedQ, Inc.</a> */}
         </Footer>
