@@ -20,6 +20,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import HelpIcon from '@material-ui/icons/Help';
 import WarningIcon from '@material-ui/icons/Warning';
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const styles = theme => ({
 //   root: {
@@ -111,13 +112,24 @@ class Fragebogen extends React.Component {
     else {
         if (this.state.activeStep===4 && this.state.files.length===0 && !this.state.noFilesWarning) {
             this.setState({ noFilesWarning: true })
-        } 
-        else return this.handleNext()
+        }
+        else if( this.state.activeStep===4) {
+          console.log("sending");
+          this.handlePost(this.state);
+          return this.handleNext();
+
+        }
+        else {
+          return this.handleNext();
+        }
     }
   }
 
   handlePost = (data) => {
-      var endpoint = ""
+      console.log(data);
+      var endpoint = "https://data.corona-meldung.de/data";
+
+      data['user_id'] = 5;
       let request = new XMLHttpRequest();
       let postString = JSON.stringify(data);
       request.open('POST', endpoint, true);
@@ -125,6 +137,7 @@ class Fragebogen extends React.Component {
       request.onreadystatechange = () => {
         if (request.readyState === 4 && request.status === 200) {
           console.log(request.responseText);
+          this.handleNext();
         }
       }
       request.send(postString);
@@ -154,10 +167,10 @@ class Fragebogen extends React.Component {
 
                 {/* get step content: */}
                 {/* active step is zero based. */}
-                
+
                 {/* step 1: mail: */}
                 {activeStep===0 && (
-                    <>                    
+                    <>
                         <center><Typography variant="h5" color="primary" >Starte mit deiner Mail-Adresse:</Typography></center><br />
                         <Grid container><Box style={{margin: "auto"}}><TextField variant="outlined" label="Mail" style={{minWidth: 300}} onChange={event=> { this.setState({mail: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }} /></Box></Grid>
                         <center><Typography style={{marginTop: 10}}>Ich nehme die <Link href="https://corona-meldung.de/datenschutz" target="_blank">Datenschutzerklärung</Link> zur Kenntnis.</Typography></center>
@@ -166,7 +179,7 @@ class Fragebogen extends React.Component {
 
                 {/* step 2: enter mail verification code */}
                 {activeStep===1 && (
-                    <Grid container>  
+                    <Grid container>
                     <Box style={{margin: "auto"}}>
                         <Typography variant="h5" color="primary" >Schau in deine Mails</Typography><br />
                         <Typography> und gib den <b>Code</b> ein, den wir dir geschickt haben:</Typography><br />
@@ -181,7 +194,7 @@ class Fragebogen extends React.Component {
                     <Grid container>
                         <Box style={{ margin: "auto" }}>
                             <Typography variant="h5" color="primary" >Über dich</Typography><br />
-                            
+
                             <TextField variant="outlined" label="Vorname" onChange={event=> { this.setState({vorname: event.target.value}) }} />&nbsp;&nbsp;
                             <TextField variant="outlined" label="Nachname" onChange={event=> { this.setState({nachname: event.target.value}) }} /><br /><br />
 
@@ -197,7 +210,7 @@ class Fragebogen extends React.Component {
 
                 {/* step 4: medical info */}
                 {activeStep===3 && (
-                  <Grid container>  
+                  <Grid container>
                     <Box style={{margin: "auto"}}>
                     <Typography variant="h5" color="primary" >Wie es dir geht</Typography><br />
 
@@ -356,7 +369,7 @@ class Fragebogen extends React.Component {
                             {/* soft no files warning: */}
                             {this.state.noFilesWarning && (
                                 <Grid container style={{marginTop: 10}}>
-                                    <div style={{ maxWidth: 450, borderWidth: 1, borderStyle: "solid", borderRadius: 3, backgroundColor: "#fff3e0", 
+                                    <div style={{ maxWidth: 450, borderWidth: 1, borderStyle: "solid", borderRadius: 3, backgroundColor: "#fff3e0",
                                                 color: "#ff9800", transition: "border .24s ease-in-out", margin: "auto" }}>
                                         <Box display="flex" flexDirection="row" style={{ marginLeft: 10, marginTop: 7, marginBottom: 10}}>
                                             <WarningIcon fontSize="small" style={{color: "#ff9800"}} />&nbsp;
@@ -372,16 +385,29 @@ class Fragebogen extends React.Component {
                     </Grid>
                 )}
 
+              {/* upload progress */}
+              {activeStep===5 && (
+                <Grid container>
+                  <Box style={{margin: "auto"}}>
+                    <center>
+                      Deine Daten werden übermittelt.
+                      <CircularProgress />
+                    </center>
+                  </Box>
+                </Grid>
+              )}
+
+
                 {/* thank you page */}
-                {activeStep===5 && (
-                  <Grid container>  
+                {activeStep===6 && (
+                  <Grid container>
                     <Box style={{margin: "auto"}}>
                         <center>
                             <CheckCircleIcon style={{fontSize: 100, color: "#81c784"}} />
                             <Typography variant="h4" style={{color: "#388e3c"}}>Herzlichen Dank!</Typography><br />
                             <Typography style={{color: "#757575"}}>Deine Daten wurden erfolgreich und sicher übermittelt.</Typography><br />
                             <Typography style={{color: "#757575"}}>Du kannst zusätzlich helfen, indem du<br /> das Projekt in deinem Umfeld bekannt machst.</Typography>
-                        
+
                             <Button variant="outlined" size="small" onClick={()=>{this.setState(this.defaultState)}} style={{marginTop: 30, textTransform: "none", color: "#9e9e9e"}}>eine weitere Person hinzufügen</Button>
                         </center>
                     </Box>
@@ -417,13 +443,13 @@ class Fragebogen extends React.Component {
                 {/* further explanations: */}
                 {activeStep===4 && (
                     <Grid container style={{marginTop: 80}}>
-                        <div style={{ maxWidth: 450, borderWidth: 1, borderStyle: "solid", borderRadius: 3, borderColor: "#eeeee", 
+                        <div style={{ maxWidth: 450, borderWidth: 1, borderStyle: "solid", borderRadius: 3, borderColor: "#eeeee",
                                     backgroundColor: "", color: "#c5cae9", transition: "border .24s ease-in-out", margin: "auto" }}>
                             <Box display="flex" flexDirection="row" style={{ marginLeft: 10, marginTop: 7, marginBottom: 10}}>
                                 <HelpIcon fontSize="small" style={{color: "#5c6bc0"}} />&nbsp;
                                 <Typography style={{color: "#5c6bc0", fontSize: 13 }}><strong>Was bedeutet "pseudonymisiert"?</strong></Typography>
                             </Box>
-                            <Typography style={{color: "#9fa8da", marginLeft: 10, marginRight: 10, marginBottom: 7, fontSize: 12 }}>Das heißt, dass wir deinen Daten eine Identifikationsnummer zuordnen. Es wird nur verarbeitet, dass z.B. jemand mit bestimmten 
+                            <Typography style={{color: "#9fa8da", marginLeft: 10, marginRight: 10, marginBottom: 7, fontSize: 12 }}>Das heißt, dass wir deinen Daten eine Identifikationsnummer zuordnen. Es wird nur verarbeitet, dass z.B. jemand mit bestimmten
                             Symptomen ein bestimmtes Alter hat. Eine Verbindung zu dir persönlich wird nicht offengelegt.</Typography>
                         </div>
                     </Grid>
