@@ -154,11 +154,11 @@ class Fragebogen extends React.Component {
                 
                 {/* step 1: mail: */}
                 {activeStep===0 && (
-                    <center>
-                        <Typography variant="h5" color="primary" >Starte mit deiner Mail-Adresse:</Typography><br />
-                        <TextField variant="outlined" label="Mail" style={{minWidth: 300}} onChange={event=> { this.setState({mail: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }} />
-                        <Typography style={{marginTop: 10}}>Ich nehme die <Link href="https://corona-meldung.de/datenschutz" target="_blank">Datenschutzerklärung</Link> zur Kenntnis.</Typography>
-                    </center>
+                    <>                    
+                        <center><Typography variant="h5" color="primary" >Starte mit deiner Mail-Adresse:</Typography></center><br />
+                        <Grid container><Box style={{margin: "auto"}}><TextField variant="outlined" label="Mail" style={{minWidth: 300}} onChange={event=> { this.setState({mail: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }} /></Box></Grid>
+                        <center><Typography style={{marginTop: 10}}>Ich nehme die <Link href="https://corona-meldung.de/datenschutz" target="_blank">Datenschutzerklärung</Link> zur Kenntnis.</Typography></center>
+                    </>
                 )}
 
                 {/* step 2: enter mail verification code */}
