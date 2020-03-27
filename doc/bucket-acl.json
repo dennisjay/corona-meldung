@@ -5,11 +5,13 @@
       "Sid": "VisualEditor0",
       "Effect": "Allow",
       "Action": [
+        "s3:GetObject",
         "s3:PutObject",
         "s3:ListBucket",
         "s3:DeleteObject",
         "s3:GetBucketLocation",
-        "s3:PutBucketWebsite"
+        "s3:PutBucketWebsite",
+        "s3:PutObjectAcl"
       ],
       "Resource": [
         "arn:aws:s3:::corona-meldung",
