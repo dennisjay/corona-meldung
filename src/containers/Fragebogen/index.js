@@ -64,9 +64,12 @@ class Fragebogen extends React.Component {
         this.defaultState = {
             vorname: "",
             nachname: "",
+            plz: "",
             mail: "",
-            geburtsdatum: "",
-            wohnort: "",
+            code: "",
+            geburtTag: "",
+            gebMonat: "",
+            gebJahr: "",
             telefonnummer: "",
             gebiet: undefined,
             kontakt: undefined,
@@ -167,7 +170,7 @@ class Fragebogen extends React.Component {
                     <Box style={{margin: "auto"}}>
                         <Typography variant="h5" color="primary" >Schau in deine Mails</Typography><br />
                         <Typography> und gib den <b>Code</b> ein, den wir dir geschickt haben:</Typography><br />
-                        <TextField variant="outlined" label="Code" style={{minWidth: 300}} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }} />
+                        <TextField variant="outlined" label="Code" style={{minWidth: 300}} onChange={event=> { this.setState({code: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }} />
                     </Box>
                   </Grid>
 
@@ -179,15 +182,15 @@ class Fragebogen extends React.Component {
                         <Box style={{ margin: "auto" }}>
                             <Typography variant="h5" color="primary" >Über dich</Typography><br />
                             
-                            <TextField variant="outlined" label="Vorname" />&nbsp;&nbsp;
-                            <TextField variant="outlined" label="Nachname" /><br /><br />
+                            <TextField variant="outlined" label="Vorname" onChange={event=> { this.setState({vorname: event.target.value}) }} />&nbsp;&nbsp;
+                            <TextField variant="outlined" label="Nachname" onChange={event=> { this.setState({nachname: event.target.value}) }} /><br /><br />
 
                             <Typography variant="caption" color="primary" style={{marginLeft: 3}}><b>Geburtsdatum:</b></Typography><br />
-                            <TextField variant="outlined" label="Tag" style={{width: 66}} />&nbsp;
-                            <TextField variant="outlined" label="Monat" style={{width: 66}} />&nbsp;
-                            <TextField variant="outlined" label="Jahr" style={{width: 68}} /><br /><br />
+                            <TextField variant="outlined" label="Tag" style={{width: 66}} onChange={event=> { this.setState({gebTag: event.target.value}) }} />&nbsp;
+                            <TextField variant="outlined" label="Monat" style={{width: 66}} onChange={event=> { this.setState({gebMonat: event.target.value}) }} />&nbsp;
+                            <TextField variant="outlined" label="Jahr" style={{width: 68}} onChange={event=> { this.setState({gebJahr: event.target.value}) }} /><br /><br />
 
-                            <TextField variant="outlined" label="Postleitzahl" onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }}/><br /><br />
+                            <TextField variant="outlined" label="Postleitzahl" onChange={event=> { this.setState({plz: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }}/><br /><br />
                         </Box>
                     </Grid>
                 )}
