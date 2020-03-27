@@ -12,10 +12,14 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import TextField from '@material-ui/core/TextField';
-import { Divider, Button, Box, Typography, Link } from '@material-ui/core';
+import { Divider, Button, Box, Typography, Link, Grid } from '@material-ui/core';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 import Dropzone from "react-dropzone";
 import { lightGreen } from "@material-ui/core/colors";
+import Checkbox from '@material-ui/core/Checkbox';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import HelpIcon from '@material-ui/icons/Help';
+import WarningIcon from '@material-ui/icons/Warning';
 
 const styles = theme => ({
 //   root: {
@@ -45,34 +49,19 @@ const styles = theme => ({
 });
 
 function getSteps() {
-  return ['Mail', 'Daten', 'Fragen'];
+  return ['Mail', 'Verifikation', 'Person', 'Fragen', 'Bewegungsdaten'];
 }
 
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return `For each ad campaign that you create, you can control how much
-              you're willing to spend on clicks and conversions, which networks
-              and geographical locations you want your ads to show on, and more.`;
-    case 1:
-      return 'An ad group contains one or more ads which target a shared set of keywords.';
-    case 2:
-      return `Try out different ad text to see what brings in the most customers,
-              and learn how to enhance your ads using features like ad extensions.
-              If you run into any problems with your ads, find out how to tell if
-              they're running and how to resolve approval issues.`;
-    default:
-      return 'Unknown step';
-  }
-}
-
-class VerticalLinearStepper extends React.Component {
+class Fragebogen extends React.Component {
     constructor() {
         super();
         this.onDrop = (files) => {
-            this.setState({ files: { files } })
+            this.setState({
+                files: { files },
+                noFilesWarning: false
+            })
             };
-        this.state = {
+        this.defaultState = {
             vorname: "",
             nachname: "",
             mail: "",
@@ -84,17 +73,21 @@ class VerticalLinearStepper extends React.Component {
             erkrankt: undefined,
             begleiterkrankungen: undefined,
             berufstaetig: undefined,
+            quarantaene: undefined,
             files: [],
-            activeStep: 0
+            activeStep: 0,
+            noFilesWarning: false
         }
+        this.state = this.defaultState
     }
 
     onDrop = () => {return true}
 
   handleNext = () => {
     this.setState(state => ({
-      activeStep: state.activeStep + 1,
-    }));
+        activeStep: state.activeStep + 1,
+        }));
+    window.scrollTo(0,0)
   };
 
   handleBack = () => {
@@ -114,11 +107,24 @@ class VerticalLinearStepper extends React.Component {
     const steps = getSteps();
     const { activeStep } = this.state;
 
+    const handleWeiter = () => {
+        // input check:
+        if (this.state.mail.length<5) {
+            return window.confirm("Bitte gib eine gültige Mail-Adresse ein.")
+        }
+        else {
+            if (activeStep===4 && this.state.files.length===0 && !this.state.noFilesWarning) {
+                this.setState({ noFilesWarning: true })
+            } 
+            else return this.handleNext()
+        }
+    }
+
     return (
         <>
             {/* steps: */}
             <div className={classes.root}>
-                <Stepper activeStep={activeStep}>
+                <Stepper activeStep={activeStep} style={{marginBottom: 15}}>
                 {steps.map((label) => {
                     return (
                     <Step key={label} className={classes.step}>
@@ -136,48 +142,54 @@ class VerticalLinearStepper extends React.Component {
                 
                 {/* step 1: mail: */}
                 {activeStep===0 && (
-                    <Box>
-                        <Typography>Wie wir dich erreichen können:</Typography>
-                        <TextField variant="outlined" label="Mail" />
-                        <Typography>Ich akzeptiere die <Link href="https://corona-meldung.de/datenschutz">Datenschutzerklärung</Link>.</Typography>
+                  <Grid container>  
+                    <Box style={{margin: "auto"}}>
+                        <Typography variant="h5" color="primary" >Starte mit deiner Mail-Adresse:</Typography><br />
+                        <TextField variant="outlined" label="Mail" style={{minWidth: 300}} onChange={event=> { this.setState({mail: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { handleWeiter() } }} />
+                        <Typography style={{marginTop: 10}}>&nbsp;&nbsp;Ich akzeptiere die <Link href="https://corona-meldung.de/datenschutz">Datenschutzerklärung</Link>.</Typography>
                     </Box>
+                  </Grid>
                 )}
 
-                {/* step 2: data: */}
+                {/* step 2: enter mail verification code */}
                 {activeStep===1 && (
-                    <Box>
-                        <Typography>Über dich</Typography>
-                        
-                        <TextField variant="outlined" label="Vorname" />&nbsp;&nbsp;
-                        <TextField variant="outlined" label="Nachname" /><br /><br />
-
-                        <TextField variant="outlined" label="Mail" /><br /><br />
-
-                        <TextField variant="outlined" label="Geburtsdatum" /><br /><br />
-
-                        <TextField variant="outlined" label="Wohnort" /><br /><br />
-
+                    <Grid container>  
+                    <Box style={{margin: "auto"}}>
+                        <Typography variant="h5" color="primary" >Schau in deine Mails</Typography><br />
+                        <Typography> und gib den <b>Code</b> ein, den wir dir geschickt haben:</Typography><br />
+                        <TextField variant="outlined" label="Code" style={{minWidth: 300}} onKeyDown={key=>{ if (key.keyCode===13) { handleWeiter() } }} />
                     </Box>
+                  </Grid>
+
                 )}
 
-                {/* step 3: medical info */}
+                {/* step 3: data: */}
                 {activeStep===2 && (
-                    <Box>
+                    <Grid container>
+                        <Box style={{ margin: "auto" }}>
+                            <Typography variant="h5" color="primary" >Über dich</Typography><br />
+                            
+                            <TextField variant="outlined" label="Vorname" />&nbsp;&nbsp;
+                            <TextField variant="outlined" label="Nachname" /><br /><br />
 
-                        <FormControl component="fieldset" onChange={event => { this.setState({ gebiet: event.target.value.localeCompare("0")!==0 }) }}>
-                            <FormLabel component="legend">Waren Sie in den letzten 14 Tagen in einem <b>Gebiet</b>, in dem <b>COVID-19-Fälle aufgetreten</b> sind?</FormLabel>
-                            <RadioGroup>
-                                <FormControlLabel control={<Radio />} value="0" label="Nein." />
-                                <FormControlLabel control={<Radio />} value ="1" label="Ja." />
-                            </RadioGroup>
-                        </FormControl>
-                        
-                        <br />
-                        <Divider />
-                        <br />
+                            <Typography variant="caption" color="primary" style={{marginLeft: 3}}><b>Geburtsdatum:</b></Typography><br />
+                            <TextField variant="outlined" label="Tag" style={{width: 66}} />&nbsp;
+                            <TextField variant="outlined" label="Monat" style={{width: 66}} />&nbsp;
+                            <TextField variant="outlined" label="Jahr" style={{width: 68}} /><br /><br />
+
+                            <TextField variant="outlined" label="Postleitzahl" onKeyDown={key=>{ if (key.keyCode===13) { handleWeiter() } }}/><br /><br />
+                        </Box>
+                    </Grid>
+                )}
+
+                {/* step 4: medical info */}
+                {activeStep===3 && (
+                  <Grid container>  
+                    <Box style={{margin: "auto"}}>
+                    <Typography variant="h5" color="primary" >Wie es dir geht</Typography><br />
 
                         <FormControl component="fieldset" onChange={event => { this.setState({ kontakt: event.target.value.localeCompare("0")!==0 }) }}>
-                            <FormLabel component="legend">Hatten Sie <b>Kontakt</b> (min. 15min, unter 2 Meter Entfernung) zu einer nachweislich an COVID-19 erkrankten Person?</FormLabel>
+                            <FormLabel component="legend">Hattest Du <b>Kontakt</b> (min. 15min, unter 1,5 Meter Entfernung) zu einer nachweislich an COVID-19 erkrankten Person?</FormLabel>
                             <RadioGroup>
                                 <FormControlLabel control={<Radio />} value="0" label="Nein." />
                                 <FormControlLabel control={<Radio />} value ="1" label="Ja." />
@@ -193,11 +205,11 @@ class VerticalLinearStepper extends React.Component {
                             </>
                         )}
 
-                        <Divider />
+                        <Divider style={{marginTop: 15}} />
                         <br />
 
                         <FormControl component="fieldset" onChange={event => { this.setState({ erkrankt: event.target.value.localeCompare("0")!==0 }) }}>
-                            <FormLabel component="legend">Sind Sie <b>erkrankt</b>?</FormLabel>
+                            <FormLabel component="legend">Bist Du nachweislich an COVID-19 <b>erkrankt</b>?</FormLabel>
                             <RadioGroup>
                                 <FormControlLabel control={<Radio />} value="0" label="Nein." />
                                 <FormControlLabel control={<Radio />} value ="1" label="Ja." />
@@ -207,27 +219,54 @@ class VerticalLinearStepper extends React.Component {
                         <br />
 
                         {this.state.erkrankt && (
-                            <TextField variant="outlined" label="Seit wann?" />
+                            <>
+                                <TextField variant="outlined" label="Wann wurdest Du getestet?" />&nbsp;&nbsp;
+                                <TextField variant="outlined" label="Seit wann?" />
+                            </>
                         )}
 
-                        <Divider />
+                        <Divider style={{marginTop: 15}} />
                         <br />
 
-                        <FormControl component="fieldset">
-                            <FormLabel component="legend">Welche <b>Symptome</b> bestehen?</FormLabel>
+                        <FormControl component="fieldset" onChange={event => { this.setState({ quarantaene: event.target.value.localeCompare("0")!==0 }) }}>
+                            <FormLabel component="legend">Wurde dir vom Arzt <b>Quarantäne verordnet</b>?</FormLabel>
                             <RadioGroup>
-                                <FormControlLabel control={<Radio />} value="0" label="Fieber" />
-                                <FormControlLabel control={<Radio />} value ="1" label="Schnupfen" />
-                                <FormControlLabel control={<Radio />} value ="2" label="Luftnot" />
-                                <FormControlLabel control={<Radio />} value ="3" label="Husten" />
-                                <FormControlLabel control={<Radio />} value ="4" label="Halsschmerzen" />
-                                <FormControlLabel control={<Radio />} value ="5" label="Durchfall" />
-                                <FormControlLabel control={<Radio />} value ="6" label="sonstige" />
+                                <FormControlLabel control={<Radio />} value="0" label="Nein." />
+                                <FormControlLabel control={<Radio />} value ="1" label="Ja." />
                             </RadioGroup>
                         </FormControl>
 
                         <br />
-                        <Divider />
+
+                        {this.state.quarantaene && (
+                            <>
+                                <TextField variant="outlined" label="Wann wurde sie verordnet?" />&nbsp;&nbsp;
+                                <TextField variant="outlined" label="Wann soll sie enden?" />
+                            </>
+                        )}
+
+                        <Divider style={{marginTop: 15}} />
+                        <br />
+
+                        <FormControl component="fieldset">
+                            <FormLabel component="legend">Welche <b>Symptome</b> bestehen?</FormLabel>
+                            {/* <RadioGroup> */}
+                                <FormControlLabel control={<Checkbox />} value="0" label="Fieber" />
+                                <FormControlLabel control={<Checkbox />} value ="1" label="Schnupfen" />
+                                <FormControlLabel control={<Checkbox />} value ="2" label="Luftnot" />
+                                <FormControlLabel control={<Checkbox />} value ="3" label="Husten" />
+                                <FormControlLabel control={<Checkbox />} value ="4" label="Halsschmerzen" />
+                                <FormControlLabel control={<Checkbox />} value ="5" label="Durchfall" />
+                                <FormControlLabel control={<Checkbox />} value ="6" label="Übelkeit" />
+                                <FormControlLabel control={<Checkbox />} value ="7" label="Erbrechen" />
+                                <FormControlLabel control={<Checkbox />} value ="8" label="Brustenge" />
+                                <FormControlLabel control={<Checkbox />} value ="9" label="Riechen oder Schmecken beeinträchtigt" />
+                                <FormControlLabel control={<Checkbox />} value ="10" label="sonstige" />
+                            {/* </RadioGroup> */}
+                        </FormControl>
+
+                        <br />
+                        <Divider style={{marginTop: 15}} />
                         <br />
 
                         <FormControl component="fieldset" onChange={event => { this.setState({ begleiterkrankungen: event.target.value.localeCompare("0")!==0 }) }}>
@@ -241,10 +280,10 @@ class VerticalLinearStepper extends React.Component {
                         <br />
 
                         {this.state.begleiterkrankungen && (
-                            <TextField variant="outlined" label="Welche?" />
+                            <TextField variant="outlined" label="Welche?" style={{width: 400}} />
                         )}
 
-                        <Divider />
+                        <Divider style={{marginTop: 15}} />
                         <br />
 
                         <FormControl component="fieldset" onChange={event => { this.setState({ berufstaetig: event.target.value.localeCompare("0")!==0 }) }}>
@@ -261,52 +300,129 @@ class VerticalLinearStepper extends React.Component {
                             <TextField variant="outlined" label="Welcher Beruf?" />
                         )}
 
-                        {/* Dropzone */}
-                        {/* <Box mb={1} />
-                        <Dropzone onDrop={this.onDrop}>
-                        {({ getRootProps, getInputProps }) => (
-                            <section className="container">
-                            <div {...getRootProps({ className: 'dropzone' })}
-                                style={{ minHeight: 30, width: 450, alignItems: "center", borderWidth: 1, borderRadius: 3, borderColor: "#eeeee", borderStyle: "dashed", backgroundColor: "#fafafa", color: "#bdbdbd", transition: "border .24s ease-in-out", cursor: "pointer" }}
-                            >
-                                <input {...getInputProps()} />
-                                {this.state.files.length!==0 ? (<Typography variant="body2" style={{marginLeft: 15, marginTop: 5, color: lightGreen["800"]}}><b>erfolgreich hochgeladen!</b></Typography>) : (<Typography align="center" style={{marginTop: 3}}><AttachFileIcon fontSize="small" style={{width: 20, verticalAlign:"middle"}}/> Klicken, um <b>Dateien</b> hochzuladen, oder hierein ziehen.</Typography>)}
-                            </div>
-                            </section>
-                        )}
-                        </Dropzone> */}
-
                     </Box>
+                  </Grid>
+                )}
+
+                {/* step 3: upload */}
+                {activeStep===4 && (
+                    <Grid container>
+                        <Box style={{margin: "auto"}}>
+
+                            <Typography variant="h5" color="primary">Füge deine Bewegungsdaten hinzu</Typography><br />
+                            <Typography style={{color: "#757575"}}>Deine Daten werden noch vor der Übertragung verschlüsselt.</Typography>
+                            <Typography style={{color: "#757575", marginTop: 10}}>Sie werden ausschließlich pseudonymisiert von renomierten<br />Forschungseinrichtungen im Gesamtbild ausgewertet.</Typography><br />
+
+                            {/* explanation: */}
+                            <Paper elevation={10} style={{maxWidth: 450, backgroundColor: "#f7f9ff"}}>
+                                <Typography variant="subtitle1" style={{fontSize: 17, color: "#3f51b5", paddingTop: 10, paddingLeft: 10, paddingBottom: 5 }}><b>So einfach geht's</b></Typography><Divider />
+                                <Typography style={{color: "#5c6bc0", padding: 10}}>
+                                    Geh auf <Link href="https://takeout.google.com" target="_blank" style={{textDecoration: "underline"}}>takeout.google.com</Link>.<br /><br />
+                                    Wähle <strong>Auswahl aufheben</strong> und setze nur bei <strong>Standortverlauf</strong> (fast ganz unten) einen Haken.<br /><br />
+                                    Klicke auf <strong>nächster Schritt</strong> und dann auf <strong>Export</strong>.<br /><br />
+                                    Klicke auf den Link in der <strong>Mail</strong>, die du max. 5 Minuten später erhälst.<br /><br />
+                                    Lade die zip-Datei dann hier hoch:
+                                </Typography>
+                            </Paper>
+                            <br /><br />
+
+                            {/* Dropzone */}
+                            <Dropzone onDrop={this.onDrop}>
+                            {({ getRootProps, getInputProps }) => (
+                            <section className="container">
+                                <div {...getRootProps({ className: 'dropzone' })}
+                                    style={{ minHeight: 30, width: 450, alignItems: "center", borderWidth: 1, borderRadius: 3, borderColor: "#eeeee", borderStyle: "dashed", backgroundColor: "#edf2ff", color: "#757575", transition: "border .24s ease-in-out", cursor: "pointer" }}
+                                >
+                                    <input {...getInputProps()} />
+                                    {this.state.files.length!==0 ? (<Typography variant="body2" style={{marginLeft: 15, marginTop: 5, color: lightGreen["800"]}}><b>erfolgreich hochgeladen!</b></Typography>) : (<Typography align="center" style={{marginTop: 3}}><AttachFileIcon fontSize="small" style={{width: 20, verticalAlign:"middle"}}/> Klicken zum <strong>Auswählen</strong>, oder <strong>hierein ziehen.</strong></Typography>)}
+                                </div>
+                            </section>
+                            )}
+                            </Dropzone>
+
+                            {/* soft no files warning: */}
+                            {this.state.noFilesWarning && (
+                                <Grid container style={{marginTop: 10}}>
+                                    <div style={{ maxWidth: 450, borderWidth: 1, borderStyle: "solid", borderRadius: 3, backgroundColor: "#fff3e0", 
+                                                color: "#ff9800", transition: "border .24s ease-in-out", margin: "auto" }}>
+                                        <Box display="flex" flexDirection="row" style={{ marginLeft: 10, marginTop: 7, marginBottom: 10}}>
+                                            <WarningIcon fontSize="small" style={{color: "#ff9800"}} />&nbsp;
+                                            <Typography style={{color: "#ff9800", fontSize: 13 }}><strong>Keine Daten hochgeladen</strong></Typography>
+                                        </Box>
+                                        <Typography style={{color: "#ff9800", marginLeft: 10, marginRight: 10, marginBottom: 7, fontSize: 12 }}>Du hast keine Bewegungsdaten hochgeladen. Du kannst das Formular zwar ohne Bewegungsdaten abschicken. Das hilft der Forschung aber kaum, weil die Bewegungsdaten am wertvollsten für uns sind.</Typography>
+                                    </div>
+                                </Grid>
+                            )}
+
+
+                        </Box>
+                    </Grid>
+                )}
+
+                {/* thank you page */}
+                {activeStep===5 && (
+                  <Grid container>  
+                    <Box style={{margin: "auto"}}>
+                        <center>
+                            <CheckCircleIcon style={{fontSize: 100, color: "#81c784"}} />
+                            <Typography variant="h4" style={{color: "#388e3c"}}>Herzlichen Dank!</Typography><br />
+                            <Typography style={{color: "#757575"}}>Deine Daten wurden erfolgreich und sicher übermittelt.</Typography><br />
+                            <Typography style={{color: "#757575"}}>Du kannst zusätzlich helfen, indem du<br /> das Projekt in deinem Umfeld bekannt machst.</Typography>
+                        
+                            <Button variant="outlined" size="small" onClick={()=>{this.setState(this.defaultState)}} style={{marginTop: 30, textTransform: "none", color: "#9e9e9e"}}>eine weitere Person hinzufügen</Button>
+                        </center>
+                    </Box>
+                  </Grid>
                 )}
 
                 {/* weiter und zurueck: */}
-                <div style={{marginTop: 25}}>
-                    <div>
-                    <Button
-                        disabled={activeStep === 0}
-                        onClick={this.handleBack}
-                        className={classes.button}
-                    >
-                        Zurück
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={this.handleNext}
-                        className={classes.button}
-                    >
-                        {activeStep === steps.length - 1 ? 'Abschicken' : 'Weiter'}
-                    </Button>
-                    </div>
-                </div>
+                {activeStep<5 && (
+                    <Box style={{marginTop: 25 }}>
+                        <center>
+                        <Button
+                            disabled={activeStep === 0}
+                            onClick={this.handleBack}
+                            className={classes.button}
+                            variant="outlined"
+                            style={{marginRight: 30, textTransform: "none"}}
+                        >
+                            zurück
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => { return handleWeiter() }}
+                            className={classes.button}
+                            style={{textTransform: "none"}}
+                        >
+                            {activeStep === steps.length - 1 ? 'ABSCHICKEN' : 'WEITER'}
+                        </Button>
+                        </center>
+                    </Box>
+                )}
+
+                {/* further explanations: */}
+                {activeStep===4 && (
+                    <Grid container style={{marginTop: 80}}>
+                        <div style={{ maxWidth: 450, borderWidth: 1, borderStyle: "solid", borderRadius: 3, borderColor: "#eeeee", 
+                                    backgroundColor: "", color: "#c5cae9", transition: "border .24s ease-in-out", margin: "auto" }}>
+                            <Box display="flex" flexDirection="row" style={{ marginLeft: 10, marginTop: 7, marginBottom: 10}}>
+                                <HelpIcon fontSize="small" style={{color: "#5c6bc0"}} />&nbsp;
+                                <Typography style={{color: "#5c6bc0", fontSize: 13 }}><strong>Was bedeutet "pseudonymisiert"?</strong></Typography>
+                            </Box>
+                            <Typography style={{color: "#9fa8da", marginLeft: 10, marginRight: 10, marginBottom: 7, fontSize: 12 }}>Das heißt, dass wir deinen Daten eine Identifikationsnummer zuordnen. Es wird nur verarbeitet, dass z.B. jemand mit bestimmten 
+                            Symptomen ein bestimmtes Alter hat. Eine Verbindung zu dir persönlich wird nicht offengelegt.</Typography>
+                        </div>
+                    </Grid>
+                )}
             </div>
         </>
     );
   }
 }
 
-VerticalLinearStepper.propTypes = {
+Fragebogen.propTypes = {
   classes: PropTypes.object,
 };
 
-export default withStyles(styles)(VerticalLinearStepper);
+export default withStyles(styles)(Fragebogen);
