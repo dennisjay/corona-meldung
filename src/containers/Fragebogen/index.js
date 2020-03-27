@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import StepContent from '@material-ui/core/StepContent';
+// import StepContent from '@material-ui/core/StepContent';
 import Paper from '@material-ui/core/Paper';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -81,8 +81,6 @@ class Fragebogen extends React.Component {
         this.state = this.defaultState
     }
 
-    onDrop = () => {return true}
-
   handleNext = () => {
     this.setState(state => ({
         activeStep: state.activeStep + 1,
@@ -102,23 +100,37 @@ class Fragebogen extends React.Component {
     });
   };
 
+  handleWeiter = () => {
+    // input check:
+    if (this.state.mail.length<5) {
+        return window.confirm("Bitte gib eine gültige Mail-Adresse ein.")
+    }
+    else {
+        if (this.state.activeStep===4 && this.state.files.length===0 && !this.state.noFilesWarning) {
+            this.setState({ noFilesWarning: true })
+        } 
+        else return this.handleNext()
+    }
+  }
+
+  handlePost = (data) => {
+      var endpoint = ""
+      let request = new XMLHttpRequest();
+      let postString = JSON.stringify(data);
+      request.open('POST', endpoint, true);
+      request.setRequestHeader('Content-Type', 'application/json');
+      request.onreadystatechange = () => {
+        if (request.readyState === 4 && request.status === 200) {
+          console.log(request.responseText);
+        }
+      }
+      request.send(postString);
+  }
+
   render() {
     const { classes } = this.props;
     const steps = getSteps();
     const { activeStep } = this.state;
-
-    const handleWeiter = () => {
-        // input check:
-        if (this.state.mail.length<5) {
-            return window.confirm("Bitte gib eine gültige Mail-Adresse ein.")
-        }
-        else {
-            if (activeStep===4 && this.state.files.length===0 && !this.state.noFilesWarning) {
-                this.setState({ noFilesWarning: true })
-            } 
-            else return this.handleNext()
-        }
-    }
 
     return (
         <>
@@ -145,7 +157,7 @@ class Fragebogen extends React.Component {
                   <Grid container>  
                     <Box style={{margin: "auto"}}>
                         <Typography variant="h5" color="primary" >Starte mit deiner Mail-Adresse:</Typography><br />
-                        <TextField variant="outlined" label="Mail" style={{minWidth: 300}} onChange={event=> { this.setState({mail: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { handleWeiter() } }} />
+                        <TextField variant="outlined" label="Mail" style={{minWidth: 300}} onChange={event=> { this.setState({mail: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }} />
                         <Typography style={{marginTop: 10}}>&nbsp;&nbsp;Ich akzeptiere die <Link href="https://corona-meldung.de/datenschutz">Datenschutzerklärung</Link>.</Typography>
                     </Box>
                   </Grid>
@@ -157,7 +169,7 @@ class Fragebogen extends React.Component {
                     <Box style={{margin: "auto"}}>
                         <Typography variant="h5" color="primary" >Schau in deine Mails</Typography><br />
                         <Typography> und gib den <b>Code</b> ein, den wir dir geschickt haben:</Typography><br />
-                        <TextField variant="outlined" label="Code" style={{minWidth: 300}} onKeyDown={key=>{ if (key.keyCode===13) { handleWeiter() } }} />
+                        <TextField variant="outlined" label="Code" style={{minWidth: 300}} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }} />
                     </Box>
                   </Grid>
 
@@ -177,7 +189,7 @@ class Fragebogen extends React.Component {
                             <TextField variant="outlined" label="Monat" style={{width: 66}} />&nbsp;
                             <TextField variant="outlined" label="Jahr" style={{width: 68}} /><br /><br />
 
-                            <TextField variant="outlined" label="Postleitzahl" onKeyDown={key=>{ if (key.keyCode===13) { handleWeiter() } }}/><br /><br />
+                            <TextField variant="outlined" label="Postleitzahl" onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }}/><br /><br />
                         </Box>
                     </Grid>
                 )}
@@ -391,7 +403,7 @@ class Fragebogen extends React.Component {
                         <Button
                             variant="contained"
                             color="primary"
-                            onClick={() => { return handleWeiter() }}
+                            onClick={() => { return this.handleWeiter() }}
                             className={classes.button}
                             style={{textTransform: "none"}}
                         >
