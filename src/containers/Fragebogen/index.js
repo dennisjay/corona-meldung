@@ -169,7 +169,8 @@ class Fragebogen extends React.Component {
                     <Step key={label} className={classes.step}>
                         <StepLabel classes={{
                         iconContainer: classes.iconContainer
-                        }}>{label}
+                        }}>
+                        <Typography>{label}</Typography>
                         </StepLabel>
                     </Step>
                     );
