@@ -21,6 +21,22 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import HelpIcon from '@material-ui/icons/Help';
 import WarningIcon from '@material-ui/icons/Warning';
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { v4 as uuidv4 } from 'uuid';
+import Evaporate from 'evaporate';
+import sparkMD5 from 'spark-md5';
+import sha256 from 'js-sha256';
+
+const uploader = Evaporate.create({
+  signerUrl: '/data-api-v1/sign',
+  aws_key: 'AKIAU2CLF3QR6VYOCXMI',
+  bucket: 'corona-meldung-incoming',
+  cloudfront: false,
+  computeContentMd5: true,
+  cryptoMd5Method: (d) => btoa(sparkMD5.ArrayBuffer.hash(d, true)),
+  cryptoHexEncodedHash256: sha256,
+  awsUrl: 'https://s3-eu-central-1.amazonaws.com',
+  awsRegion: 'eu-central-1'
+});
 
 const styles = theme => ({
 //   root: {
@@ -81,7 +97,7 @@ class Fragebogen extends React.Component {
             files: [],
             activeStep: 0,
             noFilesWarning: false
-        }
+        };
         this.state = this.defaultState
     }
 
@@ -106,42 +122,77 @@ class Fragebogen extends React.Component {
 
   handleWeiter = () => {
     // input check:
-    if (this.state.mail.length<5) {
-        return window.confirm("Bitte gib eine gültige Mail-Adresse ein.")
-    }
-    else {
-        if (this.state.activeStep===4 && this.state.files.length===0 && !this.state.noFilesWarning) {
-            this.setState({ noFilesWarning: true })
-        }
-        else if( this.state.activeStep===4) {
-          console.log("sending");
-          this.handlePost(this.state);
-          return this.handleNext();
+    if (this.state.mail.length < 5) {
+      return window.confirm("Bitte gib eine gültige Mail-Adresse ein.")
+    } else {
+      if (this.state.activeStep === 4 && this.state.files.length === 0 && !this.state.noFilesWarning) {
+        this.setState({ noFilesWarning: true })
+      } else if (this.state.activeStep === 4) {
+        console.log("sending");
+        this.handlePost(this.state);
+        return this.handleNext();
 
-        }
-        else {
-          return this.handleNext();
-        }
+      } else {
+        return this.handleNext();
+      }
     }
   }
+
+  uploadFiles = (user_pseudonym, files) => {
+    uploader.then((evaporate) => {
+      for(let file of files) {
+        evaporate.add({
+          file: file,
+          name: file.name,
+          progress: (percent, stats) => console.log('Progress', percent, stats),
+          complete: (xhr, awsObjectKey) => console.log('Complete!', awsObjectKey),
+          error: (mssg) => console.log('Error', mssg),
+          paused: () => console.log('Paused'),
+          pausing: () => console.log('Pausing'),
+          resumed: () => console.log('Resumed'),
+          cancelled: () => console.log('Cancelled'),
+          started: (fileKey) => console.log('Started', fileKey),
+          uploadInitiated: (s3Id) => console.log('Upload Initiated', s3Id),
+          warn: (mssg) => console.log('Warning', mssg)
+        }).then(
+          (awsObjectKey) => console.log('File successfully uploaded to:', awsObjectKey),
+          (reason) => console.log('File did not upload sucessfully:', reason)
+        );
+      }
+    });
+  };
+
+  postData = (user_pseudonym, data) => {
+    const endpoint = "https://data.corona-meldung.de/" + user_pseudonym;
+    let request = new XMLHttpRequest();
+    let postString = JSON.stringify(data);
+    request.open('POST', endpoint, true);
+    request.setRequestHeader('Content-Type', 'application/json');
+
+    return new Promise((resolve, reject) => {
+      if (request.readyState === 4 && request.status === 200) {
+        console.log(request.responseText);
+        resolve(request.responseText);
+      }
+      else {
+        reject();
+      }
+
+      request.send(postString);
+    });
+  };
+
 
   handlePost = (data) => {
-      console.log(data);
-      var endpoint = "https://data.corona-meldung.de/data";
+    console.log("handlePost", data);
 
-      data['user_id'] = 5;
-      let request = new XMLHttpRequest();
-      let postString = JSON.stringify(data);
-      request.open('POST', endpoint, true);
-      request.setRequestHeader('Content-Type', 'application/json');
-      request.onreadystatechange = () => {
-        if (request.readyState === 4 && request.status === 200) {
-          console.log(request.responseText);
-          this.handleNext();
-        }
-      }
-      request.send(postString);
-  }
+    const user_pseudomym = uuidv4();  //TODO replace with real pseudonym from server
+    this.postData(user_pseudomym, data)
+      .then(this.uploadFiles(user_pseudomym, data.files.files))
+      .then(() => {
+        this.handleNext();
+      });
+  };
 
   render() {
     const { classes } = this.props;

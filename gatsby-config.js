@@ -3,6 +3,10 @@ require('dotenv').config({
 })
 
 module.exports = {
+  proxy: {
+    prefix: "/data-api-v1",
+    url: "https://pidgjtb7w0.execute-api.eu-central-1.amazonaws.com",
+  },
   siteMetadata: {
     title: `Mit Deinen Daten Leben retten`,
     author: `Corona Meldung GbR`,
