@@ -23,6 +23,7 @@ import WarningIcon from '@material-ui/icons/Warning';
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { v4 as uuidv4 } from 'uuid';
 import { uploadFiles, postData } from '../../lib/upload_helpers';
+import { auth_register, auth_confirm } from '../../lib/register_helpers';
 
 import {
     EmailShareButton,
@@ -94,7 +95,8 @@ class Fragebogen extends React.Component {
             files: [],
             activeStep: 0,
             noFilesWarning: false,
-            uploadProgress: 0
+            uploadProgress: 0,
+            jwk_key: {}
         };
         this.state = this.defaultState
     }
@@ -119,23 +121,60 @@ class Fragebogen extends React.Component {
   };
 
   handleWeiter = () => {
-    // input check:
-    if (this.state.mail.length < 5) {
-      return window.confirm("Bitte gib eine gültige Mail-Adresse ein.")
-    } else {
-      if (this.state.activeStep === 4 && this.state.files.length === 0 && !this.state.noFilesWarning) {
-        this.setState({ noFilesWarning: true })
-      } else if (this.state.activeStep === 4) {
-        console.log("sending");
+    console.log(this.state.activeStep);
+    switch(this.state.activeStep)
+    {
+      case 0:
+        if (this.state.mail.length < 5) {
+          return window.confirm("Bitte gib eine gültige Mail-Adresse ein.")
+        }
+        else {
+          auth_register(this.state.mail)
+            .then(() => {
+              console.log("register");
+              this.handleNext();
+            })
+            .catch( () => {
+              window.confirm("Bitte gib eine gültige Mail-Adresse ein.")
+            })
+        }
+        break;
+      case 1:
+        auth_confirm(this.state.mail, Number(this.state.code))
+          .then((jwk_key) => {
+            console.log("register confirm", jwk_key);
+            this.setState(state => ({
+              jwk_key: jwk_key
+            }));
+
+            this.handleNext();
+          })
+          .catch( () => {
+            window.confirm("Bitte gib einen gültigen code ein")
+          });
+          break;
+
+      case 4:
+        if (this.state.files.length === 0 && !this.state.noFilesWarning) {
+          this.setState({ noFilesWarning: true })
+        } else {
+          console.log("sending");
+          this.handleNext();
+          this.handlePost(this.state)
+            .then(() => {
+              this.handleNext();
+            })
+            .catch(() => {
+              this.handleBack();
+            });
+        }
+        break;
+
+      default:
         this.handleNext();
-        this.handlePost(this.state)
-          .then(() => { this.handleNext(); })
-          .catch( () => { this.handleBack(); });
-      } else {
-        return this.handleNext();
-      }
+        break;
     }
-  }
+  };
 
 
 
@@ -477,6 +516,10 @@ class Fragebogen extends React.Component {
                         </div>
                     </Grid>
                 )}
+
+                <pre>
+                  {this.state.jwk_key}
+                </pre>
             </div>
         </>
     );
