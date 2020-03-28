@@ -26,6 +26,10 @@ const MenuItems = [
     url: "/",
   },
   {
+    label: "Mehr Erfahren",
+    url: "/idea",
+  },
+  {
     label: "Team",
     url: "/about",
   },
