@@ -404,7 +404,7 @@ class Fragebogen extends React.Component {
                     <Box style={{margin: "auto"}}>
                         <center>
                             Deine Daten werden übermittelt.
-                            <LinearProgress value={this.state.uploadProgress} />
+                            <LinearProgress value={this.state.uploadProgress} variant={'determinate'} />
                         </center>
                     </Box>
                     </Grid>
