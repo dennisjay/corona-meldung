@@ -25,6 +25,15 @@ import { v4 as uuidv4 } from 'uuid';
 import Evaporate from 'evaporate';
 import sparkMD5 from 'spark-md5';
 import sha256 from 'js-sha256';
+import {
+    EmailShareButton,
+    FacebookShareButton,
+    LinkedinShareButton,
+    TelegramShareButton,
+    TwitterShareButton,
+    WhatsappShareButton,
+  } from "react-share";
+  
 
 const uploader = Evaporate.create({
   signerUrl: '/data-api-v1/sign',
@@ -199,6 +208,8 @@ class Fragebogen extends React.Component {
     const steps = getSteps();
     const { activeStep } = this.state;
 
+    const promoMessage = "Forscher finden effektiver Maßnahmen gegen COVID-19 dank deinen anonymisierten Standortdaten."
+
     return (
         <>
             {/* steps: */}
@@ -209,7 +220,8 @@ class Fragebogen extends React.Component {
                     <Step key={label} className={classes.step}>
                         <StepLabel classes={{
                         iconContainer: classes.iconContainer
-                        }}>{label}
+                        }}>
+                        <Typography>{label}</Typography>
                         </StepLabel>
                     </Step>
                     );
@@ -436,17 +448,17 @@ class Fragebogen extends React.Component {
                     </Grid>
                 )}
 
-              {/* upload progress */}
-              {activeStep===5 && (
-                <Grid container>
-                  <Box style={{margin: "auto"}}>
-                    <center>
-                      Deine Daten werden übermittelt.
-                      <CircularProgress />
-                    </center>
-                  </Box>
-                </Grid>
-              )}
+                {/* upload progress */}
+                {activeStep===5 && (
+                    <Grid container>
+                    <Box style={{margin: "auto"}}>
+                        <center>
+                            Deine Daten werden übermittelt.
+                            <CircularProgress />
+                        </center>
+                    </Box>
+                    </Grid>
+                )}
 
 
                 {/* thank you page */}
@@ -457,7 +469,17 @@ class Fragebogen extends React.Component {
                             <CheckCircleIcon style={{fontSize: 100, color: "#81c784"}} />
                             <Typography variant="h4" style={{color: "#388e3c"}}>Herzlichen Dank!</Typography><br />
                             <Typography style={{color: "#757575"}}>Deine Daten wurden erfolgreich und sicher übermittelt.</Typography><br />
-                            <Typography style={{color: "#757575"}}>Du kannst zusätzlich helfen, indem du<br /> das Projekt in deinem Umfeld bekannt machst.</Typography>
+                            <Typography style={{color: "#757575"}}>Du kannst zusätzlich helfen, indem du<br /> das Projekt in deinem Umfeld bekannt machst.</Typography><br />
+                            <Typography style={{color: "#7986cb", marginBottom: 5}} variant="subtitle1"><strong>Teilen über:</strong></Typography>
+                            <Box style={{display: "flex"}}>
+                                <FacebookShareButton url={"https://corona-meldung.de"} title={promoMessage}><Button size="small" variant="outlined" color="primary" style={{textTransform: "none", margin: 3}}>Facebook</Button></FacebookShareButton>
+                                <EmailShareButton url={"https://corona-meldung.de"} title={promoMessage}><Button size="small" variant="outlined" color="primary" style={{textTransform: "none", margin: 3}}>E-Mail</Button></EmailShareButton>
+                                <TwitterShareButton url={"https://corona-meldung.de"} title={promoMessage}><Button size="small" variant="outlined" color="primary" style={{textTransform: "none", margin: 3}}>Twitter</Button></TwitterShareButton>
+                                <LinkedinShareButton url={"https://corona-meldung.de"} title={promoMessage}><Button size="small" variant="outlined" color="primary" style={{textTransform: "none", margin: 3}}>Linkedin</Button></LinkedinShareButton>
+                                <TelegramShareButton url={"https://corona-meldung.de"} title={promoMessage}><Button size="small" variant="outlined" color="primary" style={{textTransform: "none", margin: 3}}>Telegram</Button></TelegramShareButton>
+                                <WhatsappShareButton url={"https://corona-meldung.de"} title={promoMessage}><Button size="small" variant="outlined" color="primary" style={{textTransform: "none", margin: 3}}>Whatsapp</Button></WhatsappShareButton>
+                            </Box>
+                            <br />
 
                             <Button variant="outlined" size="small" onClick={()=>{this.setState(this.defaultState)}} style={{marginTop: 30, textTransform: "none", color: "#9e9e9e"}}>eine weitere Person hinzufügen</Button>
                         </center>
