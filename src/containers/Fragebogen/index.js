@@ -138,37 +138,25 @@ class Fragebogen extends React.Component {
         this.setState({ noFilesWarning: true })
       } else if (this.state.activeStep === 4) {
         console.log("sending");
-        this.handlePost(this.state);
-        return this.handleNext();
-
+        this.handleNext();
+        this.handlePost(this.state)
+          .then(() => { this.handleNext(); })
+          .catch( () => { this.handleBack(); });
       } else {
         return this.handleNext();
       }
     }
   }
 
-  uploadFiles = (user_pseudonym, files) => {
-    uploader.then((evaporate) => {
-      for(let file of files) {
-        evaporate.add({
-          file: file,
-          name: file.name,
-          progress: (percent, stats) => console.log('Progress', percent, stats),
-          complete: (xhr, awsObjectKey) => console.log('Complete!', awsObjectKey),
-          error: (mssg) => console.log('Error', mssg),
-          paused: () => console.log('Paused'),
-          pausing: () => console.log('Pausing'),
-          resumed: () => console.log('Resumed'),
-          cancelled: () => console.log('Cancelled'),
-          started: (fileKey) => console.log('Started', fileKey),
-          uploadInitiated: (s3Id) => console.log('Upload Initiated', s3Id),
-          warn: (mssg) => console.log('Warning', mssg)
-        }).then(
-          (awsObjectKey) => console.log('File successfully uploaded to:', awsObjectKey),
-          (reason) => console.log('File did not upload sucessfully:', reason)
-        );
-      }
-    });
+  uploadFiles = async (user_pseudonym, files) => {
+    const evaporate = await uploader;
+    for(let file of files) {
+      await evaporate.add({
+        file: file,
+        name: file.name,
+        progress: (percent, stats) => console.log('Progress', percent, stats)
+      })
+    }
   };
 
   postData = (user_pseudonym, data) => {
@@ -179,28 +167,30 @@ class Fragebogen extends React.Component {
     request.setRequestHeader('Content-Type', 'application/json');
 
     return new Promise((resolve, reject) => {
-      if (request.readyState === 4 && request.status === 200) {
-        console.log(request.responseText);
-        resolve(request.responseText);
-      }
-      else {
-        reject();
-      }
+      request.onload = function(e) {
+        if (request.readyState === 4) {
+          if (request.status === 200) {
+            console.log(request.responseText);
+            resolve()
+          } else {
+            console.error(request.statusText);
+            reject()
+          }
+        }
+      };
 
       request.send(postString);
     });
   };
 
 
-  handlePost = (data) => {
+  handlePost = async (data) => {
     console.log("handlePost", data);
 
     const user_pseudomym = uuidv4();  //TODO replace with real pseudonym from server
-    this.postData(user_pseudomym, data)
-      .then(this.uploadFiles(user_pseudomym, data.files.files))
-      .then(() => {
-        this.handleNext();
-      });
+
+    await this.postData(user_pseudomym, data);
+    await this.uploadFiles(user_pseudomym, data.files.files)
   };
 
   render() {
