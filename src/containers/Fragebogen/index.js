@@ -526,10 +526,6 @@ class Fragebogen extends React.Component {
                         </div>
                     </Grid>
                 )}
-
-                <pre>
-                  {this.state.jwk_key}
-                </pre>
             </div>
         </>
     );
