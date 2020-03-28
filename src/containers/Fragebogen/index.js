@@ -20,11 +20,10 @@ import Checkbox from '@material-ui/core/Checkbox';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import HelpIcon from '@material-ui/icons/Help';
 import WarningIcon from '@material-ui/icons/Warning';
-import CircularProgress from "@material-ui/core/CircularProgress";
+import LinearProgress from "@material-ui/core/LinearProgress";
 import { v4 as uuidv4 } from 'uuid';
-import Evaporate from 'evaporate';
-import sparkMD5 from 'spark-md5';
-import sha256 from 'js-sha256';
+import { uploadFiles, postData } from '../../lib/upload_helpers';
+
 import {
     EmailShareButton,
     FacebookShareButton,
@@ -35,17 +34,6 @@ import {
   } from "react-share";
 
 
-const uploader = Evaporate.create({
-  signerUrl: '/data-api-v1/sign',
-  aws_key: 'AKIAU2CLF3QR6VYOCXMI',
-  bucket: 'corona-meldung-incoming',
-  cloudfront: false,
-  computeContentMd5: true,
-  cryptoMd5Method: (d) => btoa(sparkMD5.ArrayBuffer.hash(d, true)),
-  cryptoHexEncodedHash256: sha256,
-  awsUrl: 'https://s3-eu-central-1.amazonaws.com',
-  awsRegion: 'eu-central-1'
-});
 
 const styles = theme => ({
 //   root: {
@@ -105,7 +93,8 @@ class Fragebogen extends React.Component {
             quarantaene: undefined,
             files: [],
             activeStep: 0,
-            noFilesWarning: false
+            noFilesWarning: false,
+            uploadProgress: 0
         };
         this.state = this.defaultState
     }
@@ -148,40 +137,7 @@ class Fragebogen extends React.Component {
     }
   }
 
-  uploadFiles = async (user_pseudonym, files) => {
-    const evaporate = await uploader;
-    for(let file of files) {
-      await evaporate.add({
-        file: file,
-        name: file.name,
-        progress: (percent, stats) => console.log('Progress', percent, stats)
-      })
-    }
-  };
 
-  postData = (user_pseudonym, data) => {
-    const endpoint = '/data-api-v1/' + user_pseudonym + '/';
-    let request = new XMLHttpRequest();
-    let postString = JSON.stringify(data);
-    request.open('POST', endpoint, true);
-    request.setRequestHeader('Content-Type', 'application/json');
-
-    return new Promise((resolve, reject) => {
-      request.onload = function(e) {
-        if (request.readyState === 4) {
-          if (request.status === 200) {
-            console.log(request.responseText);
-            resolve()
-          } else {
-            console.error(request.statusText);
-            reject()
-          }
-        }
-      };
-
-      request.send(postString);
-    });
-  };
 
 
   handlePost = async (data) => {
@@ -189,8 +145,12 @@ class Fragebogen extends React.Component {
 
     const user_pseudomym = uuidv4();  //TODO replace with real pseudonym from server
 
-    await this.postData(user_pseudomym, data);
-    await this.uploadFiles(user_pseudomym, data.files.files)
+    await postData(user_pseudomym, data);
+    await uploadFiles(user_pseudomym, data.files.files, (progress, stats) => {
+      this.setState(state => ({
+        uploadProgress: progress*100.0,
+      }));
+    });
   };
 
   render() {
@@ -444,7 +404,7 @@ class Fragebogen extends React.Component {
                     <Box style={{margin: "auto"}}>
                         <center>
                             Deine Daten werden übermittelt.
-                            <CircularProgress />
+                            <LinearProgress value={this.state.uploadProgress} />
                         </center>
                     </Box>
                     </Grid>
