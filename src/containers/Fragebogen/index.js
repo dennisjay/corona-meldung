@@ -33,7 +33,7 @@ import {
     TwitterShareButton,
     WhatsappShareButton,
   } from "react-share";
-  
+
 
 const uploader = Evaporate.create({
   signerUrl: '/data-api-v1/sign',
@@ -172,7 +172,7 @@ class Fragebogen extends React.Component {
   };
 
   postData = (user_pseudonym, data) => {
-    const endpoint = "https://data.corona-meldung.de/" + user_pseudonym;
+    const endpoint = '/data-api-v1/' + user_pseudonym + '/';
     let request = new XMLHttpRequest();
     let postString = JSON.stringify(data);
     request.open('POST', endpoint, true);
