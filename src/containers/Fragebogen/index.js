@@ -23,6 +23,7 @@ import WarningIcon from '@material-ui/icons/Warning';
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { v4 as uuidv4 } from 'uuid';
 import { uploadFiles, postData } from '../../lib/upload_helpers';
+import Tooltip from "@material-ui/core/Tooltip";
 import { auth_register, auth_confirm } from '../../lib/register_helpers';
 
 import {
@@ -247,15 +248,24 @@ class Fragebogen extends React.Component {
                         <Box style={{ margin: "auto" }}>
                             <Typography variant="h5" color="primary" >Über dich</Typography><br />
 
-                            <TextField variant="outlined" label="Vorname" onChange={event=> { this.setState({vorname: event.target.value}) }} />&nbsp;&nbsp;
-                            <TextField variant="outlined" label="Nachname" onChange={event=> { this.setState({nachname: event.target.value}) }} /><br /><br />
+                            {/* <TextField variant="outlined" label="Vorname" onChange={event=> { this.setState({vorname: event.target.value}) }} />&nbsp;&nbsp;
+                            <TextField variant="outlined" label="Nachname" onChange={event=> { this.setState({nachname: event.target.value}) }} /><br /><br /> */}
 
-                            <Typography variant="caption" color="primary" style={{marginLeft: 3}}><b>Geburtsdatum:</b></Typography><br />
-                            <TextField variant="outlined" label="Tag" style={{width: 66}} onChange={event=> { this.setState({gebTag: event.target.value}) }} />&nbsp;
-                            <TextField variant="outlined" label="Monat" style={{width: 66}} onChange={event=> { this.setState({gebMonat: event.target.value}) }} />&nbsp;
-                            <TextField variant="outlined" label="Jahr" style={{width: 68}} onChange={event=> { this.setState({gebJahr: event.target.value}) }} /><br /><br />
+                            {/* <Typography variant="caption" color="primary" style={{marginLeft: 3}}><b>Geburtsdatum:</b></Typography><br /> */}
+                            {/* <TextField variant="outlined" label="Tag" style={{width: 66}} onChange={event=> { this.setState({gebTag: event.target.value}) }} />&nbsp;
+                            <TextField variant="outlined" label="Monat" style={{width: 66}} onChange={event=> { this.setState({gebMonat: event.target.value}) }} />&nbsp; */}
 
-                            <TextField variant="outlined" label="Postleitzahl" onChange={event=> { this.setState({plz: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }}/><br /><br />
+                            <TextField variant="outlined" label="Geburtsjahr" onChange={event=> { this.setState({gebJahr: event.target.value}) }} /><br />
+                            <Tooltip arrow title="Das benötigen wir, um anhand einer Alterkategorisierung Informationen über die Ausdifferenzierung des Virus zu gewinnen.">
+                                <Typography variant="caption" style={{marginLeft: 15, color: "#5c6bc0"}}>Wofür?</Typography>
+                            </Tooltip>
+                            <br /><br />
+
+                            <TextField variant="outlined" label="Postleitzahl" onChange={event=> { this.setState({plz: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }}/><br />
+                            <Tooltip arrow title="Damit fügen wir deinen Daten zusätzlich die Dimension deines Heimatgebiets hinzu.">
+                                <Typography variant="caption" style={{marginLeft: 15, color: "#5c6bc0"}}>Wofür?</Typography>
+                            </Tooltip>
+                            <br /><br />
                         </Box>
                     </Grid>
                 )}
