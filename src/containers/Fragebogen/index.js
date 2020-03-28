@@ -166,6 +166,7 @@ class Fragebogen extends React.Component {
               this.handleNext();
             })
             .catch(() => {
+              window.confirm("Fehler beim upload!");
               this.handleBack();
             });
         }
@@ -186,11 +187,13 @@ class Fragebogen extends React.Component {
     const user_pseudomym = uuidv4();  //TODO replace with real pseudonym from server
 
     await postData(user_pseudomym, data);
-    await uploadFiles(user_pseudomym, data.files.files, (progress, stats) => {
-      this.setState(state => ({
-        uploadProgress: progress*100.0,
-      }));
-    });
+    if( data.files.files && data.files.files.length > 0) {
+      await uploadFiles(user_pseudomym, data.files.files, (progress, stats) => {
+        this.setState(state => ({
+          uploadProgress: progress * 100.0,
+        }));
+      });
+    }
   };
 
   render() {
