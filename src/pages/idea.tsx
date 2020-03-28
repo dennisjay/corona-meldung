@@ -13,7 +13,7 @@ const IdeaPage: React.FunctionComponent<IdeaPageProps> = props => {
   return (
     <Layout>
       <SEO
-        title="Impressum"
+        title="About Corona-Meldung.de"
         description=""
       />
 
