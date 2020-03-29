@@ -74,7 +74,7 @@ const KEYS_TO_TRANSMIT = [
   'kontakt', 'kontaktWo', 'kontaktWann',
   'erkrankt', 'erkranktSeit', 'erkranktTest',
   'quarantaene', 'quarantaeneAnordnung', 'quarantaeneBis',
-  'begleiterkrankungen', 'd.begleiterkrankungenText'
+  'begleiterkrankungen', 'begleiterkrankungenText'
 ];
 
 function getSteps() {
@@ -169,7 +169,8 @@ class Fragebogen extends React.Component {
     {
       case 0:
         if (this.state.mail.length < 5) {
-          return window.confirm("Bitte gib eine gültige Mail-Adresse ein.")
+          window.confirm("Bitte gib eine gültige Mail-Adresse ein.")
+          this.setState({  processingStep: false });
         }
         else {
           auth_register(this.state.mail)
@@ -190,11 +191,13 @@ class Fragebogen extends React.Component {
                   })
                   .catch( () => {
                     window.confirm("Fehler bei Login.")
+                    this.setState({  processingStep: false });
                   });
               }
 
               else {
                 window.confirm("Bitte gib eine gültige Mail-Adresse ein. Jede Mail-Adresse kann zudem nur einmal verwendet werden.")
+                this.setState({  processingStep: false });
               }
             })
         }
@@ -214,6 +217,7 @@ class Fragebogen extends React.Component {
             })
             .catch(() => {
               window.confirm("Das ist nicht der richtige Code.")
+              this.setState({  processingStep: false });;
             });
 
         }
@@ -229,7 +233,8 @@ class Fragebogen extends React.Component {
               this.handleNext();
             })
             .catch(() => {
-              window.confirm("Das ist nicht der richtige Code.")
+              window.confirm("Das ist nicht der richtige Code.");
+              this.setState({  processingStep: false });
             });
         }
         break;
@@ -274,7 +279,7 @@ class Fragebogen extends React.Component {
       'personal_data': {}
     };
 
-    if( data.files && data.files.length > 0) {
+    if( data.files.files && data.files.files.length > 0) {
       toSend.location_file_urls = await uploadFiles(data.userPseudonym, data.files.files, (progress, stats) => {
         this.setState(state => ({
           uploadProgress: progress * 100.0,
