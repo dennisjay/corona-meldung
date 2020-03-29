@@ -92,7 +92,7 @@ class Fragebogen extends React.Component {
             kontakt: undefined,
             erkrankt: undefined,
             begleiterkrankungen: undefined,
-            berufstaetig: undefined,
+            berufstaetig: true,
             quarantaene: undefined,
             files: [],
             activeStep: 0,
@@ -285,7 +285,7 @@ class Fragebogen extends React.Component {
                             </Tooltip>
                             <br /><br />
 
-                            <TextField variant="outlined" label="Postleitzahl" value={this.state.plz} onChange={event=> { this.setState({plz: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }}/><br />
+                            <TextField variant="outlined" label="Postleitzahl" value={this.state.plz} onChange={event=> { this.setState({plz: event.target.value}) }} /><br />
                             <Tooltip arrow title="Damit fügen wir deinen Daten zusätzlich die Dimension deines Heimatgebiets hinzu.">
                                 <Typography variant="caption" style={{marginLeft: 15, color: "#5c6bc0"}}>Wofür?</Typography>
                             </Tooltip>
@@ -305,7 +305,7 @@ class Fragebogen extends React.Component {
                             <br /><br />
 
                             {this.state.berufstaetig && (
-                                <TextField variant="outlined" label="Welcher Beruf?" value={this.state.beruf} onChange={event=> { this.setState({beruf: event.target.value}) }}/>
+                                <TextField variant="outlined" label="Welcher Beruf?" value={this.state.beruf} onChange={event=> { this.setState({beruf: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }}/>
                             )}
 
                         </Box>
