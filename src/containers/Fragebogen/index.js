@@ -99,7 +99,15 @@ class Fragebogen extends React.Component {
             activeStep: 0,
             noFilesWarning: false,
             uploadProgress: 0,
-            jwk_key: {},
+            kontaktWann: "",
+            kontaktWo: "",
+            quarantaeneAnordnung: "",
+            quarantaeneBis: "",
+            erkranktTest: "",
+            erkranktSeit: "",
+            begleiterkrankungenText: "",
+            beruf: "",
+            jwk_key: "",
             loginRequired: false,
             processingStep: false
         };
@@ -315,6 +323,24 @@ class Fragebogen extends React.Component {
                                 <Typography variant="caption" style={{marginLeft: 15, color: "#5c6bc0"}}>Wofür?</Typography>
                             </Tooltip>
                             <br /><br />
+
+                            <FormControl style={{marginLeft: 15}} component="fieldset" onChange={event => { this.setState({ berufstaetig: event.target.value.localeCompare("0")!==0 }) }}>
+                                <FormLabel component="legend">Berufstätig?</FormLabel>
+                                <RadioGroup style={{display: "flex", flexDirection: "row"}}>
+                                    <FormControlLabel control={<Radio />} value="0" checked={!this.state.berufstaetig} label="Nein." />
+                                    <FormControlLabel control={<Radio />} value ="1" checked={this.state.berufstaetig} label="Ja." />
+                                </RadioGroup>
+                            </FormControl><br />
+                            <Tooltip arrow title="So können wir deine Gefährdung einordnen.">
+                                <Typography variant="caption" style={{marginLeft: 15, color: "#5c6bc0"}}>Wofür?</Typography>
+                            </Tooltip>
+
+                            <br /><br />
+
+                            {this.state.berufstaetig && (
+                                <TextField variant="outlined" label="Welcher Beruf?" value={this.state.beruf} onChange={event=> { this.setState({beruf: event.target.value}) }}/>
+                            )}
+
                         </Box>
                     </Grid>
                 )}
@@ -328,8 +354,8 @@ class Fragebogen extends React.Component {
                         <FormControl component="fieldset" onChange={event => { this.setState({ kontakt: event.target.value.localeCompare("0")!==0 }) }}>
                             <FormLabel component="legend">Hattest Du <b>Kontakt</b> (min. 15min, unter 1,5 Meter Entfernung) zu einer nachweislich an COVID-19 erkrankten Person?</FormLabel>
                             <RadioGroup>
-                                <FormControlLabel control={<Radio />} value="0" label="Nein." />
-                                <FormControlLabel control={<Radio />} value ="1" label="Ja." />
+                                <FormControlLabel control={<Radio />} value="0" checked={!this.state.kontakt} label="Nein." />
+                                <FormControlLabel control={<Radio />} value ="1" checked={this.state.kontakt} label="Ja." />
                             </RadioGroup>
                         </FormControl>
 
@@ -337,8 +363,8 @@ class Fragebogen extends React.Component {
 
                         {this.state.kontakt && (
                             <>
-                                <TextField variant="outlined" label="Wo?" />&nbsp;&nbsp;
-                                <TextField variant="outlined" label="Wann?" />
+                                <TextField variant="outlined" label="Wo?" value={this.state.kontaktWo} onChange={event=> { this.setState({kontaktWo: event.target.value}) }} />&nbsp;&nbsp;
+                                <TextField variant="outlined" label="Wann?" value={this.state.kontaktWann} onChange={event=> { this.setState({kontaktWann: event.target.value}) }} />
                             </>
                         )}
 
@@ -348,8 +374,8 @@ class Fragebogen extends React.Component {
                         <FormControl component="fieldset" onChange={event => { this.setState({ erkrankt: event.target.value.localeCompare("0")!==0 }) }}>
                             <FormLabel component="legend">Bist Du nachweislich an COVID-19 <b>erkrankt</b>?</FormLabel>
                             <RadioGroup>
-                                <FormControlLabel control={<Radio />} value="0" label="Nein." />
-                                <FormControlLabel control={<Radio />} value ="1" label="Ja." />
+                                <FormControlLabel control={<Radio />} value="0" checked={!this.state.erkrankt} label="Nein." />
+                                <FormControlLabel control={<Radio />} value ="1" checked={this.state.erkrankt} label="Ja." />
                             </RadioGroup>
                         </FormControl>
 
@@ -357,8 +383,8 @@ class Fragebogen extends React.Component {
 
                         {this.state.erkrankt && (
                             <>
-                                <TextField variant="outlined" label="Wann wurdest Du getestet?" />&nbsp;&nbsp;
-                                <TextField variant="outlined" label="Seit wann?" />
+                                <TextField variant="outlined" label="Wann wurdest Du getestet?" value={this.state.erkranktTest} onChange={event=> { this.setState({erkranktTest: event.target.value}) }} />&nbsp;&nbsp;
+                                <TextField variant="outlined" label="Seit wann?" value={this.state.erkranktSeit} onChange={event=> { this.setState({erkranktSeit: event.target.value}) }} />
                             </>
                         )}
 
@@ -368,8 +394,8 @@ class Fragebogen extends React.Component {
                         <FormControl component="fieldset" onChange={event => { this.setState({ quarantaene: event.target.value.localeCompare("0")!==0 }) }}>
                             <FormLabel component="legend">Wurde dir vom Arzt <b>Quarantäne verordnet</b>?</FormLabel>
                             <RadioGroup>
-                                <FormControlLabel control={<Radio />} value="0" label="Nein." />
-                                <FormControlLabel control={<Radio />} value ="1" label="Ja." />
+                                <FormControlLabel control={<Radio />} value="0" checked={!this.state.quarantaene} label="Nein." />
+                                <FormControlLabel control={<Radio />} value ="1" checked={this.state.quarantaene} label="Ja." />
                             </RadioGroup>
                         </FormControl>
 
@@ -377,8 +403,8 @@ class Fragebogen extends React.Component {
 
                         {this.state.quarantaene && (
                             <>
-                                <TextField variant="outlined" label="Wann wurde sie verordnet?" />&nbsp;&nbsp;
-                                <TextField variant="outlined" label="Wann soll sie enden?" />
+                                <TextField variant="outlined" label="Wann wurde sie verordnet?" value={this.state.quarantaeneAnordnung} onChange={event=> { this.setState({quarantaeneAnordnung: event.target.value}) }}/>&nbsp;&nbsp;
+                                <TextField variant="outlined" label="Wann soll sie enden?" value={this.state.quarantaeneBis} onChange={event=> { this.setState({quarantaeneBis: event.target.value}) }} />
                             </>
                         )}
 
@@ -409,32 +435,15 @@ class Fragebogen extends React.Component {
                         <FormControl component="fieldset" onChange={event => { this.setState({ begleiterkrankungen: event.target.value.localeCompare("0")!==0 }) }}>
                             <FormLabel component="legend">Begleiterkrankungen?</FormLabel>
                             <RadioGroup>
-                                <FormControlLabel control={<Radio />} value="0" label="Nein." />
-                                <FormControlLabel control={<Radio />} value ="1" label="Ja." />
+                                <FormControlLabel control={<Radio />} value="0" checked={!this.state.begleiterkrankungen} label="Nein." />
+                                <FormControlLabel control={<Radio />} value ="1" checked={this.state.begleiterkrankungen} label="Ja." />
                             </RadioGroup>
                         </FormControl>
 
                         <br />
 
                         {this.state.begleiterkrankungen && (
-                            <TextField variant="outlined" label="Welche?" style={{width: 400}} />
-                        )}
-
-                        <Divider style={{marginTop: 15}} />
-                        <br />
-
-                        <FormControl component="fieldset" onChange={event => { this.setState({ berufstaetig: event.target.value.localeCompare("0")!==0 }) }}>
-                            <FormLabel component="legend">Berufstätig?</FormLabel>
-                            <RadioGroup>
-                                <FormControlLabel control={<Radio />} value="0" label="Nein." />
-                                <FormControlLabel control={<Radio />} value ="1" label="Ja." />
-                            </RadioGroup>
-                        </FormControl>
-
-                        <br />
-
-                        {this.state.berufstaetig && (
-                            <TextField variant="outlined" label="Welcher Beruf?" />
+                            <TextField variant="outlined" label="Welche?" style={{width: 400}} value={this.state.begleiterkrankungenText} onChange={event=> { this.setState({begleiterkrankungenText: event.target.value}) }}/>
                         )}
 
                     </Box>
@@ -503,20 +512,21 @@ class Fragebogen extends React.Component {
                   <Grid container>
                     <Box style={{margin: "auto"}}>
 
-                      <Typography color="primary" style={{marginBottom: 15}}>Folgende Daten werden nach Deiner Bestätigung übermittelt:</Typography>
+                      <center><Typography color="primary" style={{marginBottom: 15}}>Folgende Daten werden nach Deiner Bestätigung übermittelt:</Typography></center>
                       <Overview data={this.state} />
 
                     </Box>
                   </Grid>
                   <br /><br />
                   <Grid container>
-                    <Paper elevation={10} style={{maxWidth: 1024, backgroundColor: "#f7f9ff", margin: "auto"}}>
-                        <Typography style={{color: "#5c6bc0", padding: 5, textAlign: "left"}}>
-                            <Typography variant="h6">Einwilligung gemäß Art. 6 Abs. 1 Buchst. a, 9 Abs. 2 Buchst. a DSGVO in die Verarbeitung meiner personenbezogenen und besonderen personenbezogenen Daten</Typography>
-                            <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Hiermit willige ich zu Zwecken der medizinischen Forschung im Bereich der Virologie und der Pandemieforschung in die Verarbeitung meiner personenbezogenen Daten und meiner besonderen personenbezogene Daten (siehe obige Zusammenfassung) ein.</Typography>
+                    <Paper elevation={10} style={{maxWidth: 1024, backgroundColor: "#f7f9ff", margin: "auto", padding: 1}}>
+                        <Typography style={{color: "#5c6bc0", padding: 5, textAlign: "justify"}}>
+                            <Typography style={{fontSize: 16, marginBottom: "0.3em"}}>Einwilligung gemäß Art. 6 Abs. 1 Buchst. a, 9 Abs. 2 Buchst. a DSGVO in die Verarbeitung meiner personenbezogenen und besonderen personenbezogenen Daten</Typography>
+                            <Divider />
+                            <Typography variant="body2" style={{margin: "0.3em 0 0.3em 0"}}>Hiermit willige ich zu Zwecken der medizinischen Forschung im Bereich der Virologie und der Pandemieforschung in die Verarbeitung meiner personenbezogenen Daten und meiner besonderen personenbezogene Daten (siehe obige Zusammenfassung) ein.</Typography>
                             <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Im Rahmen der Datenverarbeitung werden Ihre Daten erhoben, gespeichert, gegebenenfalls aggregiert, ausgewertet und an renommierte Forschungsinstitute übermittelt.</Typography>
                             <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Soweit es zu einer Übermittlung Ihrer personenbezogenen Daten an Forschungsinstitute kommt, erfolgt diese Übermittlung dergestalt, dass den Forschungsinstituten Rückschlüsse auf Ihre Person unmöglich sind.</Typography>
-                            <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Sie können Ihre Einwilligung jederzeit und ohne Nachteile widerrufen. Den Widerruf können Sie formlos, beispielsweise an datenschutz@corona-meldung.de, richten.</Typography>
+                            <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Sie können Ihre Einwilligung jederzeit und ohne Nachteile widerrufen. Den Widerruf können Sie formlos beispielsweise an datenschutz@corona-meldung.de richten.</Typography>
                             <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Sobald Sie Ihre Einwilligung widerrufen, werden sämtliche bei uns gespeicherten personenbezogenen Daten und sämtliche bei uns gespeicherten besonderen personenbezogenen Daten vollständig anonymisiert, so dass auch für uns keinerlei Rückschlüsse mehr auf Ihre Person möglich sind.</Typography>
                             <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Ein Widerruf Ihrer Einwilligungserklärung berührt nicht die Rechtmäßigkeit der Datenverarbeitungen bis zum Zeitpunkt Ihres Widerrufs. Soweit Ihre personenbezogenen Daten und besonderen personenbezogenen Daten bereits an Forschungsinstitute übermittelt wurden, wird diese Übermittlung rückwirkend ebenfalls nicht rechtswidrig.</Typography>
                         </Typography>

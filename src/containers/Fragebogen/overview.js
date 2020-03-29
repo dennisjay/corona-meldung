@@ -48,6 +48,12 @@ export default (
                                         <TableCell>{d.plz}</TableCell>
                                     </TableRow>
                                 )}
+                                {d.berufstaetig!==undefined && (
+                                    <TableRow>
+                                        <TableCell><b>Berufstätig?</b></TableCell>
+                                        <TableCell>{d.berufstaetig ? (<>Ja: {d.beruf}</>) : ("Nein")}</TableCell>
+                                    </TableRow>
+                                )}
                                 
                                 <TableRow>
                                     <TableCell colspan={2}>
@@ -56,32 +62,26 @@ export default (
                                 </TableRow>
                                 {d.kontakt!==undefined && (
                                     <TableRow>
-                                        <TableCell><Typography style={{fontSize: 11, maxWidth: 200}}>Hattest Du <b>Kontakt</b> (min. 15min, unter 1,5 Meter Entfernung) zu einer nachweislich an COVID-19 erkrankten Person?</Typography></TableCell>
-                                        <TableCell>{d.kontakt ? ("Ja") : ("Nein")}</TableCell>
+                                        <TableCell><Typography style={{fontSize: 11, maxWidth: 230}}>Hattest Du <b>Kontakt</b> (min. 15min, unter 1,5 Meter Entfernung) zu einer nachweislich an COVID-19 erkrankten Person?</Typography></TableCell>
+                                        <TableCell>{d.kontakt ? (<>Ja.<br /> Wo:&nbsp;{d.kontaktWo}<br />Wann:&nbsp;{d.kontaktWann}</>) : ("Nein")}</TableCell>
                                     </TableRow>
                                 )}
                                 {d.erkrankt!==undefined && (
                                     <TableRow>
-                                        <TableCell><Typography style={{fontSize: 11, maxWidth: 200}}>Bist Du nachweislich an COVID-19 <b>erkrankt</b>?</Typography></TableCell>
-                                        <TableCell>{d.erkrankt ? ("Ja") : ("Nein")}</TableCell>
+                                        <TableCell><Typography style={{fontSize: 11, maxWidth: 230}}>Bist Du nachweislich an COVID-19 <b>erkrankt</b>?</Typography></TableCell>
+                                        <TableCell>{d.erkrankt ? (<>Ja.<br /> Seit:&nbsp;{d.erkranktSeit}<br />Getestet:&nbsp;{d.erkranktTest}</>) : ("Nein")}</TableCell>
                                     </TableRow>
                                 )}
                                 {d.quarantaene!==undefined && (
                                     <TableRow>
-                                        <TableCell><Typography style={{fontSize: 11, maxWidth: 200}}>Wurde dir vom Arzt <b>Quarantäne verordnet</b>?</Typography></TableCell>
-                                        <TableCell>{d.quarantaene ? ("Ja") : ("Nein")}</TableCell>
+                                        <TableCell><Typography style={{fontSize: 11, maxWidth: 230}}>Wurde dir vom Arzt <b>Quarantäne verordnet</b>?</Typography></TableCell>
+                                        <TableCell>{d.quarantaene ? (<>Ja.<br /> Angeordnet:&nbsp;{d.quarantaeneAnordnung}<br />Bis:&nbsp;{d.quarantaeneBis}</>) : ("Nein")}</TableCell>
                                     </TableRow>
                                 )}
                                 {d.begleiterkrankungen!==undefined && (
                                     <TableRow>
                                         <TableCell><b>Begleiterkrankungen?</b></TableCell>
-                                        <TableCell>{d.begleiterkrankungen ? ("Ja") : ("Nein")}</TableCell>
-                                    </TableRow>
-                                )}
-                                {d.berufstaetig!==undefined && (
-                                    <TableRow>
-                                        <TableCell><b>Berufstätig?</b></TableCell>
-                                        <TableCell>{d.berufstaetig ? ("Ja") : ("Nein")}</TableCell>
+                                        <TableCell>{d.erkrankt ? (<>Ja: {d.begleiterkrankungenText}</>) : ("Nein")}</TableCell>
                                     </TableRow>
                                 )}
                                 

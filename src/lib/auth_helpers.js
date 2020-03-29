@@ -92,7 +92,7 @@ export const login_request = (email) => {
 
 export const login_confirm = (email, login_token) => {
   console.log(email, login_token);
-  const endpoint = AUTH_BACKEND_BASE_URL + '/confirm_login';
+  const endpoint = AUTH_BACKEND_BASE_URL + '/confirmlogin';
   let request = new XMLHttpRequest();
   const postString = JSON.stringify({
     'email': email,
