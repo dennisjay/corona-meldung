@@ -670,11 +670,11 @@ class Fragebogen extends React.Component {
 
               {/* usercount: */}
               <Grid container style={{marginTop: 80}}>
-                <div style={{ maxWidth: 450, borderWidth: 1, borderStyle: "solid", borderRadius: 3, borderColor: "#eeeee",
+                <Box p={1} style={{ maxWidth: 450, borderWidth: 1, borderStyle: "solid", borderRadius: 3, borderColor: "#eeeee",
                   backgroundColor: "", color: "green", transition: "border .24s ease-in-out", margin: "auto" }}>
 
                   <UserCount/>
-                </div>
+                </Box>
               </Grid>
 
             </div>
