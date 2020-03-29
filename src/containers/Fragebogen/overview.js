@@ -22,86 +22,103 @@ export default (
               <Paper elevation={5}>
                 <Box p={2}>
 
-                    
-
-                    <TableContainer>
+                    <TableContainer style={{maxWidth: 600 }}>
                         <Table>
-                            <TableBody variant="footer">
+                            <TableBody>
                                 <TableRow>
-                                    <TableCell colspan={2}>
+                                    <TableCell colspan={2} style={{backgroundColor: "#f7f9ff"}}>
                                         <Typography variant="h6"><b>Personenbezogene Daten</b></Typography>
                                     </TableCell>
                                 </TableRow>
-                                <TableRow>
+                                <TableRow style={{backgroundColor: "#ffffff"}}>
                                     <TableCell><b>Mail</b></TableCell>
                                     <TableCell>{d.mail}</TableCell>
                                 </TableRow>
                                 {d.gebJahr!=="" && (
-                                    <TableRow>
+                                    <TableRow style={{backgroundColor: "#ffffff"}}>
                                         <TableCell><b>Geburtsjahr</b></TableCell>
                                         <TableCell>{d.gebJahr}</TableCell>
                                     </TableRow>
                                 )}
                                 {d.plz!=="" && (
-                                    <TableRow>
+                                    <TableRow style={{backgroundColor: "#ffffff"}}>
                                         <TableCell><b>Postleitzahl</b></TableCell>
                                         <TableCell>{d.plz}</TableCell>
                                     </TableRow>
                                 )}
                                 {d.berufstaetig!==undefined && (
-                                    <TableRow>
+                                    <TableRow style={{backgroundColor: "#ffffff"}}>
                                         <TableCell><b>Berufstätig?</b></TableCell>
                                         <TableCell>{d.berufstaetig ? (<>Ja: {d.beruf}</>) : ("Nein")}</TableCell>
                                     </TableRow>
                                 )}
                                 
-                                <TableRow>
+                                <TableRow style={{backgroundColor: "#f7f9ff"}}>
                                     <TableCell colspan={2}>
                                         <Typography variant="h6"><b>Medizinische Daten</b></Typography>
                                     </TableCell>
                                 </TableRow>
                                 {d.kontakt!==undefined && (
-                                    <TableRow>
+                                    <TableRow style={{backgroundColor: "#ffffff"}}>
                                         <TableCell><Typography style={{fontSize: 11, maxWidth: 230}}>Hattest Du <b>Kontakt</b> (min. 15min, unter 1,5 Meter Entfernung) zu einer nachweislich an COVID-19 erkrankten Person?</Typography></TableCell>
                                         <TableCell>{d.kontakt ? (<>Ja.<br /> Wo:&nbsp;{d.kontaktWo}<br />Wann:&nbsp;{d.kontaktWann}</>) : ("Nein")}</TableCell>
                                     </TableRow>
                                 )}
                                 {d.erkrankt!==undefined && (
-                                    <TableRow>
+                                    <TableRow style={{backgroundColor: "#ffffff"}}>
                                         <TableCell><Typography style={{fontSize: 11, maxWidth: 230}}>Bist Du nachweislich an COVID-19 <b>erkrankt</b>?</Typography></TableCell>
                                         <TableCell>{d.erkrankt ? (<>Ja.<br /> Seit:&nbsp;{d.erkranktSeit}<br />Getestet:&nbsp;{d.erkranktTest}</>) : ("Nein")}</TableCell>
                                     </TableRow>
                                 )}
                                 {d.quarantaene!==undefined && (
-                                    <TableRow>
+                                    <TableRow style={{backgroundColor: "#ffffff"}}>
                                         <TableCell><Typography style={{fontSize: 11, maxWidth: 230}}>Wurde dir vom Arzt <b>Quarantäne verordnet</b>?</Typography></TableCell>
                                         <TableCell>{d.quarantaene ? (<>Ja.<br /> Angeordnet:&nbsp;{d.quarantaeneAnordnung}<br />Bis:&nbsp;{d.quarantaeneBis}</>) : ("Nein")}</TableCell>
                                     </TableRow>
                                 )}
                                 {d.begleiterkrankungen!==undefined && (
-                                    <TableRow>
+                                    <TableRow style={{backgroundColor: "#ffffff"}}>
                                         <TableCell><b>Begleiterkrankungen?</b></TableCell>
                                         <TableCell>{d.erkrankt ? (<>Ja: {d.begleiterkrankungenText}</>) : ("Nein")}</TableCell>
                                     </TableRow>
                                 )}
+                                {/* Symptome: */}
+                                <TableRow style={{backgroundColor: "#ffffff"}}>
+                                        <TableCell><b>Symptome</b></TableCell>
+                                        <TableCell>
+                                        
+                                            {d.symptom1 && ("Fieber, ")}
+                                            {d.symptom2 && ("Schnupfen, ")}
+                                            {d.symptom3 && ("Luftnot, ")}
+                                            {d.symptom4 && ("Husten, ")}
+                                            {d.symptom5 && ("Halsschmerzen, ")}
+                                            {d.symptom6 && ("Durchfall, ")}
+                                            {d.symptom7 && ("Übelkeit, ")}
+                                            {d.symptom8 && ("Erbrechen, ")}
+                                            {d.symptom9 && ("Brustenge, ")}
+                                            {d.symptom10 && ("beeinträchtigtes Riechen oder Schmecken, ")}
+                                            {d.symptom11 && ("sonstiges.")}
+                                            
+                                        </TableCell>
+                                    </TableRow>
                                 
                                 {d.files!==null && d.files.length>0 && (
-                                    <TableRow>
-                                        <TableCell colspan={2}>
+                                    <TableRow style={{backgroundColor: "#f7f9ff"}}>
+                                        <TableCell colspan={2} style={{backgroundColor: "#f7f9ff"}}>
                                             <Typography variant="h6"><b>Standortdaten</b></Typography>
                                         </TableCell>
                                     </TableRow>
                                 )}
                                 {d.files!==null && d.files.length>0 ? (        
-                                    <TableRow>
+                                    <TableRow style={{backgroundColor: "#ffffff"}}>
                                         <TableCell><b>Uploads</b></TableCell>
                                         <TableCell>die hochgeladenen Daten</TableCell>
                                     </TableRow>
                                     
                                 ) : (
-                                    <TableRow>
-                                        <TableCell colSpan={2}><br />
-                                            Du hast <b>keine Standortdaten</b> hinzugefügt.
+                                    <TableRow style={{backgroundColor: "#ffffff"}}>
+                                        <TableCell colSpan={2} style={{borderStyle: "none"}}><br />
+                                            <center>Du hast <b>keine Standortdaten</b> hinzugefügt.</center>
                                         </TableCell>
                                     </TableRow>
                                 )}
