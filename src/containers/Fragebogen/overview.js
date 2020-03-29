@@ -25,16 +25,20 @@ export default (
                     
 
                     <TableContainer>
-                        <Typography variant="h6">Personenbezogene Daten</Typography>
                         <Table>
                             <TableBody variant="footer">
+                                <TableRow>
+                                    <TableCell colspan={2}>
+                                        <Typography variant="h6"><b>Personenbezogene Daten</b></Typography>
+                                    </TableCell>
+                                </TableRow>
                                 <TableRow>
                                     <TableCell><b>Mail</b></TableCell>
                                     <TableCell>{d.mail}</TableCell>
                                 </TableRow>
                                 {d.gebJahr!=="" && (
                                     <TableRow>
-                                        <TableCell><b>Mail</b></TableCell>
+                                        <TableCell><b>Geburtsjahr</b></TableCell>
                                         <TableCell>{d.gebJahr}</TableCell>
                                     </TableRow>
                                 )}
@@ -46,16 +50,61 @@ export default (
                                 )}
                                 
                                 <TableRow>
-                                    <Typography variant="h6">Medizinische Daten</Typography>
+                                    <TableCell colspan={2}>
+                                        <Typography variant="h6"><b>Medizinische Daten</b></Typography>
+                                    </TableCell>
                                 </TableRow>
-                                <TableRow>
-                                    <TableCell><b>Mail</b></TableCell>
-                                    <TableCell>abc</TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell><b>Mail</b></TableCell>
-                                    <TableCell>abc</TableCell>
-                                </TableRow>
+                                {d.kontakt!==undefined && (
+                                    <TableRow>
+                                        <TableCell><Typography style={{fontSize: 11, maxWidth: 200}}>Hattest Du <b>Kontakt</b> (min. 15min, unter 1,5 Meter Entfernung) zu einer nachweislich an COVID-19 erkrankten Person?</Typography></TableCell>
+                                        <TableCell>{d.kontakt ? ("Ja") : ("Nein")}</TableCell>
+                                    </TableRow>
+                                )}
+                                {d.erkrankt!==undefined && (
+                                    <TableRow>
+                                        <TableCell><Typography style={{fontSize: 11, maxWidth: 200}}>Bist Du nachweislich an COVID-19 <b>erkrankt</b>?</Typography></TableCell>
+                                        <TableCell>{d.erkrankt ? ("Ja") : ("Nein")}</TableCell>
+                                    </TableRow>
+                                )}
+                                {d.quarantaene!==undefined && (
+                                    <TableRow>
+                                        <TableCell><Typography style={{fontSize: 11, maxWidth: 200}}>Wurde dir vom Arzt <b>Quarantäne verordnet</b>?</Typography></TableCell>
+                                        <TableCell>{d.quarantaene ? ("Ja") : ("Nein")}</TableCell>
+                                    </TableRow>
+                                )}
+                                {d.begleiterkrankungen!==undefined && (
+                                    <TableRow>
+                                        <TableCell><b>Begleiterkrankungen?</b></TableCell>
+                                        <TableCell>{d.begleiterkrankungen ? ("Ja") : ("Nein")}</TableCell>
+                                    </TableRow>
+                                )}
+                                {d.berufstaetig!==undefined && (
+                                    <TableRow>
+                                        <TableCell><b>Berufstätig?</b></TableCell>
+                                        <TableCell>{d.berufstaetig ? ("Ja") : ("Nein")}</TableCell>
+                                    </TableRow>
+                                )}
+                                
+                                {d.files!==null && d.files.length>0 && (
+                                    <TableRow>
+                                        <TableCell colspan={2}>
+                                            <Typography variant="h6"><b>Standortdaten</b></Typography>
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                                {d.files!==null && d.files.length>0 ? (        
+                                    <TableRow>
+                                        <TableCell><b>Uploads</b></TableCell>
+                                        <TableCell>die hochgeladenen Daten</TableCell>
+                                    </TableRow>
+                                    
+                                ) : (
+                                    <TableRow>
+                                        <TableCell colSpan={2}><br />
+                                            Du hast <b>keine Standortdaten</b> hinzugefügt.
+                                        </TableCell>
+                                    </TableRow>
+                                )}
                             </TableBody>
                         </Table>
 
