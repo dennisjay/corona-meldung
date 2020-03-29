@@ -99,7 +99,6 @@ class Fragebogen extends React.Component {
             activeStep: 0,
             noFilesWarning: false,
             uploadProgress: 0,
-            jwk_key: {},
             kontaktWann: "",
             kontaktWo: "",
             quarantaeneAnordnung: "",
@@ -107,8 +106,8 @@ class Fragebogen extends React.Component {
             erkranktTest: "",
             erkranktSeit: "",
             begleiterkrankungenText: "",
-            beruf: ""
-            jwk_key: {},
+            beruf: "",
+            jwk_key: "",
             loginRequired: false,
             processingStep: false
         };
