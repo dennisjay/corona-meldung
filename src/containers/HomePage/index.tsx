@@ -1,15 +1,11 @@
 import * as React from "react";
 import PersonalBlogWrapper from "./style";
 import Intro from "./Intro";
-import Posts from "./Posts";
-import FeaturedPosts from "./FeaturedPost";
 import Button from "../../components/Button/Button";
 
 import img_data from "../../images/undraw_data_xmfy.svg";
 import img_map from "../../images/undraw_Map_light_3hjy.svg";
-import img_medicine from "../../images/undraw_medicine_b1ol.svg";
 import img_security from "../../images/undraw_security_o890.svg";
-import img_security_on from "../../images/undraw_Security_on_ff2u.svg";
 import img_server from "../../images/undraw_server_cluster_jwwq.svg";
 
 
@@ -20,12 +16,14 @@ import {
   SectionContent,
   SectionImage
 } from "./style";
+import UserCount from "./userCount";
 
 type PersonalBlogProps = {};
 
 const PersonalBlog: React.FunctionComponent<PersonalBlogProps> = ({
   ...props
 }) => {
+
   return (
     <PersonalBlogWrapper {...props}>
       <Intro />
@@ -40,7 +38,8 @@ const PersonalBlog: React.FunctionComponent<PersonalBlogProps> = ({
               Herauszufinden, wer wann, wo und wie lange war, hilft den Weg des
               Virus' nachzuvollziehen und die Effektivität von Gegenmaßnahmen zu
               messen. Mit einer ausreichend großen Menge an Daten können
-              Forschungseinrichtungen besser gegen COVID-19 vorgehen.
+              Forschungseinrichtungen besser gegen COVID-19 vorgehen.&nbsp;
+              <UserCount/>
             </p>
           </SectionContent>
         </SectionText>
