@@ -21,10 +21,11 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import HelpIcon from '@material-ui/icons/Help';
 import WarningIcon from '@material-ui/icons/Warning';
 import LinearProgress from "@material-ui/core/LinearProgress";
+import CircularProgress from '@material-ui/core/CircularProgress'
 import { v4 as uuidv4 } from 'uuid';
 import { uploadFiles, postData } from '../../lib/upload_helpers';
 import Tooltip from "@material-ui/core/Tooltip";
-import { auth_register, auth_confirm } from '../../lib/register_helpers';
+import { auth_register, auth_confirm, login_request, login_confirm } from '../../lib/auth_helpers';
 import Overview from "./overview";
 
 import {
@@ -98,7 +99,9 @@ class Fragebogen extends React.Component {
             activeStep: 0,
             noFilesWarning: false,
             uploadProgress: 0,
-            jwk_key: {}
+            jwk_key: {},
+            loginRequired: false,
+            processingStep: false
         };
         this.state = this.defaultState
     }
@@ -106,6 +109,7 @@ class Fragebogen extends React.Component {
   handleNext = () => {
     this.setState(state => ({
         activeStep: state.activeStep + 1,
+        processingStep: false
         }));
     window.scrollTo(0,0)
   };
@@ -113,17 +117,23 @@ class Fragebogen extends React.Component {
   handleBack = () => {
     this.setState(state => ({
       activeStep: state.activeStep - 1,
+      processingStep: false
     }));
   };
 
   handleReset = () => {
     this.setState({
       activeStep: 0,
+      processingStep: false
     });
   };
 
   handleWeiter = () => {
     console.log(this.state.activeStep);
+    this.setState(state => ({
+      processingStep: true
+    }));
+
     switch(this.state.activeStep)
     {
       case 0:
@@ -136,25 +146,60 @@ class Fragebogen extends React.Component {
               console.log("register");
               this.handleNext();
             })
-            .catch( () => {
-              window.confirm("Bitte gib eine gültige Mail-Adresse ein. Jede Mail-Adresse kann zudem nur einmal verwendet werden.")
+            .catch( (reason) => {
+              if( reason === 'already_registered') {
+                  this.setState(state => ({
+                    loginRequired: true
+                  }));
+
+                  login_request(this.state.mail)
+                  .then(() => {
+                    console.log("login");
+                    this.handleNext();
+                  })
+                  .catch( () => {
+                    window.confirm("Fehler bei Login.")
+                  });
+              }
+
+              else {
+                window.confirm("Bitte gib eine gültige Mail-Adresse ein. Jede Mail-Adresse kann zudem nur einmal verwendet werden.")
+              }
             })
         }
         break;
       case 1:
-        auth_confirm(this.state.mail, Number(this.state.code))
-          .then((jwk_key) => {
-            console.log("register confirm", jwk_key);
-            this.setState(state => ({
-              jwk_key: jwk_key
-            }));
+        console.log( this.state.loginRequired );
+        if( this.state.loginRequired ){
+          login_confirm(this.state.mail, this.state.code)
+            .then((jwk_key) => {
+              console.log("login confirm", jwk_key);
+              this.setState(state => ({
+                jwk_key: jwk_key
+              }));
 
-            this.handleNext();
-          })
-          .catch( () => {
-            window.confirm("Das ist nicht der richtige Code.")
-          });
-          break;
+              this.handleNext();
+            })
+            .catch(() => {
+              window.confirm("Das ist nicht der richtige Code.")
+            });
+
+        }
+        else {
+          auth_confirm(this.state.mail, Number(this.state.code))
+            .then((jwk_key) => {
+              console.log("register confirm", jwk_key);
+              this.setState(state => ({
+                jwk_key: jwk_key
+              }));
+
+              this.handleNext();
+            })
+            .catch(() => {
+              window.confirm("Das ist nicht der richtige Code.")
+            });
+        }
+        break;
 
       case 5:
         if (this.state.files.length === 0 && !this.state.noFilesWarning) {
@@ -521,7 +566,7 @@ class Fragebogen extends React.Component {
                 )}
 
                 {/* weiter und zurueck: */}
-                {activeStep<6 && (
+                {activeStep<6 && !this.state.processingStep && (
                     <Box style={{marginTop: 25 }}>
                         <center>
                         <Button
@@ -545,6 +590,14 @@ class Fragebogen extends React.Component {
                         </center>
                     </Box>
                 )}
+
+              {activeStep<6 && this.state.processingStep && (
+                <Box style={{marginTop: 25 }}>
+                  <center>
+                    <CircularProgress/>
+                  </center>
+                </Box>
+              )}
 
                 {/* further explanations: */}
                 {activeStep===4 && (
