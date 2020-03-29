@@ -34,6 +34,7 @@ import {
     TwitterShareButton,
     WhatsappShareButton,
   } from "react-share";
+import DataTreeView from "../../components/DataTreeView/DataTreeView";
 
 
 
@@ -65,7 +66,7 @@ const styles = theme => ({
 });
 
 function getSteps() {
-  return ['Mail', 'Verifikation', 'Person', 'Fragen', 'Bewegungsdaten'];
+  return ['Mail', 'Verifikation', 'Person', 'Fragen', 'Bewegungsdaten', 'Bestätigung'];
 }
 
 class Fragebogen extends React.Component {
@@ -125,7 +126,7 @@ class Fragebogen extends React.Component {
     console.log(this.state.activeStep);
     switch(this.state.activeStep)
     {
-      case 0:
+      /*case 0:
         if (this.state.mail.length < 5) {
           return window.confirm("Bitte gib eine gültige Mail-Adresse ein.")
         }
@@ -155,7 +156,7 @@ class Fragebogen extends React.Component {
           });
           break;
 
-      case 4:
+      case 5:
         if (this.state.files.length === 0 && !this.state.noFilesWarning) {
           this.setState({ noFilesWarning: true })
         } else {
@@ -171,7 +172,7 @@ class Fragebogen extends React.Component {
             });
         }
         break;
-
+*/
       default:
         this.handleNext();
         break;
@@ -451,8 +452,22 @@ class Fragebogen extends React.Component {
                     </Grid>
                 )}
 
+
+              {/* upload progress */}
+              {activeStep===5 && (
+                <Grid container>
+                  <Box style={{margin: "auto"}}>
+                    <center>
+                      <p>Folgende Daten werden nach Deiner Bestätigung übermittelt:</p>
+                      <DataTreeView data={this.state}/>
+                    </center>
+                  </Box>
+                </Grid>
+              )}
+
+
                 {/* upload progress */}
-                {activeStep===5 && (
+                {activeStep===6 && (
                     <Grid container>
                     <Box style={{margin: "auto"}}>
                         <center>
@@ -465,7 +480,7 @@ class Fragebogen extends React.Component {
 
 
                 {/* thank you page */}
-                {activeStep===6 && (
+                {activeStep===7 && (
                   <Grid container>
                     <Box style={{margin: "auto"}}>
                         <center>
@@ -491,7 +506,7 @@ class Fragebogen extends React.Component {
                 )}
 
                 {/* weiter und zurueck: */}
-                {activeStep<5 && (
+                {activeStep<6 && (
                     <Box style={{marginTop: 25 }}>
                         <center>
                         <Button
