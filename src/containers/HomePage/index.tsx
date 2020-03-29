@@ -120,7 +120,7 @@ const PersonalBlog: React.FunctionComponent<PersonalBlogProps> = ({
 
       <SectionWrapper>
         <SectionContent>
-          <Button title="Jetzt Daten spenden" />
+          <a href={'/fragebogen'}><Button title="Jetzt Daten spenden" href={'/fragebogen'} /></a>
         </SectionContent>
       </SectionWrapper>
       <br />
