@@ -20,9 +20,9 @@ export default (
             
             return (    
               <Paper elevation={5}>
-                <Box p={2}>
+                <Box p={2} style={{maxWidth: 620 }}>
 
-                    <TableContainer style={{maxWidth: 600 }}>
+                    <TableContainer>
                         <Table>
                             <TableBody>
                                 <TableRow>
@@ -126,6 +126,8 @@ export default (
                         </Table>
 
                     </TableContainer>
+
+                    <Typography variant="body" style={{color: "#bdbdbd"}}>Du kannst auf 'zurück' klicken und Änderungen vornehmen, ohne dass du etwas nochmal ganz neu eingeben musst.</Typography><br />
 
                 </Box>
               </Paper>
