@@ -25,6 +25,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { uploadFiles, postData } from '../../lib/upload_helpers';
 import Tooltip from "@material-ui/core/Tooltip";
 import { auth_register, auth_confirm } from '../../lib/register_helpers';
+import Overview from "./overview";
 
 import {
     EmailShareButton,
@@ -65,7 +66,7 @@ const styles = theme => ({
 });
 
 function getSteps() {
-  return ['Mail', 'Verifikation', 'Person', 'Fragen', 'Bewegungsdaten'];
+  return ['Mail', 'Verifikation', 'Person', 'Fragen', 'Bewegungsdaten', 'Prüfung'];
 }
 
 class Fragebogen extends React.Component {
@@ -125,7 +126,7 @@ class Fragebogen extends React.Component {
     console.log(this.state.activeStep);
     switch(this.state.activeStep)
     {
-      case 0:
+      /*case 0:
         if (this.state.mail.length < 5) {
           return window.confirm("Bitte gib eine gültige Mail-Adresse ein.")
         }
@@ -155,7 +156,7 @@ class Fragebogen extends React.Component {
           });
           break;
 
-      case 4:
+      case 5:
         if (this.state.files.length === 0 && !this.state.noFilesWarning) {
           this.setState({ noFilesWarning: true })
         } else {
@@ -171,7 +172,7 @@ class Fragebogen extends React.Component {
             });
         }
         break;
-
+*/
       default:
         this.handleNext();
         break;
@@ -228,7 +229,7 @@ class Fragebogen extends React.Component {
                 {activeStep===0 && (
                     <>
                         <center><Typography variant="h5" color="primary" >Starte mit deiner Mail-Adresse:</Typography></center><br />
-                        <Grid container><Box style={{margin: "auto"}}><TextField variant="outlined" label="Mail" style={{minWidth: 300}} onChange={event=> { this.setState({mail: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }} /></Box></Grid>
+                        <Grid container><Box style={{margin: "auto"}}><TextField variant="outlined" label="Mail" style={{minWidth: 300}} value={this.state.mail} onChange={event=> { this.setState({mail: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }} /></Box></Grid>
                         <center><Typography style={{marginTop: 10}}>Ich nehme die <Link href="https://corona-meldung.de/datenschutz" target="_blank">Datenschutzerklärung</Link> zur Kenntnis.</Typography></center>
                     </>
                 )}
@@ -239,7 +240,7 @@ class Fragebogen extends React.Component {
                     <Box style={{margin: "auto"}}>
                         <Typography variant="h5" color="primary" >Schau in deine Mails</Typography><br />
                         <Typography> und gib den <b>Code</b> ein, den wir dir geschickt haben:</Typography><br />
-                        <TextField variant="outlined" label="Code" style={{minWidth: 300}} onChange={event=> { this.setState({code: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }} /><br />
+                        <TextField variant="outlined" label="Code" style={{minWidth: 300}} value={this.state.code} onChange={event=> { this.setState({code: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }} /><br />
                         <Typography variant="caption" style={{marginLeft: 15, marginTop: 10, color: "#bdbdbd"}}>Schau ggf. in deinen <b>Spam-Ordner</b>.</Typography><br />
                     </Box>
                   </Grid>
@@ -259,13 +260,13 @@ class Fragebogen extends React.Component {
                             {/* <TextField variant="outlined" label="Tag" style={{width: 66}} onChange={event=> { this.setState({gebTag: event.target.value}) }} />&nbsp;
                             <TextField variant="outlined" label="Monat" style={{width: 66}} onChange={event=> { this.setState({gebMonat: event.target.value}) }} />&nbsp; */}
 
-                            <TextField variant="outlined" label="Geburtsjahr" onChange={event=> { this.setState({gebJahr: event.target.value}) }} /><br />
+                            <TextField variant="outlined" label="Geburtsjahr" value={this.state.gebJahr} onChange={event=> { this.setState({gebJahr: event.target.value}) }} /><br />
                             <Tooltip arrow title="Das benötigen wir, um anhand einer Alterkategorisierung Informationen über die Ausdifferenzierung des Virus zu gewinnen.">
                                 <Typography variant="caption" style={{marginLeft: 15, color: "#5c6bc0"}}>Wofür?</Typography>
                             </Tooltip>
                             <br /><br />
 
-                            <TextField variant="outlined" label="Postleitzahl" onChange={event=> { this.setState({plz: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }}/><br />
+                            <TextField variant="outlined" label="Postleitzahl" value={this.state.plz} onChange={event=> { this.setState({plz: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }}/><br />
                             <Tooltip arrow title="Damit fügen wir deinen Daten zusätzlich die Dimension deines Heimatgebiets hinzu.">
                                 <Typography variant="caption" style={{marginLeft: 15, color: "#5c6bc0"}}>Wofür?</Typography>
                             </Tooltip>
@@ -451,8 +452,38 @@ class Fragebogen extends React.Component {
                     </Grid>
                 )}
 
+
+              {/* upload progress */}
+              {activeStep===5 && (
+                <>
+                  <Grid container>
+                    <Box style={{margin: "auto"}}>
+
+                      <Typography color="primary" style={{marginBottom: 15}}>Folgende Daten werden nach Deiner Bestätigung übermittelt:</Typography>
+                      <Overview data={this.state} />
+
+                    </Box>
+                  </Grid>
+                  <br /><br />
+                  <Grid container>
+                    <Paper elevation={10} style={{maxWidth: 1024, backgroundColor: "#f7f9ff", margin: "auto"}}>
+                        <Typography style={{color: "#5c6bc0", padding: 5, textAlign: "left"}}>
+                            <Typography variant="h6">Einwilligung gemäß Art. 6 Abs. 1 Buchst. a, 9 Abs. 2 Buchst. a DSGVO in die Verarbeitung meiner personenbezogenen und besonderen personenbezogenen Daten</Typography>
+                            <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Hiermit willige ich zu Zwecken der medizinischen Forschung im Bereich der Virologie und der Pandemieforschung in die Verarbeitung meiner personenbezogenen Daten und meiner besonderen personenbezogene Daten (siehe obige Zusammenfassung) ein.</Typography>
+                            <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Im Rahmen der Datenverarbeitung werden Ihre Daten erhoben, gespeichert, gegebenenfalls aggregiert, ausgewertet und an renommierte Forschungsinstitute übermittelt.</Typography>
+                            <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Soweit es zu einer Übermittlung Ihrer personenbezogenen Daten an Forschungsinstitute kommt, erfolgt diese Übermittlung dergestalt, dass den Forschungsinstituten Rückschlüsse auf Ihre Person unmöglich sind.</Typography>
+                            <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Sie können Ihre Einwilligung jederzeit und ohne Nachteile widerrufen. Den Widerruf können Sie formlos, beispielsweise an datenschutz@corona-meldung.de, richten.</Typography>
+                            <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Sobald Sie Ihre Einwilligung widerrufen, werden sämtliche bei uns gespeicherten personenbezogenen Daten und sämtliche bei uns gespeicherten besonderen personenbezogenen Daten vollständig anonymisiert, so dass auch für uns keinerlei Rückschlüsse mehr auf Ihre Person möglich sind.</Typography>
+                            <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Ein Widerruf Ihrer Einwilligungserklärung berührt nicht die Rechtmäßigkeit der Datenverarbeitungen bis zum Zeitpunkt Ihres Widerrufs. Soweit Ihre personenbezogenen Daten und besonderen personenbezogenen Daten bereits an Forschungsinstitute übermittelt wurden, wird diese Übermittlung rückwirkend ebenfalls nicht rechtswidrig.</Typography>
+                        </Typography>
+                      </Paper>
+                  </Grid>
+                </>
+              )}
+
+
                 {/* upload progress */}
-                {activeStep===5 && (
+                {activeStep===6 && (
                     <Grid container>
                     <Box style={{margin: "auto"}}>
                         <center>
@@ -465,7 +496,7 @@ class Fragebogen extends React.Component {
 
 
                 {/* thank you page */}
-                {activeStep===6 && (
+                {activeStep===7 && (
                   <Grid container>
                     <Box style={{margin: "auto"}}>
                         <center>
@@ -491,7 +522,7 @@ class Fragebogen extends React.Component {
                 )}
 
                 {/* weiter und zurueck: */}
-                {activeStep<5 && (
+                {activeStep<6 && (
                     <Box style={{marginTop: 25 }}>
                         <center>
                         <Button
