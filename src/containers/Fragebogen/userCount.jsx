@@ -8,20 +8,23 @@ class UserCount extends React.Component {
         'visible': false,
         'user_count': 'Eine unbekannte Anzahl '
       };
+  }
 
-      user_count()
-        .then((user_count) => {
-          this.setState({
-            'visible': true,
-            'user_count': user_count
-          })
+
+  componentDidMount() {
+    user_count()
+      .then((user_count) => {
+        this.setState({
+          'visible': true,
+          'user_count': user_count
         })
-        .catch( () => {
-          this.setState({
-            'visible': true,
-            'user_count': 'Eine unbekannte Anzahl '
-          })
-        });
+      })
+      .catch( () => {
+        this.setState({
+          'visible': true,
+          'user_count': 'Eine unbekannte Anzahl '
+        })
+      });
   }
 
   render() {
