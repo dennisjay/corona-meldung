@@ -126,7 +126,7 @@ class Fragebogen extends React.Component {
     console.log(this.state.activeStep);
     switch(this.state.activeStep)
     {
-      /*case 0:
+      case 0:
         if (this.state.mail.length < 5) {
           return window.confirm("Bitte gib eine gültige Mail-Adresse ein.")
         }
@@ -172,7 +172,6 @@ class Fragebogen extends React.Component {
             });
         }
         break;
-*/
       default:
         this.handleNext();
         break;
