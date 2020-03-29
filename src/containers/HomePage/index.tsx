@@ -16,7 +16,7 @@ import {
   SectionContent,
   SectionImage
 } from "./style";
-import UserCount from "./userCount";
+
 
 type PersonalBlogProps = {};
 
@@ -38,8 +38,7 @@ const PersonalBlog: React.FunctionComponent<PersonalBlogProps> = ({
               Herauszufinden, wer wann, wo und wie lange war, hilft den Weg des
               Virus' nachzuvollziehen und die Effektivität von Gegenmaßnahmen zu
               messen. Mit einer ausreichend großen Menge an Daten können
-              Forschungseinrichtungen besser gegen COVID-19 vorgehen.&nbsp;
-              <UserCount/>
+              Forschungseinrichtungen besser gegen COVID-19 vorgehen.
             </p>
           </SectionContent>
         </SectionText>

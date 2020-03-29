@@ -36,6 +36,7 @@ import {
     TwitterShareButton,
     WhatsappShareButton,
   } from "react-share";
+import UserCount from "./userCount";
 
 
 
@@ -281,6 +282,7 @@ class Fragebogen extends React.Component {
                 {activeStep===0 && (
                     <>
                         <center><Typography variant="h5" color="primary" >Starte mit deiner Mail-Adresse:</Typography></center><br />
+
                         <Grid container><Box style={{margin: "auto"}}><TextField variant="outlined" label="Mail" style={{minWidth: 300}} value={this.state.mail} onChange={event=> { this.setState({mail: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }} /></Box></Grid>
                         <center><Typography style={{marginTop: 10}}>Ich nehme die <Link href="https://corona-meldung.de/datenschutz" target="_blank">Datenschutzerklärung</Link> zur Kenntnis.</Typography></center>
                     </>
@@ -619,10 +621,20 @@ class Fragebogen extends React.Component {
                                 <Typography style={{color: "#5c6bc0", fontSize: 13 }}><strong>Was bedeutet "pseudonymisiert"?</strong></Typography>
                             </Box>
                             <Typography style={{color: "#9fa8da", marginLeft: 10, marginRight: 10, marginBottom: 7, fontSize: 12 }}>Das heißt, dass wir deinen Daten eine Identifikationsnummer zuordnen. Es wird nur verarbeitet, dass z.B. jemand mit bestimmten
-                            Symptomen ein bestimmtes Alter hat. Eine Verbindung zu dir persönlich wird nicht offengelegt.</Typography>
+                            Symptomen ein bestimmtes Alter hat. Eine Verbindung zu dir persönlich wird nicht offengelegt. </Typography>
                         </div>
                     </Grid>
                 )}
+
+              {/* usercount: */}
+              <Grid container style={{marginTop: 80}}>
+                <div style={{ maxWidth: 450, borderWidth: 1, borderStyle: "solid", borderRadius: 3, borderColor: "#eeeee",
+                  backgroundColor: "", color: "green", transition: "border .24s ease-in-out", margin: "auto" }}>
+
+                  <UserCount/>
+                </div>
+              </Grid>
+
             </div>
         </>
     );
