@@ -21,6 +21,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import HelpIcon from '@material-ui/icons/Help';
 import WarningIcon from '@material-ui/icons/Warning';
 import LinearProgress from "@material-ui/core/LinearProgress";
+import CircularProgress from '@material-ui/core/CircularProgress'
 import { v4 as uuidv4 } from 'uuid';
 import { uploadFiles, postData } from '../../lib/upload_helpers';
 import Tooltip from "@material-ui/core/Tooltip";
@@ -99,7 +100,8 @@ class Fragebogen extends React.Component {
             noFilesWarning: false,
             uploadProgress: 0,
             jwk_key: {},
-            loginRequired: false
+            loginRequired: false,
+            processingStep: false
         };
         this.state = this.defaultState
     }
@@ -107,6 +109,7 @@ class Fragebogen extends React.Component {
   handleNext = () => {
     this.setState(state => ({
         activeStep: state.activeStep + 1,
+        processingStep: false
         }));
     window.scrollTo(0,0)
   };
@@ -114,17 +117,23 @@ class Fragebogen extends React.Component {
   handleBack = () => {
     this.setState(state => ({
       activeStep: state.activeStep - 1,
+      processingStep: false
     }));
   };
 
   handleReset = () => {
     this.setState({
       activeStep: 0,
+      processingStep: false
     });
   };
 
   handleWeiter = () => {
     console.log(this.state.activeStep);
+    this.setState(state => ({
+      processingStep: true
+    }));
+
     switch(this.state.activeStep)
     {
       case 0:
@@ -557,7 +566,7 @@ class Fragebogen extends React.Component {
                 )}
 
                 {/* weiter und zurueck: */}
-                {activeStep<6 && (
+                {activeStep<6 && !this.state.processingStep && (
                     <Box style={{marginTop: 25 }}>
                         <center>
                         <Button
@@ -581,6 +590,14 @@ class Fragebogen extends React.Component {
                         </center>
                     </Box>
                 )}
+
+              {activeStep<6 && this.state.processingStep && (
+                <Box style={{marginTop: 25 }}>
+                  <center>
+                    <CircularProgress/>
+                  </center>
+                </Box>
+              )}
 
                 {/* further explanations: */}
                 {activeStep===4 && (
