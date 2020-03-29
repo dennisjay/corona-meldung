@@ -17,12 +17,14 @@ export default (
 
         render() {
             var d = this.props.data
-
-            return (    
+            
+            return (
+            <Grid container>
+            <Box style={{margin: "auto"}}>  
               <Paper elevation={5}>
-                <Box p={2}>
+                <Box p={2} style={{maxWidth: 620, paddingBottom: 0 }}>
 
-                    <TableContainer style={{maxWidth: 600 }}>
+                    <TableContainer>
                         <Table>
                             <TableBody>
                                 <TableRow>
@@ -102,20 +104,20 @@ export default (
                                         </TableCell>
                                     </TableRow>
                                 
-                                {d.files!==null && d.files.length>0 && (
+                                {d.files!==null && d.files.length===undefined && (
                                     <TableRow style={{backgroundColor: "#f7f9ff"}}>
                                         <TableCell colspan={2} style={{backgroundColor: "#f7f9ff"}}>
                                             <Typography variant="h6"><b>Standortdaten</b></Typography>
                                         </TableCell>
                                     </TableRow>
                                 )}
-                                {d.files!==null && d.files.length>0 ? (        
+                                {d.files!==null && d.files.length===undefined ? (        
                                     <TableRow style={{backgroundColor: "#ffffff"}}>
                                         <TableCell><b>Uploads</b></TableCell>
                                         <TableCell>die hochgeladenen Daten</TableCell>
                                     </TableRow>
                                     
-                                ) : (
+                                ) : ( 
                                     <TableRow style={{backgroundColor: "#ffffff"}}>
                                         <TableCell colSpan={2} style={{borderStyle: "none"}}><br />
                                             <center>Du hast <b>keine Standortdaten</b> hinzugefügt.</center>
@@ -129,6 +131,8 @@ export default (
 
                 </Box>
               </Paper>
+            </Box>
+            </Grid>
             )
         }
     }
