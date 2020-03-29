@@ -133,6 +133,7 @@ class Fragebogen extends React.Component {
             symptom9: false,
             symptom10: false,
             symptom10: false,
+            eingewilligt: false
         };
         this.state = this.defaultState
     }
@@ -555,21 +556,18 @@ class Fragebogen extends React.Component {
                 )}
 
 
-              {/* upload progress */}
               {activeStep===5 && (
                 <>
-                  <Grid container>
-                    <Box style={{margin: "auto"}}>
-
-                      <center><Typography color="primary" style={{marginBottom: 15}}>Folgende Daten werden nach Deiner Bestätigung übermittelt:</Typography></center>
-                      <Overview data={this.state} />
-
-                    </Box>
-                  </Grid>
+                  <center><Typography color="primary" style={{marginBottom: 15}}>Folgende Daten werden nach Deiner Bestätigung übermittelt:</Typography></center>
+                      
+                  <Overview data={this.state} />  
+                    
+                  <br />
+                  <center><Typography variant="body" style={{color: "#bdbdbd"}}>Du kannst auf 'zurück' klicken und Änderungen vornehmen,<br />ohne dass du etwas nochmal ganz neu eingeben musst.</Typography></center>
                   <br /><br />
                   <Grid container>
-                    <Paper elevation={10} style={{maxWidth: 1024, backgroundColor: "#f7f9ff", margin: "auto", padding: 1}}>
-                        <Typography style={{color: "#5c6bc0", padding: 5, textAlign: "justify"}}>
+                    <Paper elevation={5} style={{maxWidth: 1024, backgroundColor: "", margin: "auto", padding: 1}}>
+                        <Typography style={{color: "#9e9e9e", padding: 5, textAlign: "justify"}}>
                             <Typography style={{fontSize: 16, marginBottom: "0.3em"}}>Einwilligung gemäß Art. 6 Abs. 1 Buchst. a, 9 Abs. 2 Buchst. a DSGVO in die Verarbeitung meiner personenbezogenen und besonderen personenbezogenen Daten</Typography>
                             <Divider />
                             <Typography variant="body2" style={{margin: "0.3em 0 0.3em 0"}}>Hiermit willige ich zu Zwecken der medizinischen Forschung im Bereich der Virologie und der Pandemieforschung in die Verarbeitung meiner personenbezogenen Daten und meiner besonderen personenbezogene Daten (siehe obige Zusammenfassung) ein.</Typography>
@@ -581,6 +579,35 @@ class Fragebogen extends React.Component {
                         </Typography>
                       </Paper>
                   </Grid>
+                  <br />
+                  <center>
+                    <Checkbox checked={this.state.eingewilligt} onClick={()=>{this.setState({eingewilligt: !this.state.eingewilligt})}} />
+                    <Button color="primary" style={{textTransform: "none"}} onClick={()=>{this.setState({eingewilligt: !this.state.eingewilligt})}}><b>Ich erteile die obige Einwilligung.</b></Button>
+                  </center>
+
+                  <Box style={{marginTop: 25 }}>
+                      <center>
+                      <Button
+                          disabled={activeStep === 0}
+                          onClick={this.handleBack}
+                          className={classes.button}
+                          variant="outlined"
+                          style={{marginRight: 30, textTransform: "none"}}
+                      >
+                          zurück
+                      </Button>
+                      <Button
+                          variant="contained"
+                          color="primary"
+                          disabled={!this.state.eingewilligt}
+                          onClick={() => { return this.handleWeiter() }}
+                          className={classes.button}
+                          style={{textTransform: "none"}}
+                      >
+                          {activeStep === steps.length - 1 ? 'ABSCHICKEN' : 'WEITER'}
+                      </Button>
+                      </center>
+                  </Box>
                 </>
               )}
 
@@ -625,7 +652,7 @@ class Fragebogen extends React.Component {
                 )}
 
                 {/* weiter und zurueck: */}
-                {activeStep<6 && !this.state.processingStep && (
+                {activeStep<5 && !this.state.processingStep && (
                     <Box style={{marginTop: 25 }}>
                         <center>
                         <Button

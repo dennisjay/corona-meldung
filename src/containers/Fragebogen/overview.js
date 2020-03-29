@@ -18,9 +18,11 @@ export default (
         render() {
             var d = this.props.data
             
-            return (    
+            return (
+            <Grid container>
+            <Box style={{margin: "auto"}}>  
               <Paper elevation={5}>
-                <Box p={2} style={{maxWidth: 620 }}>
+                <Box p={2} style={{maxWidth: 620, paddingBottom: 0 }}>
 
                     <TableContainer>
                         <Table>
@@ -127,10 +129,10 @@ export default (
 
                     </TableContainer>
 
-                    <Typography variant="body" style={{color: "#bdbdbd"}}>Du kannst auf 'zurück' klicken und Änderungen vornehmen, ohne dass du etwas nochmal ganz neu eingeben musst.</Typography><br />
-
                 </Box>
               </Paper>
+            </Box>
+            </Grid>
             )
         }
     }
