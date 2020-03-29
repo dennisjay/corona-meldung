@@ -75,7 +75,19 @@ const KEYS_TO_TRANSMIT = [
   'kontakt', 'kontaktWo', 'kontaktWann',
   'erkrankt', 'erkranktSeit', 'erkranktTest',
   'quarantaene', 'quarantaeneAnordnung', 'quarantaeneBis',
-  'begleiterkrankungen', 'begleiterkrankungenText'
+  'begleiterkrankungen', 'begleiterkrankungenText',
+  'userPseudonym',
+  'symptom1',
+  'symptom2',
+  'symptom3',
+  'symptom4',
+  'symptom5',
+  'symptom6',
+  'symptom7',
+  'symptom8',
+  'symptom9',
+  'symptom10',
+  'symptom11'
 ];
 
 function getSteps() {
@@ -133,7 +145,7 @@ class Fragebogen extends React.Component {
             symptom8: false,
             symptom9: false,
             symptom10: false,
-            symptom10: false,
+            symptom11: false,
             eingewilligt: false
         };
         this.state = this.defaultState
@@ -570,9 +582,9 @@ class Fragebogen extends React.Component {
               {activeStep===5 && (
                 <>
                   <center><Typography color="primary" style={{marginBottom: 15}}>Folgende Daten werden nach Deiner Bestätigung übermittelt:</Typography></center>
-                      
-                  <Overview data={this.state} />  
-                    
+
+                  <Overview data={this.state} />
+
                   <br />
                   <center><Typography variant="body" style={{color: "#bdbdbd"}}>Du kannst auf 'zurück' klicken und Änderungen vornehmen,<br />ohne dass du etwas nochmal ganz neu eingeben musst.</Typography></center>
                   <br /><br />
