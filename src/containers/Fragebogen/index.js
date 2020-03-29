@@ -22,7 +22,6 @@ import HelpIcon from '@material-ui/icons/Help';
 import WarningIcon from '@material-ui/icons/Warning';
 import LinearProgress from "@material-ui/core/LinearProgress";
 import CircularProgress from '@material-ui/core/CircularProgress'
-import { v4 as uuidv4 } from 'uuid';
 import { uploadFiles, postData } from '../../lib/upload_helpers';
 import Tooltip from "@material-ui/core/Tooltip";
 import { auth_register, auth_confirm, login_request, login_confirm } from '../../lib/auth_helpers';
@@ -37,6 +36,9 @@ import {
     WhatsappShareButton,
   } from "react-share";
 import UserCount from "./userCount";
+import TableRow from "@material-ui/core/TableRow";
+import TableCell from "@material-ui/core/TableCell";
+import TableBody from "@material-ui/core/TableBody";
 
 
 
@@ -67,6 +69,14 @@ const styles = theme => ({
   }
 });
 
+const KEYS_TO_TRANSMIT = [
+  'gebJahr', 'plz', 'berufstaetig', 'beruf',
+  'kontakt', 'kontaktWo', 'kontaktWann',
+  'erkrankt', 'erkranktSeit', 'erkranktTest',
+  'quarantaene', 'quarantaeneAnordnung', 'quarantaeneBis',
+  'begleiterkrankungen', 'd.begleiterkrankungenText'
+];
+
 function getSteps() {
   return ['Mail', 'Verifikation', 'Person', 'Fragen', 'Bewegungsdaten', 'Prüfung'];
 }
@@ -96,10 +106,6 @@ class Fragebogen extends React.Component {
             begleiterkrankungen: undefined,
             berufstaetig: undefined,
             quarantaene: undefined,
-            files: [],
-            activeStep: 0,
-            noFilesWarning: false,
-            uploadProgress: 0,
             kontaktWann: "",
             kontaktWo: "",
             quarantaeneAnordnung: "",
@@ -108,9 +114,14 @@ class Fragebogen extends React.Component {
             erkranktSeit: "",
             begleiterkrankungenText: "",
             beruf: "",
+            files: [],
+            activeStep: 0,
+            noFilesWarning: false,
+            uploadProgress: 0,
             jwk_key: "",
             loginRequired: false,
-            processingStep: false
+            processingStep: false,
+            userPseudonym: ''
         };
         this.state = this.defaultState
     }
@@ -181,10 +192,11 @@ class Fragebogen extends React.Component {
         console.log( this.state.loginRequired );
         if( this.state.loginRequired ){
           login_confirm(this.state.mail, this.state.code)
-            .then((jwk_key) => {
-              console.log("login confirm", jwk_key);
+            .then((result) => {
+              console.log("login confirm", result);
               this.setState(state => ({
-                jwk_key: jwk_key
+                userPseudonym: result.pseudonym,
+                jwk_key: result.jwk_key
               }));
 
               this.handleNext();
@@ -196,10 +208,11 @@ class Fragebogen extends React.Component {
         }
         else {
           auth_confirm(this.state.mail, Number(this.state.code))
-            .then((jwk_key) => {
-              console.log("register confirm", jwk_key);
+            .then((result) => {
+              console.log("register confirm", result);
               this.setState(state => ({
-                jwk_key: jwk_key
+                userPseudonym: result.pseudonym,
+                jwk_key: result.jwk_key
               }));
 
               this.handleNext();
@@ -210,10 +223,16 @@ class Fragebogen extends React.Component {
         }
         break;
 
-      case 5:
+      case 4:
         if (this.state.files.length === 0 && !this.state.noFilesWarning) {
-          this.setState({ noFilesWarning: true })
-        } else {
+          this.setState({ noFilesWarning: true, processingStep: false })
+        }
+        else {
+          this.handleNext();
+        }
+        break;
+
+      case 5:
           console.log("sending");
           this.handleNext();
           this.handlePost(this.state)
@@ -224,8 +243,7 @@ class Fragebogen extends React.Component {
               window.confirm("Fehler beim upload!");
               this.handleBack();
             });
-        }
-        break;
+          break;
       default:
         this.handleNext();
         break;
@@ -236,18 +254,31 @@ class Fragebogen extends React.Component {
 
 
   handlePost = async (data) => {
+
+
     console.log("handlePost", data);
+    let toSend = {
+      'user_pseudonym': data.userPseudonym,
+      'location_file_urls': [],
+      'personal_data': {}
+    };
 
-    const user_pseudomym = uuidv4();  //TODO replace with real pseudonym from server
-
-    await postData(user_pseudomym, data);
-    if( data.files.files && data.files.files.length > 0) {
-      await uploadFiles(user_pseudomym, data.files.files, (progress, stats) => {
+    if( data.files && data.files.length > 0) {
+      toSend.location_file_urls = await uploadFiles(data.userPseudonym, data.files.files, (progress, stats) => {
         this.setState(state => ({
           uploadProgress: progress * 100.0,
         }));
       });
     }
+
+    for( let key of KEYS_TO_TRANSMIT ){
+      toSend.personal_data[key] = data[key];
+    }
+
+    console.log("POSTING", toSend);
+    return postData(data.userPseudonym, toSend);
+
+
   };
 
   render() {

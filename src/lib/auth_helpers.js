@@ -76,7 +76,8 @@ export const auth_confirm = (email, activation_key) => {
       if (request.readyState === 4) {
         if (request.status === 200) {
           console.log(request.responseText);
-          resolve(JSON.parse(request.responseText).jwk_key)
+          const obj = JSON.parse(request.responseText);
+          resolve(obj)
         } else {
           console.error(request.statusText);
           reject()
@@ -134,7 +135,8 @@ export const login_confirm = (email, login_token) => {
       if (request.readyState === 4) {
         if (request.status === 200) {
           console.log(request.responseText);
-          resolve(JSON.parse(request.responseText).jwk_key)
+          const obj = JSON.parse(request.responseText);
+          resolve(obj)
         } else {
           console.error(request.statusText);
           reject()
