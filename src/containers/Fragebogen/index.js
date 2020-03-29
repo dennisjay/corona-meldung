@@ -283,8 +283,8 @@ class Fragebogen extends React.Component {
                             <FormControl style={{marginLeft: 15}} component="fieldset" onChange={event => { this.setState({ berufstaetig: event.target.value.localeCompare("0")!==0 }) }}>
                                 <FormLabel component="legend">Berufstätig?</FormLabel>
                                 <RadioGroup style={{display: "flex", flexDirection: "row"}}>
-                                    <FormControlLabel control={<Radio />} value="0" label="Nein." />
-                                    <FormControlLabel control={<Radio />} value ="1" label="Ja." />
+                                    <FormControlLabel control={<Radio />} value="0" checked={!this.state.berufstaetig} label="Nein." />
+                                    <FormControlLabel control={<Radio />} value ="1" checked={this.state.berufstaetig} label="Ja." />
                                 </RadioGroup>
                             </FormControl><br />
                             <Tooltip arrow title="So können wir deine Gefährdung einordnen.">
@@ -310,8 +310,8 @@ class Fragebogen extends React.Component {
                         <FormControl component="fieldset" onChange={event => { this.setState({ kontakt: event.target.value.localeCompare("0")!==0 }) }}>
                             <FormLabel component="legend">Hattest Du <b>Kontakt</b> (min. 15min, unter 1,5 Meter Entfernung) zu einer nachweislich an COVID-19 erkrankten Person?</FormLabel>
                             <RadioGroup>
-                                <FormControlLabel control={<Radio />} value="0" label="Nein." />
-                                <FormControlLabel control={<Radio />} value ="1" label="Ja." />
+                                <FormControlLabel control={<Radio />} value="0" checked={!this.state.kontakt} label="Nein." />
+                                <FormControlLabel control={<Radio />} value ="1" checked={this.state.kontakt} label="Ja." />
                             </RadioGroup>
                         </FormControl>
 
@@ -330,8 +330,8 @@ class Fragebogen extends React.Component {
                         <FormControl component="fieldset" onChange={event => { this.setState({ erkrankt: event.target.value.localeCompare("0")!==0 }) }}>
                             <FormLabel component="legend">Bist Du nachweislich an COVID-19 <b>erkrankt</b>?</FormLabel>
                             <RadioGroup>
-                                <FormControlLabel control={<Radio />} value="0" label="Nein." />
-                                <FormControlLabel control={<Radio />} value ="1" label="Ja." />
+                                <FormControlLabel control={<Radio />} value="0" checked={!this.state.erkrankt} label="Nein." />
+                                <FormControlLabel control={<Radio />} value ="1" checked={this.state.erkrankt} label="Ja." />
                             </RadioGroup>
                         </FormControl>
 
@@ -350,8 +350,8 @@ class Fragebogen extends React.Component {
                         <FormControl component="fieldset" onChange={event => { this.setState({ quarantaene: event.target.value.localeCompare("0")!==0 }) }}>
                             <FormLabel component="legend">Wurde dir vom Arzt <b>Quarantäne verordnet</b>?</FormLabel>
                             <RadioGroup>
-                                <FormControlLabel control={<Radio />} value="0" label="Nein." />
-                                <FormControlLabel control={<Radio />} value ="1" label="Ja." />
+                                <FormControlLabel control={<Radio />} value="0" checked={!this.state.quarantaene} label="Nein." />
+                                <FormControlLabel control={<Radio />} value ="1" checked={this.state.quarantaene} label="Ja." />
                             </RadioGroup>
                         </FormControl>
 
@@ -391,8 +391,8 @@ class Fragebogen extends React.Component {
                         <FormControl component="fieldset" onChange={event => { this.setState({ begleiterkrankungen: event.target.value.localeCompare("0")!==0 }) }}>
                             <FormLabel component="legend">Begleiterkrankungen?</FormLabel>
                             <RadioGroup>
-                                <FormControlLabel control={<Radio />} value="0" label="Nein." />
-                                <FormControlLabel control={<Radio />} value ="1" label="Ja." />
+                                <FormControlLabel control={<Radio />} value="0" checked={!this.state.begleiterkrankungen} label="Nein." />
+                                <FormControlLabel control={<Radio />} value ="1" checked={this.state.begleiterkrankungen} label="Ja." />
                             </RadioGroup>
                         </FormControl>
 
@@ -482,7 +482,7 @@ class Fragebogen extends React.Component {
                             <Typography variant="body2" style={{margin: "0.3em 0 0.3em 0"}}>Hiermit willige ich zu Zwecken der medizinischen Forschung im Bereich der Virologie und der Pandemieforschung in die Verarbeitung meiner personenbezogenen Daten und meiner besonderen personenbezogene Daten (siehe obige Zusammenfassung) ein.</Typography>
                             <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Im Rahmen der Datenverarbeitung werden Ihre Daten erhoben, gespeichert, gegebenenfalls aggregiert, ausgewertet und an renommierte Forschungsinstitute übermittelt.</Typography>
                             <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Soweit es zu einer Übermittlung Ihrer personenbezogenen Daten an Forschungsinstitute kommt, erfolgt diese Übermittlung dergestalt, dass den Forschungsinstituten Rückschlüsse auf Ihre Person unmöglich sind.</Typography>
-                            <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Sie können Ihre Einwilligung jederzeit und ohne Nachteile widerrufen. Den Widerruf können Sie formlos, beispielsweise an datenschutz@corona-meldung.de, richten.</Typography>
+                            <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Sie können Ihre Einwilligung jederzeit und ohne Nachteile widerrufen. Den Widerruf können Sie formlos beispielsweise an datenschutz@corona-meldung.de richten.</Typography>
                             <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Sobald Sie Ihre Einwilligung widerrufen, werden sämtliche bei uns gespeicherten personenbezogenen Daten und sämtliche bei uns gespeicherten besonderen personenbezogenen Daten vollständig anonymisiert, so dass auch für uns keinerlei Rückschlüsse mehr auf Ihre Person möglich sind.</Typography>
                             <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Ein Widerruf Ihrer Einwilligungserklärung berührt nicht die Rechtmäßigkeit der Datenverarbeitungen bis zum Zeitpunkt Ihres Widerrufs. Soweit Ihre personenbezogenen Daten und besonderen personenbezogenen Daten bereits an Forschungsinstitute übermittelt wurden, wird diese Übermittlung rückwirkend ebenfalls nicht rechtswidrig.</Typography>
                         </Typography>
