@@ -71,7 +71,7 @@ const About: React.FunctionComponent<AboutProps> = props => {
   `)
 
   return (
-   <> 
+   <>
     <AboutWrapper>
 
       <AboutPageTitle>
@@ -82,7 +82,7 @@ const About: React.FunctionComponent<AboutProps> = props => {
       </AboutPageTitle>
 
     </AboutWrapper>
-     
+
     <IntroWrapper>
       <IntroImage>
         {/* <Image fluid={} alt="author" /> */}
@@ -92,7 +92,7 @@ const About: React.FunctionComponent<AboutProps> = props => {
         <IntroTitle>
           Dennis Jöst
         </IntroTitle>
-        <Desciption>Dennis Jöst ist Data Scientist, Cloud Expert und Lead Machine Learning Engineer bei DEFINE MEDIA und glaubt, dass neben Ärzten, Polizei und Pflegekräften auch die Data Science wichtige Beiträge im Kampf gegen den Coronavirus liefern kann.</Desciption>
+        <Desciption>Dennis Jöst ist Data Scientist, Cloud Expert und Lead Machine Learning Engineer bei DEFINE MEDIA und glaubt, dass neben Ärzten, Polizei und Pflegekräften auch die Data Science wichtige Beiträge im Kampf gegen das Coronavirus liefern kann.</Desciption>
         {/* <SocialProfile items={SocialLinks} /> */}
       </IntroInfo>
     </IntroWrapper>
@@ -175,10 +175,10 @@ const About: React.FunctionComponent<AboutProps> = props => {
       </IntroInfo>
     </IntroWrapper>
 
-    
 
-    
-   </> 
+
+
+   </>
   )
 }
 

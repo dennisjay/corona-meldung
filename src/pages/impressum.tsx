@@ -17,7 +17,7 @@ const ImpressumPage: React.FunctionComponent<ImpressumPageProps> = props => {
     <Layout>
       <SEO
         title="Impressum"
-        description=""
+        description="Unser Impressum."
       />
 
     <AboutWrapper>

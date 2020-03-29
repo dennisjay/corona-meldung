@@ -33,7 +33,7 @@ const PersonalBlog: React.FunctionComponent<PersonalBlogProps> = ({
       <SectionWrapper>
         <SectionText>
           <SectionTitle>
-            <h2>Mit Daten leben retten</h2>
+            <h2>Mit Daten Leben retten</h2>
           </SectionTitle>
           <SectionContent>
             <p>
@@ -80,16 +80,16 @@ const PersonalBlog: React.FunctionComponent<PersonalBlogProps> = ({
             <p>
               Datenschutz ist unsere Priorität. Bewegungsdaten sind hochsensible
               und sehr persönliche Auskünfte über uns selbst. Deswegen werden
-              diese nur anonymisiert gespeichert. Diese für die Forschung bereitzustellen 
+              diese nur anonymisiert gespeichert. Diese für die Forschung bereitzustellen
               gibt uns eine hohe Verantwortung, der wir bewusst
               begegnen. Wir sind deshalb in ständigem Austausch mit
               Datenschutz-Anwälten und Internet-Verbänden und arbeiten streng
               nach deutschen Datenschutzrichtlinien. Die Daten werden
-              zeilenweise (d.h. mit einem eigenen Schlüssel für jeden Nutzer) verlüsselt, wobei 
+              zeilenweise (d.h. mit einem eigenen Schlüssel für jeden Nutzer) verlüsselt, wobei
               der Schlüssel unabhänig von den Daten
               gespeichert wird. Nur renomierte Forschungsinstitutionen haben
-              Zugriff auf die Daten. Für Fragen zum Datenschutz stehen wir unter
-              Datenschutz@corona-meldung.de jederzeit zur Verfügung.]
+              Zugriff auf die Daten. Für Fragen zum Datenschutz stehen wir
+              unter <a href={"mailto:datenschutz@corona-meldung.de"}>datenschutz@corona-meldung.de</a> jederzeit zur Verfügung.
             </p>
           </SectionContent>
         </SectionText>
@@ -108,13 +108,13 @@ const PersonalBlog: React.FunctionComponent<PersonalBlogProps> = ({
           </SectionTitle>
           <SectionContent>
             <p>
-              Wir, das sind Dennis, Tim, Tobias und Paul, sind
-              Softwareentwickler, die einen Beitrag zur Bekämpfung von COVID-19
+              Wir, das sind Dennis, Tim, Bogdan, Malte, Tobias T., Tobias B. und Florian  sind
+              Softwareentwickler (und ein Anwalt), die einen Beitrag zur Bekämpfung von COVID-19
               liefern wollen. Wir haben bereits in verschiedenen Projekten für
               die Industrie zusammengearbeitet und arbeiten jetzt das erste Mal
               vollends remote an einem Projekt zusammen. Wenn Ihr mithelfen
               wollt modernste Technologie gegen Corona zu nutzen, dann
-              kontaktiert uns gerne unter corona@corona-meldung.de.
+              kontaktiert uns gerne unter <a href={"mailto:info@corona-meldung.de"}>info@corona-meldung.de</a>.
             </p>
           </SectionContent>
         </SectionText>
@@ -127,8 +127,7 @@ const PersonalBlog: React.FunctionComponent<PersonalBlogProps> = ({
       </SectionWrapper>
       <br />
 
-      <FeaturedPosts />
-      <Posts />
+
     </PersonalBlogWrapper>
   );
 };

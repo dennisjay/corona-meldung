@@ -19,13 +19,13 @@ const FragebogenPage: React.FunctionComponent<FragebogenPageProps> = props => {
     return (
         <Layout>
             <SEO
-                title="Frageboben"
-                description=""
+                title="Fragebogen"
+                description="Spende jetzt deine Daten zur Coronabekämpfung."
             />
 
             <AboutWrapper>
                 <AboutPageTitle>
-                    
+
                     <Fragebogen />
 
                 </AboutPageTitle>

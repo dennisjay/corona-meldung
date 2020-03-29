@@ -76,7 +76,7 @@ const Intro: React.FunctionComponent<IntroProps> = props => {
         <IntroTitle>
           Mit Deinen Daten Leben retten
         </IntroTitle>
-        <Desciption>Forscher finden effektiver Maßnahmen gegen COVID-19 dank Deinen anonymisierten Standordaten.</Desciption>
+        <Desciption>Forscher finden effektiver Maßnahmen gegen COVID-19 dank Deinen anonymisierten Standortdaten.</Desciption>
         <Button title="Jetzt Daten spenden"></Button>
         {/* <SocialProfile items={SocialLinks} /> */}
       </IntroInfo>
