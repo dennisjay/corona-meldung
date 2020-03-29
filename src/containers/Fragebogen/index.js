@@ -39,6 +39,7 @@ import UserCount from "./userCount";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
+import { decrypt, encrypt } from "../../lib/encrypt_helpers";
 
 
 
@@ -161,6 +162,7 @@ class Fragebogen extends React.Component {
 
   handleWeiter = () => {
     console.log(this.state.activeStep);
+
     this.setState(state => ({
       processingStep: true
     }));
@@ -290,6 +292,15 @@ class Fragebogen extends React.Component {
     for( let key of KEYS_TO_TRANSMIT ){
       toSend.personal_data[key] = data[key];
     }
+
+
+    const jwk_key = JSON.parse(data.jwk_key);
+    const encryped = await encrypt(jwk_key, JSON.stringify(toSend.personal_data));
+    console.log("ENCRYPTED",  encryped);
+    const decrypted = await decrypt(jwk_key, encryped);
+    console.log("DECRYPTED", decrypted);
+
+    toSend.personal_data = encryped;
 
     console.log("POSTING", toSend);
     return postData(data.userPseudonym, toSend);
