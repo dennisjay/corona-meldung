@@ -106,7 +106,18 @@ class Fragebogen extends React.Component {
             erkranktTest: "",
             erkranktSeit: "",
             begleiterkrankungenText: "",
-            beruf: ""
+            beruf: "",
+            symptom1: false,
+            symptom2: false,
+            symptom3: false,
+            symptom4: false,
+            symptom5: false,
+            symptom6: false,
+            symptom7: false,
+            symptom8: false,
+            symptom9: false,
+            symptom10: false,
+            symptom10: false,
         };
         this.state = this.defaultState
     }
@@ -370,17 +381,17 @@ class Fragebogen extends React.Component {
                         <FormControl component="fieldset">
                             <FormLabel component="legend">Welche <b>Symptome</b> bestehen?</FormLabel>
                             {/* <RadioGroup> */}
-                                <FormControlLabel control={<Checkbox />} value="0" label="Fieber" />
-                                <FormControlLabel control={<Checkbox />} value ="1" label="Schnupfen" />
-                                <FormControlLabel control={<Checkbox />} value ="2" label="Luftnot" />
-                                <FormControlLabel control={<Checkbox />} value ="3" label="Husten" />
-                                <FormControlLabel control={<Checkbox />} value ="4" label="Halsschmerzen" />
-                                <FormControlLabel control={<Checkbox />} value ="5" label="Durchfall" />
-                                <FormControlLabel control={<Checkbox />} value ="6" label="Übelkeit" />
-                                <FormControlLabel control={<Checkbox />} value ="7" label="Erbrechen" />
-                                <FormControlLabel control={<Checkbox />} value ="8" label="Brustenge" />
-                                <FormControlLabel control={<Checkbox />} value ="9" label="Riechen oder Schmecken beeinträchtigt" />
-                                <FormControlLabel control={<Checkbox />} value ="10" label="sonstige" />
+                                <FormControlLabel control={<Checkbox />} value ="0" label="Fieber" checked={this.state.symptom1} onChange={() => { this.setState({ symptom1: !this.state.symptom1 }) }} />
+                                <FormControlLabel control={<Checkbox />} value ="1" label="Schnupfen" checked={this.state.symptom2} onChange={() => { this.setState({ symptom2: !this.state.symptom2 }) }} />
+                                <FormControlLabel control={<Checkbox />} value ="2" label="Luftnot" checked={this.state.symptom3} onChange={() => { this.setState({ symptom3: !this.state.symptom3 }) }} />
+                                <FormControlLabel control={<Checkbox />} value ="3" label="Husten" checked={this.state.symptom4} onChange={() => { this.setState({ symptom4: !this.state.symptom4 }) }} />
+                                <FormControlLabel control={<Checkbox />} value ="4" label="Halsschmerzen" checked={this.state.symptom5} onChange={() => { this.setState({ symptom5: !this.state.symptom5 }) }} />
+                                <FormControlLabel control={<Checkbox />} value ="5" label="Durchfall" checked={this.state.symptom6} onChange={() => { this.setState({ symptom6: !this.state.symptom6 }) }} />
+                                <FormControlLabel control={<Checkbox />} value ="6" label="Übelkeit" checked={this.state.symptom7} onChange={() => { this.setState({ symptom7: !this.state.symptom7 }) }} />
+                                <FormControlLabel control={<Checkbox />} value ="7" label="Erbrechen" checked={this.state.symptom8} onChange={() => { this.setState({ symptom8: !this.state.symptom8 }) }} />
+                                <FormControlLabel control={<Checkbox />} value ="8" label="Brustenge" checked={this.state.symptom9} onChange={() => { this.setState({ symptom9: !this.state.symptom9 }) }} />
+                                <FormControlLabel control={<Checkbox />} value ="9" label="Riechen oder Schmecken beeinträchtigt" checked={this.state.symptom10} onChange={() => { this.setState({ symptom10: !this.state.symptom10 }) }} />
+                                <FormControlLabel control={<Checkbox />} value ="10" label="sonstige" checked={this.state.symptom11} onChange={() => { this.setState({ symptom11: !this.state.symptom11 }) }} />
                             {/* </RadioGroup> */}
                         </FormControl>
 

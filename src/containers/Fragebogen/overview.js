@@ -22,9 +22,7 @@ export default (
               <Paper elevation={5}>
                 <Box p={2}>
 
-                    
-
-                    <TableContainer>
+                    <TableContainer style={{maxWidth: 600}}>
                         <Table>
                             <TableBody variant="footer">
                                 <TableRow>
@@ -84,6 +82,25 @@ export default (
                                         <TableCell>{d.erkrankt ? (<>Ja: {d.begleiterkrankungenText}</>) : ("Nein")}</TableCell>
                                     </TableRow>
                                 )}
+                                {/* Symptome: */}
+                                <TableRow>
+                                        <TableCell><b>Symptome</b></TableCell>
+                                        <TableCell>
+                                        
+                                            {d.symptom1 && ("Fieber, ")}
+                                            {d.symptom2 && ("Schnupfen, ")}
+                                            {d.symptom3 && ("Luftnot, ")}
+                                            {d.symptom4 && ("Husten, ")}
+                                            {d.symptom5 && ("Halsschmerzen, ")}
+                                            {d.symptom6 && ("Durchfall, ")}
+                                            {d.symptom7 && ("Übelkeit, ")}
+                                            {d.symptom8 && ("Erbrechen, ")}
+                                            {d.symptom9 && ("Brustenge, ")}
+                                            {d.symptom10 && ("beeinträchtigtes Riechen oder Schmecken, ")}
+                                            {d.symptom11 && ("sonstiges.")}
+                                            
+                                        </TableCell>
+                                    </TableRow>
                                 
                                 {d.files!==null && d.files.length>0 && (
                                     <TableRow>
