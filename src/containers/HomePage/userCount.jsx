@@ -31,7 +31,7 @@ class UserCount extends React.Component {
       )
     }
     else {
-      return ();
+      return (<div>&nbsp;</div>);
     }
   }
 }
