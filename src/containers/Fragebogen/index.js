@@ -25,6 +25,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { uploadFiles, postData } from '../../lib/upload_helpers';
 import Tooltip from "@material-ui/core/Tooltip";
 import { auth_register, auth_confirm } from '../../lib/register_helpers';
+import Overview from "./overview";
 
 import {
     EmailShareButton,
@@ -34,7 +35,6 @@ import {
     TwitterShareButton,
     WhatsappShareButton,
   } from "react-share";
-import DataTreeView from "../../components/DataTreeView/DataTreeView";
 
 
 
@@ -66,7 +66,7 @@ const styles = theme => ({
 });
 
 function getSteps() {
-  return ['Mail', 'Verifikation', 'Person', 'Fragen', 'Bewegungsdaten', 'Bestätigung'];
+  return ['Mail', 'Verifikation', 'Person', 'Fragen', 'Bewegungsdaten', 'Prüfung'];
 }
 
 class Fragebogen extends React.Component {
@@ -260,7 +260,7 @@ class Fragebogen extends React.Component {
                             {/* <TextField variant="outlined" label="Tag" style={{width: 66}} onChange={event=> { this.setState({gebTag: event.target.value}) }} />&nbsp;
                             <TextField variant="outlined" label="Monat" style={{width: 66}} onChange={event=> { this.setState({gebMonat: event.target.value}) }} />&nbsp; */}
 
-                            <TextField variant="outlined" label="Geburtsjahr" onChange={event=> { this.setState({gebJahr: event.target.value}) }} /><br />
+                            <TextField variant="outlined" label="Geburtsjahr" value={this.state.gebJahr} onChange={event=> { this.setState({gebJahr: event.target.value}) }} /><br />
                             <Tooltip arrow title="Das benötigen wir, um anhand einer Alterkategorisierung Informationen über die Ausdifferenzierung des Virus zu gewinnen.">
                                 <Typography variant="caption" style={{marginLeft: 15, color: "#5c6bc0"}}>Wofür?</Typography>
                             </Tooltip>
@@ -457,10 +457,10 @@ class Fragebogen extends React.Component {
               {activeStep===5 && (
                 <Grid container>
                   <Box style={{margin: "auto"}}>
-                    <center>
-                      <p>Folgende Daten werden nach Deiner Bestätigung übermittelt:</p>
-                      <DataTreeView data={this.state}/>
-                    </center>
+
+                    <Typography color="primary" style={{marginBottom: 15}}>Folgende Daten werden nach Deiner Bestätigung übermittelt:</Typography>
+                    <Overview data={this.state} />
+
                   </Box>
                 </Grid>
               )}
