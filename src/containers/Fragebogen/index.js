@@ -74,7 +74,7 @@ const KEYS_TO_TRANSMIT = [
   'kontakt', 'kontaktWo', 'kontaktWann',
   'erkrankt', 'erkranktSeit', 'erkranktTest',
   'quarantaene', 'quarantaeneAnordnung', 'quarantaeneBis',
-  'begleiterkrankungen', 'd.begleiterkrankungenText'
+  'begleiterkrankungen', 'begleiterkrankungenText'
 ];
 
 function getSteps() {
@@ -263,7 +263,7 @@ class Fragebogen extends React.Component {
       'personal_data': {}
     };
 
-    if( data.files && data.files.length > 0) {
+    if( data.files.files && data.files.files.length > 0) {
       toSend.location_file_urls = await uploadFiles(data.userPseudonym, data.files.files, (progress, stats) => {
         this.setState(state => ({
           uploadProgress: progress * 100.0,
