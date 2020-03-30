@@ -77,9 +77,9 @@ const Intro: React.FunctionComponent<IntroProps> = props => {
         <IntroTitle>
           Mit Deinen Daten Leben retten
         </IntroTitle>
-        <Desciption>Forscher finden effektiver Maßnahmen gegen COVID-19 dank Deinen anonymisierten Standortdaten.</Desciption>
+        <Desciption>Effiziente Forschung dank pseudonymisierter Standort- und Gesundheitsdaten.</Desciption>
         <ButtonM size="large" href="https://corona-meldung.de/fragebogen" variant="contained" color="primary" style={{textTransform: "none"}}>
-          Jetzt Daten spenden
+          Jetzt Daten teilen
         </ButtonM>
         {/* <SocialProfile items={SocialLinks} /> */}
       </IntroInfo>

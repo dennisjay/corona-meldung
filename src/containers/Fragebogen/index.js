@@ -394,13 +394,13 @@ class Fragebogen extends React.Component {
 
                             <TextField variant="outlined" label="Geburtsjahr" value={this.state.gebJahr} onChange={event=> { this.setState({gebJahr: event.target.value}) }} /><br />
                             <Tooltip arrow title="Das benötigen wir, um anhand einer Alterkategorisierung Informationen über die Ausdifferenzierung des Virus zu gewinnen.">
-                                <Typography variant="caption" style={{marginLeft: 15, color: "#5c6bc0"}}>Wofür?</Typography>
+                                <Typography variant="caption" style={{marginLeft: 15, color: "#5c6bc0"}}>Warum ist das relevant?</Typography>
                             </Tooltip>
                             <br /><br />
 
                             <TextField variant="outlined" label="Postleitzahl" value={this.state.plz} onChange={event=> { this.setState({plz: event.target.value}) }} /><br />
                             <Tooltip arrow title="Damit fügen wir deinen Daten zusätzlich die Dimension deines Heimatgebiets hinzu.">
-                                <Typography variant="caption" style={{marginLeft: 15, color: "#5c6bc0"}}>Wofür?</Typography>
+                                <Typography variant="caption" style={{marginLeft: 15, color: "#5c6bc0"}}>Warum ist das relevant?</Typography>
                             </Tooltip>
                             <br /><br />
 
@@ -412,7 +412,7 @@ class Fragebogen extends React.Component {
                                 </RadioGroup>
                             </FormControl><br />
                             <Tooltip arrow title="So können wir deine Gefährdung einordnen.">
-                                <Typography variant="caption" style={{marginLeft: 15, color: "#5c6bc0"}}>Wofür?</Typography>
+                                <Typography variant="caption" style={{marginLeft: 15, color: "#5c6bc0"}}>Warum ist das relevant?</Typography>
                             </Tooltip>
 
                             <br /><br />
@@ -492,7 +492,7 @@ class Fragebogen extends React.Component {
                         <br />
 
                         <FormControl component="fieldset">
-                            <FormLabel component="legend">Welche <b>Symptome</b> bestehen?</FormLabel>
+                            <FormLabel component="legend">Welche <b>Symptome</b> hast du?</FormLabel>
                             {/* <RadioGroup> */}
                                 <FormControlLabel control={<Checkbox />} value ="0" label="Fieber" checked={this.state.symptom1} onChange={() => { this.setState({ symptom1: !this.state.symptom1 }) }} />
                                 <FormControlLabel control={<Checkbox />} value ="1" label="Schnupfen" checked={this.state.symptom2} onChange={() => { this.setState({ symptom2: !this.state.symptom2 }) }} />
@@ -513,7 +513,7 @@ class Fragebogen extends React.Component {
                         <br />
 
                         <FormControl component="fieldset" onChange={event => { this.setState({ begleiterkrankungen: event.target.value.localeCompare("0")!==0 }) }}>
-                            <FormLabel component="legend">Begleiterkrankungen?</FormLabel>
+                            <FormLabel component="legend">Weitere Erkrankungen?</FormLabel>
                             <RadioGroup>
                                 <FormControlLabel control={<Radio />} value="0" checked={!this.state.begleiterkrankungen} label="Nein." />
                                 <FormControlLabel control={<Radio />} value ="1" checked={this.state.begleiterkrankungen} label="Ja." />
@@ -535,9 +535,10 @@ class Fragebogen extends React.Component {
                     <Grid container>
                         <Box style={{margin: "auto"}}>
 
-                            <Typography variant="h5" color="primary">Füge deine Bewegungsdaten hinzu</Typography><br />
+                            <Typography variant="h5" color="primary">Füge deine Bewegungsdaten hinzu (optional)</Typography><br />
+                            {/* Hast du einen Google Account -> Ja: Rest einblenden */}
                             <Typography style={{color: "#757575"}}>Deine Daten werden noch vor der Übertragung verschlüsselt.</Typography>
-                            <Typography style={{color: "#757575", marginTop: 10}}>Sie werden ausschließlich pseudonymisiert von renomierten<br />Forschungseinrichtungen im Gesamtbild ausgewertet.</Typography><br />
+                            <Typography style={{color: "#757575", marginTop: 10}}>Sie werden ausschließlich pseudonymisiert von renomierten<br />Forschungseinrichtungen verarbeitet.</Typography><br />
 
                             {/* explanation: */}
                             <Paper elevation={10} style={{maxWidth: 450, backgroundColor: "#f7f9ff"}}>
@@ -731,13 +732,13 @@ class Fragebogen extends React.Component {
                 )}
 
               {/* usercount: */}
-              <Grid container style={{marginTop: 80}}>
+              {/* <Grid container style={{marginTop: 80}}>
                 <Box p={1} style={{ maxWidth: 450, borderWidth: 1, borderStyle: "solid", borderRadius: 3, borderColor: "#eeeee",
                   backgroundColor: "", color: "green", transition: "border .24s ease-in-out", margin: "auto" }}>
 
                   <UserCount/>
                 </Box>
-              </Grid>
+              </Grid> */}
 
             </div>
         </>

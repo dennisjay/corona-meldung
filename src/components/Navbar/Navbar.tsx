@@ -83,7 +83,7 @@ const Navbar: React.FunctionComponent<NavbarProps> = ({
           <Menu items={MenuItems} />
         </MenuWrapper>
         <ButtonM href={"/fragebogen"} variant="contained" color="primary" style={{textTransform: "none"}}>
-          Jetzt Daten spenden
+          Jetzt Daten teilen
         </ButtonM>
       </NavbarWrapper>
 

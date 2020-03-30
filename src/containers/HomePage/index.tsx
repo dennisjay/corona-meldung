@@ -36,10 +36,13 @@ const PersonalBlog: React.FunctionComponent<PersonalBlogProps> = ({
           </SectionTitle>
           <SectionContent>
             <p>
+              Wir ermöglichen Nutzern Standortdaten zusammen mit einem kurzen medizinischen Fragebogen mit Forschungseinrichtungen der Pandemiebekämpfung zu teilen. Die Standortdaten können rückwirkend geteilt werden. So können Infektionsketten zurückverfolgt und Rückschlüsse auf die Wirksamkeit von Eindämmungsmaßnahmen auf die Virusausbreitung gezogen werden.
+
+{/* 
               Herauszufinden, wer wann, wo und wie lange war, hilft den Weg des
               Virus' nachzuvollziehen und die Effektivität von Gegenmaßnahmen zu
               messen. Mit einer ausreichend großen Menge an Daten können
-              Forschungseinrichtungen besser gegen COVID-19 vorgehen.
+              Forschungseinrichtungen besser gegen COVID-19 vorgehen. */}
             </p>
           </SectionContent>
         </SectionText>
@@ -122,7 +125,7 @@ const PersonalBlog: React.FunctionComponent<PersonalBlogProps> = ({
       {/* <SectionWrapper> */}
         <center>
           <ButtonM size="large" href="https://corona-meldung.de/fragebogen" variant="contained" color="primary" style={{textTransform: "none"}}>
-            &nbsp;&nbsp;Jetzt Daten spenden&nbsp;&nbsp;
+            &nbsp;&nbsp;Jetzt Daten teilen&nbsp;&nbsp;
           </ButtonM>
         </center>
       {/* </SectionWrapper> */}
