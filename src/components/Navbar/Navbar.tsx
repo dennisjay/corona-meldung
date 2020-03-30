@@ -16,6 +16,7 @@ import HeaderWrapper, {
 } from "./Navbar.style"
 import LogoImage from "../../images/logo.png"
 import Button from "../Button/Button";
+import ButtonM from '@material-ui/core/Button';
 
 type NavbarProps = {
   className?: string
@@ -81,7 +82,9 @@ const Navbar: React.FunctionComponent<NavbarProps> = ({
         <MenuWrapper>
           <Menu items={MenuItems} />
         </MenuWrapper>
-        <a href={'/fragebogen'}><Button title="Jetzt Daten spenden" href={'/fragebogen'} /></a>
+        <ButtonM href={"/fragebogen"} variant="contained" color="primary" style={{textTransform: "none"}}>
+          Jetzt Daten spenden
+        </ButtonM>
       </NavbarWrapper>
 
     </HeaderWrapper>

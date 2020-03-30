@@ -7,6 +7,7 @@ import img_data from "../../images/undraw_data_xmfy.svg";
 import img_map from "../../images/undraw_Map_light_3hjy.svg";
 import img_security from "../../images/undraw_security_o890.svg";
 import img_server from "../../images/undraw_server_cluster_jwwq.svg";
+import ButtonM from '@material-ui/core/Button';
 
 
 import {
@@ -118,11 +119,13 @@ const PersonalBlog: React.FunctionComponent<PersonalBlogProps> = ({
         </SectionText>
       </SectionWrapper>
 
-      <SectionWrapper>
-        <SectionContent>
-          <a href={'/fragebogen'}><Button title="Jetzt Daten spenden" href={'/fragebogen'} /></a>
-        </SectionContent>
-      </SectionWrapper>
+      {/* <SectionWrapper> */}
+        <center>
+          <ButtonM size="large" href="https://corona-meldung.de/fragebogen" variant="contained" color="primary" style={{textTransform: "none"}}>
+            &nbsp;&nbsp;Jetzt Daten spenden&nbsp;&nbsp;
+          </ButtonM>
+        </center>
+      {/* </SectionWrapper> */}
       <br />
 
 
