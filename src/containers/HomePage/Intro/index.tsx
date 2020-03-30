@@ -5,6 +5,7 @@ import SocialProfile from "../../../components/SocialProfile/SocialProfile"
 import Button from "../../../components/Button/Button"
 
 import img_mask from "../../../images/undraw_social_distancing_2g0u(1).svg";
+import ButtonM from '@material-ui/core/Button';
 
 import {
   IntroWrapper,
@@ -77,7 +78,9 @@ const Intro: React.FunctionComponent<IntroProps> = props => {
           Mit Deinen Daten Leben retten
         </IntroTitle>
         <Desciption>Forscher finden effektiver Maßnahmen gegen COVID-19 dank Deinen anonymisierten Standortdaten.</Desciption>
-        <a href={'/fragebogen'}> <Button title="Jetzt Daten spenden" /></a>
+        <ButtonM size="large" href="https://corona-meldung.de/fragebogen" variant="contained" color="primary" style={{textTransform: "none"}}>
+          Jetzt Daten spenden
+        </ButtonM>
         {/* <SocialProfile items={SocialLinks} /> */}
       </IntroInfo>
     </IntroWrapper>
