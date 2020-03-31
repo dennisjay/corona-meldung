@@ -55,21 +55,21 @@ export const SectionWrapper = styled.div`
   width: 940px;
   max-width: 100%;
   margin: 0 auto;
-  padding: 0px 10px 10px 10px;
+  padding: 0px 0px 10px 0px;
   display: flex;
   align-items: center;
   @media (max-width: 1400px) {
     padding: 120px 10px 120px 10px;
   }
   @media (max-width: 1200px) {
-    padding: 100px 10px 100px 10px;
+    padding: 50px 10px 60px 10px;
   }
   @media (max-width: 990px) {
-    padding: 70px 25px 80px 25px;
+    padding: 20px 25px 30px 25px;
   }
   @media (max-width: 575px) {
     display: block;
-    padding: 50px 25px 80px 25px;
+    padding: 5px 25px 10px 25px;
     text-align: center;
   }
 `
