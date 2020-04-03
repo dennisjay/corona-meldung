@@ -90,6 +90,9 @@ const KEYS_TO_TRANSMIT = [
   'symptom11'
 ];
 
+const EMAIL_VALIDATION_REGEX = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
+
+
 function getSteps() {
   return ['Mail', 'Verifikation', 'Person', 'Fragen', 'Bewegungsdaten', 'Prüfung'];
 }
@@ -191,7 +194,7 @@ class Fragebogen extends React.Component {
     switch(this.state.activeStep)
     {
       case 0:
-        if (this.state.mail.length < 5) {
+        if (!this.state.mail.match(EMAIL_VALIDATION_REGEX)) {
           window.confirm("Bitte gib eine gültige Mail-Adresse ein.")
           this.setState({  processingStep: false });
         }
@@ -228,7 +231,7 @@ class Fragebogen extends React.Component {
       case 1:
         console.log( this.state.loginRequired );
         if( this.state.loginRequired ){
-          login_confirm(this.state.mail, this.state.code)
+          login_confirm(this.state.mail, this.state.code.trim())
             .then((result) => {
               console.log("login confirm", result);
               this.setState(state => ({
@@ -245,7 +248,7 @@ class Fragebogen extends React.Component {
 
         }
         else {
-          auth_confirm(this.state.mail, Number(this.state.code))
+          auth_confirm(this.state.mail, Number(this.state.code.trim()))
             .then((result) => {
               console.log("register confirm", result);
               this.setState(state => ({
@@ -362,7 +365,7 @@ class Fragebogen extends React.Component {
                     <>
                         <center><Typography variant="h5" color="primary" >Starte mit deiner Mail-Adresse:</Typography></center><br />
 
-                        <Grid container><Box style={{margin: "auto"}}><TextField variant="outlined" label="Mail" style={{minWidth: 300}} value={this.state.mail} onChange={event=> { this.setState({mail: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }} /></Box></Grid>
+                        <Grid container><Box style={{margin: "auto"}}><TextField variant="outlined" label="Mail" style={{minWidth: 300}} value={this.state.mail.trim()} onChange={event=> { this.setState({mail: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }} /></Box></Grid>
                         <center><Typography style={{marginTop: 10}}>Ich nehme die <Link href="https://corona-meldung.de/datenschutz" target="_blank">Datenschutzerklärung</Link> zur Kenntnis.</Typography></center>
                     </>
                 )}
@@ -373,7 +376,7 @@ class Fragebogen extends React.Component {
                     <Box style={{margin: "auto"}}>
                         <Typography variant="h5" color="primary" >Schau in deine Mails</Typography><br />
                         <Typography> und gib den <b>Code</b> ein, den wir dir geschickt haben:</Typography><br />
-                        <TextField variant="outlined" label="Code" style={{minWidth: 300}} value={this.state.code} onChange={event=> { this.setState({code: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }} /><br />
+                        <TextField variant="outlined" label="Code" style={{minWidth: 300}} value={this.state.code.trim()} onChange={event=> { this.setState({code: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }} /><br />
                         <Typography variant="caption" style={{marginLeft: 15, marginTop: 10, color: "#bdbdbd"}}>Schau ggf. in deinen <b>Spam-Ordner</b>.</Typography><br />
                     </Box>
                   </Grid>
@@ -538,7 +541,7 @@ class Fragebogen extends React.Component {
 
                             <Typography variant="h5" color="primary">Füge deine Bewegungsdaten hinzu</Typography>
                             <Typography style={{color: "#757575", textAlign: "center"}}>(optional)</Typography><br />
-                            
+
                             <FormControl component="fieldset" onChange={event => { this.setState({ gAccount: event.target.value.localeCompare("0")!==0 }) }}>
                                 <FormLabel component="legend">Hast du einen Google-Account?<br /><br />(z.B. eine Mail-Adresse ***@googlemail.com)</FormLabel>
                                 <RadioGroup style={{marginTop: 15}}>
