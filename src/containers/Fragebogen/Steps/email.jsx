@@ -2,6 +2,10 @@ import React from "react";
 import { Box, Grid, Link, Typography } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import WizardNavigation from "../navigation";
+import { auth_register, login_request } from "../../../lib/auth_helpers";
+
+const EMAIL_VALIDATION_REGEX = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+
 
 class Email extends React.Component {
   constructor() {
@@ -9,6 +13,7 @@ class Email extends React.Component {
 
     this.state = {
       mail: "",
+      loginRequired: false
 
     };
 
@@ -17,12 +22,31 @@ class Email extends React.Component {
 
   }
 
-  validateWeiter = () => {
+  validateWeiter = async () => {
+    if (!this.state.mail.match(EMAIL_VALIDATION_REGEX)) {
+      window.confirm("Bitte gib eine gültige Mail-Adresse ein.")
+    } else {
+      try {
+        await auth_register(this.state.mail);
+        this.props.handleWeiter('user', this.state);
+      } catch (reason) {
+        if (reason === 'already_registered') {
+          this.setState({
+            loginRequired: true
+          });
 
-    this.props.handleWeiter();
-
-
-  }
+          try {
+            await login_request(this.state.mail);
+            this.props.handleWeiter('user', this.state);
+          } catch {
+            window.confirm("Fehler bei Login.")
+          }
+        } else {
+          window.confirm("Bitte gib eine gültige Mail-Adresse ein. Jede Mail-Adresse kann zudem nur einmal verwendet werden.")
+        }
+      }
+    }
+  };
 
 
 
@@ -42,7 +66,7 @@ class Email extends React.Component {
       );
     }
 
-}
+};
 
 
 export default Email;

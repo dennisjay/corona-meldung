@@ -42,7 +42,7 @@ class Medical extends React.Component {
   }
 
   validateWeiter = () =>{
-    this.props.handleWeiter();
+    this.props.handleWeiter("medical",this.state);
   }
 
   render() {

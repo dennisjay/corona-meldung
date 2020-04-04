@@ -26,7 +26,7 @@ class Personal extends React.Component {
   }
 
   validateWeiter = () =>{
-    this.props.handleWeiter();
+    this.props.handleWeiter("personal", this.state);
   }
 
   render() {

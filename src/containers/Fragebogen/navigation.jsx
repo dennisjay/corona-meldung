@@ -15,7 +15,7 @@ class WizardNavigation extends React.Component {
 
   executeWeiter = async () => {
     this.setState({processingStep:true});
-    this.props.validateWeiter();
+    await this.props.validateWeiter();
     this.setState({processingStep:false});
   };
 

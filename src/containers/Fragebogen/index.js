@@ -80,198 +80,134 @@ const KEYS_TO_TRANSMIT = [
   'symptom11'
 ];
 
-const EMAIL_VALIDATION_REGEX = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
-
 
 function getSteps() {
   return ['Mail', 'Verifikation', 'Person', 'Fragen', 'Bewegungsdaten', 'Prüfung'];
 }
 
 class Fragebogen extends React.Component {
-    constructor() {
-        super();
-        this.onDrop = (files) => {
-            this.setState({
-                files: { files },
-                noFilesWarning: false
-            })
-            };
+  constructor() {
+    super();
+    this.onDrop = (files) => {
+      this.setState({
+        files: { files },
+        noFilesWarning: false
+      })
+    };
 
-        /*
-        this.defaultState = {
-            vorname: "",
-            nachname: "",
-            plz: "",
-            mail: "",
-            code: "",
-            gebJahr: "",
-            gebiet: undefined,
-            kontakt: undefined,
-            erkrankt: undefined,
-            begleiterkrankungen: undefined,
-            berufstaetig: true,
-            quarantaene: undefined,
-            kontaktWann: "",
-            kontaktWo: "",
-            quarantaeneAnordnung: "",
-            quarantaeneBis: "",
-            erkranktTest: "",
-            erkranktSeit: "",
-            begleiterkrankungenText: "",
-            beruf: "",
-            files: [],
-            activeStep: 0,
-            noFilesWarning: false,
-            uploadProgress: 0,
-            jwk_key: "",
-            loginRequired: false,
-            processingStep: false,
-            userPseudonym: '',
-            symptom1: false,
-            symptom2: false,
-            symptom3: false,
-            symptom4: false,
-            symptom5: false,
-            symptom6: false,
-            symptom7: false,
-            symptom8: false,
-            symptom9: false,
-            symptom10: false,
-            symptom11: false,
-            eingewilligt: false,
-            gAccount: undefined
-        };*/
-        this.defaultState = {
-            activeStep: 0,
-            user: {},
-            personal: {},
-            medical: {},
-            files: {}
-        };
+    /*
+    this.defaultState = {
+        vorname: "",
+        nachname: "",
+        plz: "",
+        mail: "",
+        code: "",
+        gebJahr: "",
+        gebiet: undefined,
+        kontakt: undefined,
+        erkrankt: undefined,
+        begleiterkrankungen: undefined,
+        berufstaetig: true,
+        quarantaene: undefined,
+        kontaktWann: "",
+        kontaktWo: "",
+        quarantaeneAnordnung: "",
+        quarantaeneBis: "",
+        erkranktTest: "",
+        erkranktSeit: "",
+        begleiterkrankungenText: "",
+        beruf: "",
+        files: [],
+        activeStep: 0,
+        noFilesWarning: false,
+        uploadProgress: 0,
+        jwk_key: "",
+        loginRequired: false,
+        processingStep: false,
+        userPseudonym: '',
+        symptom1: false,
+        symptom2: false,
+        symptom3: false,
+        symptom4: false,
+        symptom5: false,
+        symptom6: false,
+        symptom7: false,
+        symptom8: false,
+        symptom9: false,
+        symptom10: false,
+        symptom11: false,
+        eingewilligt: false,
+        gAccount: undefined
+    };*/
+    this.defaultState = {
+      activeStep: 0,
+      user: {},
+      personal: {},
+      medical: {},
+      files: {}
+    };
 
-        this.state = this.defaultState;
-    }
+    this.state = this.defaultState;
+  }
 
   handleReset = () => {
-      this.setState(this.defaultState);
-    };
+    this.setState(this.defaultState);
+  };
 
   handleBack = () => {
     this.setState({
       activeStep: this.state.activeStep - 1,
     });
-  }
+  };
 
-  handleWeiter = () => {
+  handleWeiter = (entered_data_key, entered_data) => {
+    if(entered_data_key){
+      let toUpdate = {};
+      toUpdate[entered_data_key] = entered_data;
+      this.setState(toUpdate);
+    }
     this.setState({
       activeStep: this.state.activeStep + 1,
     });
-    window.scrollTo(0,0);
+    window.scrollTo(0, 0);
 
 
+    /*
+    case 0:
+      }
+      break;
+    case 1:
 
-      /*
-      case 0:
-        if (!this.state.mail.match(EMAIL_VALIDATION_REGEX)) {
-          window.confirm("Bitte gib eine gültige Mail-Adresse ein.")
-          this.setState({  processingStep: false });
-        }
-        else {
-          auth_register(this.state.mail)
-            .then(() => {
-              console.log("register");
-              this.handleNext();
-            })
-            .catch( (reason) => {
-              if( reason === 'already_registered') {
-                  this.setState(state => ({
-                    loginRequired: true
-                  }));
+      }
+      break;
 
-                  login_request(this.state.mail)
-                  .then(() => {
-                    console.log("login");
-                    this.handleNext();
-                  })
-                  .catch( () => {
-                    window.confirm("Fehler bei Login.")
-                    this.setState({  processingStep: false });
-                  });
-              }
-
-              else {
-                window.confirm("Bitte gib eine gültige Mail-Adresse ein. Jede Mail-Adresse kann zudem nur einmal verwendet werden.")
-                this.setState({  processingStep: false });
-              }
-            })
-        }
-        break;
-      case 1:
-        console.log( this.state.loginRequired );
-        if( this.state.loginRequired ){
-          login_confirm(this.state.mail, this.state.code.trim())
-            .then((result) => {
-              console.log("login confirm", result);
-              this.setState(state => ({
-                userPseudonym: result.pseudonym,
-                jwk_key: result.jwk_key
-              }));
-
-              this.handleNext();
-            })
-            .catch(() => {
-              window.confirm("Das ist nicht der richtige Code.")
-              this.setState({  processingStep: false });;
-            });
-
-        }
-        else {
-          auth_confirm(this.state.mail, Number(this.state.code.trim()))
-            .then((result) => {
-              console.log("register confirm", result);
-              this.setState(state => ({
-                userPseudonym: result.pseudonym,
-                jwk_key: result.jwk_key
-              }));
-
-              this.handleNext();
-            })
-            .catch(() => {
-              window.confirm("Das ist nicht der richtige Code.");
-              this.setState({  processingStep: false });
-            });
-        }
-        break;
-
-      case 4:
-        if (this.state.files.length === 0 && !this.state.noFilesWarning) {
-          this.setState({ noFilesWarning: true, processingStep: false })
-        }
-        else {
-          this.handleNext();
-        }
-        break;
-
-      case 5:
-          console.log("sending");
-          this.handleNext();
-          this.handlePost(this.state)
-            .then(() => {
-              this.handleNext();
-            })
-            .catch(() => {
-              window.confirm("Fehler beim upload!");
-              this.handleBack();
-            });
-          break;
-
-      default:
+    case 4:
+      if (this.state.files.length === 0 && !this.state.noFilesWarning) {
+        this.setState({ noFilesWarning: true, processingStep: false })
+      }
+      else {
         this.handleNext();
+      }
+      break;
+
+    case 5:
+        console.log("sending");
+        this.handleNext();
+        this.handlePost(this.state)
+          .then(() => {
+            this.handleNext();
+          })
+          .catch(() => {
+            window.confirm("Fehler beim upload!");
+            this.handleBack();
+          });
         break;
-    }      */
+
+    default:
+      this.handleNext();
+      break;
+  }      */
   };
-
-
 
 
   handlePost = async (data) => {
@@ -284,7 +220,7 @@ class Fragebogen extends React.Component {
       'personal_data': {}
     };
 
-    if( data.files.files && data.files.files.length > 0) {
+    if (data.files.files && data.files.files.length > 0) {
       toSend.location_file_urls = await uploadFiles(data.userPseudonym, data.files.files, (progress, stats) => {
         this.setState(state => ({
           uploadProgress: progress * 100.0,
@@ -292,14 +228,14 @@ class Fragebogen extends React.Component {
       });
     }
 
-    for( let key of KEYS_TO_TRANSMIT ){
+    for (let key of KEYS_TO_TRANSMIT) {
       toSend.personal_data[key] = data[key];
     }
 
 
     const jwk_key = JSON.parse(data.jwk_key);
     const encryped = await encrypt(jwk_key, JSON.stringify(toSend.personal_data));
-    console.log("ENCRYPTED",  encryped);
+    console.log("ENCRYPTED", encryped);
     const decrypted = await decrypt(jwk_key, encryped);
     console.log("DECRYPTED", decrypted);
 
@@ -317,75 +253,75 @@ class Fragebogen extends React.Component {
     const { activeStep } = this.state;
 
     return (
-        <>
-            {/* steps: */}
-            <div className={classes.root}>
-                <Stepper activeStep={activeStep} style={{marginBottom: 15}}>
-                {steps.map((label) => {
-                    return (
-                    <Step key={label} className={classes.step}>
-                        <StepLabel classes={{
-                        iconContainer: classes.iconContainer
-                        }}>
-                        <Typography>{label}</Typography>
-                        </StepLabel>
-                    </Step>
-                    );
-                })}
-                </Stepper>
+      <>
+        {/* steps: */}
+        <div className={classes.root}>
+          <Stepper activeStep={activeStep} style={{ marginBottom: 15 }}>
+            {steps.map((label) => {
+              return (
+                <Step key={label} className={classes.step}>
+                  <StepLabel classes={{
+                    iconContainer: classes.iconContainer
+                  }}>
+                    <Typography>{label}</Typography>
+                  </StepLabel>
+                </Step>
+              );
+            })}
+          </Stepper>
 
-                {/* get step content: */}
-                {/* active step is zero based. */}
+          {/* get step content: */}
+          {/* active step is zero based. */}
 
-                {/* step 1: mail: */}
-                {activeStep===0 && ( <Email
-                    handleWeiter={this.handleWeiter}
-                    handleBack={this.handleBack}
-                    activeStep={this.state.activeStep} /> )}
+          {/* step 1: mail: */}
+          {activeStep === 0 && (<Email
+            handleWeiter={this.handleWeiter}
+            handleBack={this.handleBack}
+            activeStep={this.state.activeStep}
+          />)}
 
-                {/* step 2: enter mail verification code */}
-                {activeStep===1 && ( <Verification
-                  handleWeiter={this.handleWeiter}
-                  handleBack={this.handleBack}
-                  activeStep={this.state.activeStep} /> )}
+          {/* step 2: enter mail verification code */}
+          {activeStep === 1 && (<Verification
+            handleWeiter={this.handleWeiter}
+            handleBack={this.handleBack}
+            activeStep={this.state.activeStep}
+            user={this.state.user}
+          />)}
 
-                {/* step 3: data: */}
-                {activeStep===2 && ( <Personal
-                  handleWeiter={this.handleWeiter}
-                  handleBack={this.handleBack}
-                  activeStep={this.state.activeStep} /> )}
+          {/* step 3: data: */}
+          {activeStep === 2 && (<Personal
+            handleWeiter={this.handleWeiter}
+            handleBack={this.handleBack}
+            activeStep={this.state.activeStep}/>)}
 
-                {/* step 4: medical info */}
-                {activeStep===3 && <Medical
-                  handleWeiter={this.handleWeiter}
-                  handleBack={this.handleBack}
-                  activeStep={this.state.activeStep} />}
+          {/* step 4: medical info */}
+          {activeStep === 3 && <Medical
+            handleWeiter={this.handleWeiter}
+            handleBack={this.handleBack}
+            activeStep={this.state.activeStep}/>}
 
-              {activeStep===4 && <Upload
-                handleWeiter={this.handleWeiter}
-                handleBack={this.handleBack}
-                activeStep={this.state.activeStep} />}
-
-
-
-              {activeStep===5 && <SendConfirm
-                handleWeiter={this.handleWeiter}
-                handleBack={this.handleBack}
-                activeStep={this.state.activeStep}
-              />}
+          {activeStep === 4 && <Upload
+            handleWeiter={this.handleWeiter}
+            handleBack={this.handleBack}
+            activeStep={this.state.activeStep}/>}
 
 
-                {/* thank you page */}
-                {activeStep===6 && (<ThankYou
-                    handleReset={this.handleReset}
-                  />
-                )}
+          {activeStep === 5 && <SendConfirm
+            handleWeiter={this.handleWeiter}
+            handleBack={this.handleBack}
+            activeStep={this.state.activeStep}
+          />}
 
 
+          {/* thank you page */}
+          {activeStep === 6 && (<ThankYou
+              handleReset={this.handleReset}
+            />
+          )}
 
 
-              {/* usercount: */}
-              {/* <Grid container style={{marginTop: 80}}>
+          {/* usercount: */}
+          {/* <Grid container style={{marginTop: 80}}>
                 <Box p={1} style={{ maxWidth: 450, borderWidth: 1, borderStyle: "solid", borderRadius: 3, borderColor: "#eeeee",
                   backgroundColor: "", color: "green", transition: "border .24s ease-in-out", margin: "auto" }}>
 
@@ -393,8 +329,8 @@ class Fragebogen extends React.Component {
                 </Box>
               </Grid> */}
 
-            </div>
-        </>
+        </div>
+      </>
     );
   }
 }
