@@ -25,6 +25,7 @@ import Tim from "../../images/tim.jpg"
 import Malte from "../../images/malte.jpg"
 import Dennis from "../../images/dennis.jpg"
 import Florian from "../../images/florian.jpg"
+import Bogdan from "../../images/bogdan.jpg"
 
 const SocialLinks = [
   {
@@ -112,7 +113,7 @@ const About: React.FunctionComponent<AboutProps> = props => {
 
     <IntroWrapper>
       <IntroImage>
-        {/* <Image fluid={} alt="author" /> */}
+        <img src={Bogdan} alt="Bogdan" />
       </IntroImage>
       <IntroInfo>
         <IntroTitle>

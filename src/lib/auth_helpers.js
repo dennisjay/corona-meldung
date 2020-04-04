@@ -1,6 +1,34 @@
 const AUTH_BACKEND_BASE_URL = 'https://auth.corona-meldung.de';
 
 
+export const user_count = () => {
+  const endpoint = AUTH_BACKEND_BASE_URL + '/user_count';
+  let request = new XMLHttpRequest();
+
+  request.open('GET', endpoint, true);
+  request.setRequestHeader('Content-Type', 'application/json');
+
+  return new Promise((resolve, reject) => {
+    request.onload = function(e) {
+      if (request.readyState === 4) {
+        if (request.status === 200) {
+          console.log(request.responseText);
+          resolve(JSON.parse(request.responseText).user_count)
+        }
+        else {
+          console.error(request.statusText);
+          reject(request.statusText)
+        }
+      }
+    };
+
+    request.send(null);
+  });
+};
+
+
+
+
 export const auth_register = (email) => {
   const endpoint = AUTH_BACKEND_BASE_URL + '/register';
   let request = new XMLHttpRequest();
@@ -48,7 +76,8 @@ export const auth_confirm = (email, activation_key) => {
       if (request.readyState === 4) {
         if (request.status === 200) {
           console.log(request.responseText);
-          resolve(JSON.parse(request.responseText).jwk_key)
+          const obj = JSON.parse(request.responseText);
+          resolve(obj)
         } else {
           console.error(request.statusText);
           reject()
@@ -106,7 +135,8 @@ export const login_confirm = (email, login_token) => {
       if (request.readyState === 4) {
         if (request.status === 200) {
           console.log(request.responseText);
-          resolve(JSON.parse(request.responseText).jwk_key)
+          const obj = JSON.parse(request.responseText);
+          resolve(obj)
         } else {
           console.error(request.statusText);
           reject()

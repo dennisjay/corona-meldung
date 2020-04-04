@@ -15,6 +15,8 @@ import HeaderWrapper, {
   NavSearchFromWrapper,
 } from "./Navbar.style"
 import LogoImage from "../../images/logo.png"
+import Button from "../Button/Button";
+import ButtonM from '@material-ui/core/Button';
 
 type NavbarProps = {
   className?: string
@@ -33,10 +35,10 @@ const MenuItems = [
     label: "Team",
     url: "/about",
   },
-  {
-    label: "Kontakt",
-    url: "/contact",
-  }
+  // {
+  //   label: "Kontakt",
+  //   url: "/contact",
+  // }
   //   label: "404 Page",
   //   url: "/404",
   // },
@@ -80,27 +82,11 @@ const Navbar: React.FunctionComponent<NavbarProps> = ({
         <MenuWrapper>
           <Menu items={MenuItems} />
         </MenuWrapper>
-        <NavSearchButton
-          type="button"
-          aria-label="search"
-          onClick={toggleHandle}
-        >
-          <IoIosSearch size="23px" />
-        </NavSearchButton>
+        <ButtonM href={"/fragebogen"} variant="contained" color="primary" style={{textTransform: "none"}}>
+          Jetzt Daten teilen
+        </ButtonM>
       </NavbarWrapper>
 
-      <NavSearchWrapper className={state.toggle === true ? "expand" : ""}>
-        <NavSearchFromWrapper>
-          <SearchContainer />
-          <SearchCloseButton
-            type="submit"
-            aria-label="close"
-            onClick={toggleHandle}
-          >
-            <IoIosClose />
-          </SearchCloseButton>
-        </NavSearchFromWrapper>
-      </NavSearchWrapper>
     </HeaderWrapper>
   )
 }

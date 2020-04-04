@@ -22,7 +22,6 @@ import HelpIcon from '@material-ui/icons/Help';
 import WarningIcon from '@material-ui/icons/Warning';
 import LinearProgress from "@material-ui/core/LinearProgress";
 import CircularProgress from '@material-ui/core/CircularProgress'
-import { v4 as uuidv4 } from 'uuid';
 import { uploadFiles, postData } from '../../lib/upload_helpers';
 import Tooltip from "@material-ui/core/Tooltip";
 import { auth_register, auth_confirm, login_request, login_confirm } from '../../lib/auth_helpers';
@@ -36,6 +35,11 @@ import {
     TwitterShareButton,
     WhatsappShareButton,
   } from "react-share";
+import UserCount from "./userCount";
+import TableRow from "@material-ui/core/TableRow";
+import TableCell from "@material-ui/core/TableCell";
+import TableBody from "@material-ui/core/TableBody";
+import { decrypt, encrypt } from "../../lib/encrypt_helpers";
 
 
 
@@ -66,6 +70,29 @@ const styles = theme => ({
   }
 });
 
+const KEYS_TO_TRANSMIT = [
+  'gebJahr', 'plz', 'berufstaetig', 'beruf',
+  'kontakt', 'kontaktWo', 'kontaktWann',
+  'erkrankt', 'erkranktSeit', 'erkranktTest',
+  'quarantaene', 'quarantaeneAnordnung', 'quarantaeneBis',
+  'begleiterkrankungen', 'begleiterkrankungenText',
+  'userPseudonym',
+  'symptom1',
+  'symptom2',
+  'symptom3',
+  'symptom4',
+  'symptom5',
+  'symptom6',
+  'symptom7',
+  'symptom8',
+  'symptom9',
+  'symptom10',
+  'symptom11'
+];
+
+const EMAIL_VALIDATION_REGEX = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
+
+
 function getSteps() {
   return ['Mail', 'Verifikation', 'Person', 'Fragen', 'Bewegungsdaten', 'Prüfung'];
 }
@@ -85,20 +112,13 @@ class Fragebogen extends React.Component {
             plz: "",
             mail: "",
             code: "",
-            geburtTag: "",
-            gebMonat: "",
             gebJahr: "",
-            telefonnummer: "",
             gebiet: undefined,
             kontakt: undefined,
             erkrankt: undefined,
             begleiterkrankungen: undefined,
-            berufstaetig: undefined,
+            berufstaetig: true,
             quarantaene: undefined,
-            files: [],
-            activeStep: 0,
-            noFilesWarning: false,
-            uploadProgress: 0,
             kontaktWann: "",
             kontaktWo: "",
             quarantaeneAnordnung: "",
@@ -107,12 +127,40 @@ class Fragebogen extends React.Component {
             erkranktSeit: "",
             begleiterkrankungenText: "",
             beruf: "",
+            files: [],
+            activeStep: 0,
+            noFilesWarning: false,
+            uploadProgress: 0,
             jwk_key: "",
             loginRequired: false,
-            processingStep: false
+            processingStep: false,
+            userPseudonym: '',
+            symptom1: false,
+            symptom2: false,
+            symptom3: false,
+            symptom4: false,
+            symptom5: false,
+            symptom6: false,
+            symptom7: false,
+            symptom8: false,
+            symptom9: false,
+            symptom10: false,
+            symptom11: false,
+            eingewilligt: false,
+            gAccount: undefined
         };
         this.state = this.defaultState
     }
+
+
+  componentDidMount() {
+    window.addEventListener('beforeunload', function (e) {
+      // Cancel the event
+      e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
+      // Chrome requires returnValue to be set
+      e.returnValue = '';
+    });
+  }
 
   handleNext = () => {
     this.setState(state => ({
@@ -138,6 +186,7 @@ class Fragebogen extends React.Component {
 
   handleWeiter = () => {
     console.log(this.state.activeStep);
+
     this.setState(state => ({
       processingStep: true
     }));
@@ -145,8 +194,9 @@ class Fragebogen extends React.Component {
     switch(this.state.activeStep)
     {
       case 0:
-        if (this.state.mail.length < 5) {
-          return window.confirm("Bitte gib eine gültige Mail-Adresse ein.")
+        if (!this.state.mail.match(EMAIL_VALIDATION_REGEX)) {
+          window.confirm("Bitte gib eine gültige Mail-Adresse ein.")
+          this.setState({  processingStep: false });
         }
         else {
           auth_register(this.state.mail)
@@ -167,11 +217,13 @@ class Fragebogen extends React.Component {
                   })
                   .catch( () => {
                     window.confirm("Fehler bei Login.")
+                    this.setState({  processingStep: false });
                   });
               }
 
               else {
                 window.confirm("Bitte gib eine gültige Mail-Adresse ein. Jede Mail-Adresse kann zudem nur einmal verwendet werden.")
+                this.setState({  processingStep: false });
               }
             })
         }
@@ -179,40 +231,50 @@ class Fragebogen extends React.Component {
       case 1:
         console.log( this.state.loginRequired );
         if( this.state.loginRequired ){
-          login_confirm(this.state.mail, this.state.code)
-            .then((jwk_key) => {
-              console.log("login confirm", jwk_key);
+          login_confirm(this.state.mail, this.state.code.trim())
+            .then((result) => {
+              console.log("login confirm", result);
               this.setState(state => ({
-                jwk_key: jwk_key
+                userPseudonym: result.pseudonym,
+                jwk_key: result.jwk_key
               }));
 
               this.handleNext();
             })
             .catch(() => {
               window.confirm("Das ist nicht der richtige Code.")
+              this.setState({  processingStep: false });;
             });
 
         }
         else {
-          auth_confirm(this.state.mail, Number(this.state.code))
-            .then((jwk_key) => {
-              console.log("register confirm", jwk_key);
+          auth_confirm(this.state.mail, Number(this.state.code.trim()))
+            .then((result) => {
+              console.log("register confirm", result);
               this.setState(state => ({
-                jwk_key: jwk_key
+                userPseudonym: result.pseudonym,
+                jwk_key: result.jwk_key
               }));
 
               this.handleNext();
             })
             .catch(() => {
-              window.confirm("Das ist nicht der richtige Code.")
+              window.confirm("Das ist nicht der richtige Code.");
+              this.setState({  processingStep: false });
             });
         }
         break;
 
-      case 5:
+      case 4:
         if (this.state.files.length === 0 && !this.state.noFilesWarning) {
-          this.setState({ noFilesWarning: true })
-        } else {
+          this.setState({ noFilesWarning: true, processingStep: false })
+        }
+        else {
+          this.handleNext();
+        }
+        break;
+
+      case 5:
           console.log("sending");
           this.handleNext();
           this.handlePost(this.state)
@@ -223,8 +285,7 @@ class Fragebogen extends React.Component {
               window.confirm("Fehler beim upload!");
               this.handleBack();
             });
-        }
-        break;
+          break;
       default:
         this.handleNext();
         break;
@@ -235,18 +296,40 @@ class Fragebogen extends React.Component {
 
 
   handlePost = async (data) => {
+
+
     console.log("handlePost", data);
+    let toSend = {
+      'user_pseudonym': data.userPseudonym,
+      'location_file_urls': [],
+      'personal_data': {}
+    };
 
-    const user_pseudomym = uuidv4();  //TODO replace with real pseudonym from server
-
-    await postData(user_pseudomym, data);
     if( data.files.files && data.files.files.length > 0) {
-      await uploadFiles(user_pseudomym, data.files.files, (progress, stats) => {
+      toSend.location_file_urls = await uploadFiles(data.userPseudonym, data.files.files, (progress, stats) => {
         this.setState(state => ({
           uploadProgress: progress * 100.0,
         }));
       });
     }
+
+    for( let key of KEYS_TO_TRANSMIT ){
+      toSend.personal_data[key] = data[key];
+    }
+
+
+    const jwk_key = JSON.parse(data.jwk_key);
+    const encryped = await encrypt(jwk_key, JSON.stringify(toSend.personal_data));
+    console.log("ENCRYPTED",  encryped);
+    const decrypted = await decrypt(jwk_key, encryped);
+    console.log("DECRYPTED", decrypted);
+
+    toSend.personal_data = encryped;
+
+    console.log("POSTING", toSend);
+    return postData(data.userPseudonym, toSend);
+
+
   };
 
   render() {
@@ -281,7 +364,8 @@ class Fragebogen extends React.Component {
                 {activeStep===0 && (
                     <>
                         <center><Typography variant="h5" color="primary" >Starte mit deiner Mail-Adresse:</Typography></center><br />
-                        <Grid container><Box style={{margin: "auto"}}><TextField variant="outlined" label="Mail" style={{minWidth: 300}} value={this.state.mail} onChange={event=> { this.setState({mail: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }} /></Box></Grid>
+
+                        <Grid container><Box style={{margin: "auto"}}><TextField variant="outlined" label="Mail" style={{minWidth: 300}} value={this.state.mail.trim()} onChange={event=> { this.setState({mail: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }} /></Box></Grid>
                         <center><Typography style={{marginTop: 10}}>Ich nehme die <Link href="https://corona-meldung.de/datenschutz" target="_blank">Datenschutzerklärung</Link> zur Kenntnis.</Typography></center>
                     </>
                 )}
@@ -292,7 +376,7 @@ class Fragebogen extends React.Component {
                     <Box style={{margin: "auto"}}>
                         <Typography variant="h5" color="primary" >Schau in deine Mails</Typography><br />
                         <Typography> und gib den <b>Code</b> ein, den wir dir geschickt haben:</Typography><br />
-                        <TextField variant="outlined" label="Code" style={{minWidth: 300}} value={this.state.code} onChange={event=> { this.setState({code: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }} /><br />
+                        <TextField variant="outlined" label="Code" style={{minWidth: 300}} value={this.state.code.trim()} onChange={event=> { this.setState({code: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }} /><br />
                         <Typography variant="caption" style={{marginLeft: 15, marginTop: 10, color: "#bdbdbd"}}>Schau ggf. in deinen <b>Spam-Ordner</b>.</Typography><br />
                     </Box>
                   </Grid>
@@ -314,13 +398,13 @@ class Fragebogen extends React.Component {
 
                             <TextField variant="outlined" label="Geburtsjahr" value={this.state.gebJahr} onChange={event=> { this.setState({gebJahr: event.target.value}) }} /><br />
                             <Tooltip arrow title="Das benötigen wir, um anhand einer Alterkategorisierung Informationen über die Ausdifferenzierung des Virus zu gewinnen.">
-                                <Typography variant="caption" style={{marginLeft: 15, color: "#5c6bc0"}}>Wofür?</Typography>
+                                <Typography variant="caption" style={{marginLeft: 15, color: "#5c6bc0"}}>Warum ist das relevant?</Typography>
                             </Tooltip>
                             <br /><br />
 
-                            <TextField variant="outlined" label="Postleitzahl" value={this.state.plz} onChange={event=> { this.setState({plz: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }}/><br />
+                            <TextField variant="outlined" label="Postleitzahl" value={this.state.plz} onChange={event=> { this.setState({plz: event.target.value}) }} /><br />
                             <Tooltip arrow title="Damit fügen wir deinen Daten zusätzlich die Dimension deines Heimatgebiets hinzu.">
-                                <Typography variant="caption" style={{marginLeft: 15, color: "#5c6bc0"}}>Wofür?</Typography>
+                                <Typography variant="caption" style={{marginLeft: 15, color: "#5c6bc0"}}>Warum ist das relevant?</Typography>
                             </Tooltip>
                             <br /><br />
 
@@ -332,13 +416,13 @@ class Fragebogen extends React.Component {
                                 </RadioGroup>
                             </FormControl><br />
                             <Tooltip arrow title="So können wir deine Gefährdung einordnen.">
-                                <Typography variant="caption" style={{marginLeft: 15, color: "#5c6bc0"}}>Wofür?</Typography>
+                                <Typography variant="caption" style={{marginLeft: 15, color: "#5c6bc0"}}>Warum ist das relevant?</Typography>
                             </Tooltip>
 
                             <br /><br />
 
                             {this.state.berufstaetig && (
-                                <TextField variant="outlined" label="Welcher Beruf?" value={this.state.beruf} onChange={event=> { this.setState({beruf: event.target.value}) }}/>
+                                <TextField variant="outlined" label="Welcher Beruf?" value={this.state.beruf} onChange={event=> { this.setState({beruf: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }}/>
                             )}
 
                         </Box>
@@ -506,49 +590,70 @@ class Fragebogen extends React.Component {
                     <Grid container>
                         <Box style={{margin: "auto"}}>
 
-                            <Typography variant="h5" color="primary">Füge deine Bewegungsdaten hinzu</Typography><br />
-                            <Typography style={{color: "#757575"}}>Deine Daten werden noch vor der Übertragung verschlüsselt.</Typography>
-                            <Typography style={{color: "#757575", marginTop: 10}}>Sie werden ausschließlich pseudonymisiert von renomierten<br />Forschungseinrichtungen im Gesamtbild ausgewertet.</Typography><br />
+                            <Typography variant="h5" color="primary">Füge deine Bewegungsdaten hinzu</Typography>
+                            <Typography style={{color: "#757575", textAlign: "center"}}>(optional)</Typography><br />
 
-                            {/* explanation: */}
-                            <Paper elevation={10} style={{maxWidth: 450, backgroundColor: "#f7f9ff"}}>
-                                <Typography variant="subtitle1" style={{fontSize: 17, color: "#3f51b5", paddingTop: 10, paddingLeft: 10, paddingBottom: 5 }}><b>So einfach geht's</b></Typography><Divider />
-                                <Typography style={{color: "#5c6bc0", padding: 10}}>
-                                    Geh auf <Link href="https://takeout.google.com" target="_blank" style={{textDecoration: "underline"}}>takeout.google.com</Link>.<br /><br />
-                                    Wähle <strong>Auswahl aufheben</strong> und setze nur bei <strong>Standortverlauf</strong> (fast ganz unten) einen Haken.<br /><br />
-                                    Klicke auf <strong>nächster Schritt</strong> und dann auf <strong>Export</strong>.<br /><br />
-                                    Klicke auf den Link in der <strong>Mail</strong>, die du max. 5 Minuten später erhälst.<br /><br />
-                                    Lade die zip-Datei dann hier hoch:
-                                </Typography>
-                            </Paper>
-                            <br /><br />
+                            <FormControl component="fieldset" onChange={event => { this.setState({ gAccount: event.target.value.localeCompare("0")!==0 }) }}>
+                                <FormLabel component="legend">Hast du einen Google-Account?<br /><br />(z.B. eine Mail-Adresse ***@googlemail.com)</FormLabel>
+                                <RadioGroup style={{marginTop: 15}}>
+                                    <FormControlLabel control={<Radio />} value="0" label="Nein" />
+                                    <FormControlLabel control={<Radio />} value ="1" checked={this.state.gAccount} label="Ja" />
+                                </RadioGroup>
+                            </FormControl>
 
-                            {/* Dropzone */}
-                            <Dropzone onDrop={this.onDrop}>
-                            {({ getRootProps, getInputProps }) => (
-                            <section className="container">
-                                <div {...getRootProps({ className: 'dropzone' })}
-                                    style={{ minHeight: 30, width: 450, alignItems: "center", borderWidth: 1, borderRadius: 3, borderColor: "#eeeee", borderStyle: "dashed", backgroundColor: "#edf2ff", color: "#757575", transition: "border .24s ease-in-out", cursor: "pointer" }}
-                                >
-                                    <input {...getInputProps()} />
-                                    {this.state.files.length!==0 ? (<Typography variant="body2" style={{marginLeft: 15, marginTop: 5, color: lightGreen["800"]}}><b>erfolgreich hochgeladen!</b></Typography>) : (<Typography align="center" style={{marginTop: 3}}><AttachFileIcon fontSize="small" style={{width: 20, verticalAlign:"middle"}}/> Klicken zum <strong>Auswählen</strong>, oder <strong>hierein ziehen.</strong></Typography>)}
-                                </div>
-                            </section>
-                            )}
-                            </Dropzone>
+                            {this.state.gAccount && (
+                              <>
 
-                            {/* soft no files warning: */}
-                            {this.state.noFilesWarning && (
-                                <Grid container style={{marginTop: 10}}>
-                                    <div style={{ maxWidth: 450, borderWidth: 1, borderStyle: "solid", borderRadius: 3, backgroundColor: "#fff3e0",
-                                                color: "#ff9800", transition: "border .24s ease-in-out", margin: "auto" }}>
-                                        <Box display="flex" flexDirection="row" style={{ marginLeft: 10, marginTop: 7, marginBottom: 10}}>
-                                            <WarningIcon fontSize="small" style={{color: "#ff9800"}} />&nbsp;
-                                            <Typography style={{color: "#ff9800", fontSize: 13 }}><strong>Keine Daten hochgeladen</strong></Typography>
-                                        </Box>
-                                        <Typography style={{color: "#ff9800", marginLeft: 10, marginRight: 10, marginBottom: 7, fontSize: 12 }}>Du hast keine Bewegungsdaten hochgeladen. Du kannst das Formular zwar ohne Bewegungsdaten abschicken. Das hilft der Forschung aber kaum, weil die Bewegungsdaten am wertvollsten für uns sind.</Typography>
+                                <Typography style={{color: "#757575"}}>Deine Daten werden noch vor der Übertragung verschlüsselt.</Typography>
+                                <Typography style={{color: "#757575", marginTop: 10}}>Sie werden ausschließlich pseudonymisiert von renomierten<br />Forschungseinrichtungen verarbeitet.</Typography><br />
+
+                                {/* explanation: */}
+                                <Paper elevation={10} style={{maxWidth: 450, backgroundColor: "#f7f9ff"}}>
+                                    <Typography variant="subtitle1" style={{fontSize: 17, color: "#3f51b5", paddingTop: 10, paddingLeft: 10, paddingBottom: 5 }}><b>So einfach geht's</b></Typography><Divider />
+                                    <Typography style={{color: "#5c6bc0", padding: 10}}>
+                                        Geh auf <Link href="https://takeout.google.com" target="_blank" style={{textDecoration: "underline"}}>takeout.google.com</Link>.<br /><br />
+                                        Wähle <strong>Auswahl aufheben</strong> und setze nur bei <strong>Standortverlauf</strong> (fast ganz unten) einen Haken.<br /><br />
+                                        Klicke auf <strong>nächster Schritt</strong> und dann auf <strong>Export</strong>.<br /><br />
+                                        Klicke auf den Link in der <strong>Mail</strong>, die du max. 5 Minuten später erhälst.<br /><br />
+                                        Lade die zip-Datei dann hier hoch:
+                                    </Typography>
+                                </Paper>
+                                <br /><br />
+
+                                {/* Dropzone */}
+                                <Dropzone onDrop={this.onDrop}>
+                                {({ getRootProps, getInputProps }) => (
+                                <section className="container">
+                                    <div {...getRootProps({ className: 'dropzone' })}
+                                        style={{ minHeight: 30, width: 450, alignItems: "center", borderWidth: 1, borderRadius: 3, borderColor: "#eeeee", borderStyle: "dashed", backgroundColor: "#edf2ff", color: "#757575", transition: "border .24s ease-in-out", cursor: "pointer" }}
+                                    >
+                                        <input {...getInputProps()} />
+                                        {this.state.files.length!==0 ? (<Box style={{display: "flex", justifyContent: "space-around"}}><Typography variant="body2" style={{marginLeft: 15, marginTop: 5, color: lightGreen["800"]}}><b>erfolgreich hochgeladen!</b></Typography>&nbsp;&nbsp;<Button disableElevation variant="contained" size="small" style={{color: "#757575"}} onClick={()=>{this.setState({ files: [] })}}>löschen</Button></Box>) : (<Typography align="center" style={{marginTop: 3}}><AttachFileIcon fontSize="small" style={{width: 20, verticalAlign:"middle"}}/> Klicken zum <strong>Auswählen</strong>, oder <strong>hierein ziehen.</strong></Typography>)}
                                     </div>
-                                </Grid>
+                                </section>
+                                )}
+                                </Dropzone>
+
+                                {/* soft no files warning: */}
+                                {this.state.noFilesWarning && (
+                                    <Grid container style={{marginTop: 10}}>
+                                        <div style={{ maxWidth: 450, borderWidth: 1, borderStyle: "solid", borderRadius: 3, backgroundColor: "#fff3e0",
+                                                    color: "#ff9800", transition: "border .24s ease-in-out", margin: "auto" }}>
+                                            <Box display="flex" flexDirection="row" style={{ marginLeft: 10, marginTop: 7, marginBottom: 10}}>
+                                                <WarningIcon fontSize="small" style={{color: "#ff9800"}} />&nbsp;
+                                                <Typography style={{color: "#ff9800", fontSize: 13 }}><strong>Keine Daten hochgeladen</strong></Typography>
+                                            </Box>
+                                            <Typography style={{color: "#ff9800", marginLeft: 10, marginRight: 10, marginBottom: 7, fontSize: 12 }}>Du hast keine Bewegungsdaten hochgeladen. Du kannst das Formular zwar ohne Bewegungsdaten abschicken. Das hilft der Forschung aber kaum, weil die Bewegungsdaten am wertvollsten für uns sind.</Typography>
+                                        </div>
+                                    </Grid>
+                                )}
+                              </>
+                            )}
+
+                            {this.state.gAccount!==undefined && !this.state.gAccount && (
+                              <center>
+                                <Typography style={{color: "#757575", maxWidth: 350, textAlign: "center"}}>Da du keinen Google-Account hast, können wir aktuell technisch keine Bewegungsdaten von dir hinzufügen.</Typography>
+                              </center>
                             )}
 
 
@@ -557,32 +662,58 @@ class Fragebogen extends React.Component {
                 )}
 
 
-              {/* upload progress */}
               {activeStep===5 && (
                 <>
-                  <Grid container>
-                    <Box style={{margin: "auto"}}>
+                  <center><Typography color="primary" style={{marginBottom: 15}}>Folgende Daten werden nach Deiner Bestätigung übermittelt:</Typography></center>
 
-                      <center><Typography color="primary" style={{marginBottom: 15}}>Folgende Daten werden nach Deiner Bestätigung übermittelt:</Typography></center>
-                      <Overview data={this.state} />
+                  <Overview data={this.state} />
 
-                    </Box>
-                  </Grid>
+                  <br />
+                  <center><Typography variant="body" style={{color: "#bdbdbd"}}>Du kannst auf 'zurück' klicken und Änderungen vornehmen,<br />ohne dass du etwas nochmal ganz neu eingeben musst.</Typography></center>
                   <br /><br />
                   <Grid container>
-                    <Paper elevation={10} style={{maxWidth: 1024, backgroundColor: "#f7f9ff", margin: "auto", padding: 1}}>
-                        <Typography style={{color: "#5c6bc0", padding: 5, textAlign: "justify"}}>
-                            <Typography style={{fontSize: 16, marginBottom: "0.3em"}}>Einwilligung gemäß Art. 6 Abs. 1 Buchst. a, 9 Abs. 2 Buchst. a DSGVO in die Verarbeitung meiner personenbezogenen und besonderen personenbezogenen Daten</Typography>
+                    <Paper elevation={5} style={{maxWidth: 500, backgroundColor: "", margin: "auto", padding: 1}}>
+                        <Typography style={{color: "#9e9e9e", padding: 5, textAlign: "justify"}}>
+                            <Typography style={{fontSize: 15, marginBottom: "0.3em"}}>Einwilligung in die Verarbeitung meiner personenbezogenen und besonderen personenbezogenen Daten gemäß Art. 6 Abs. 1 Buchst. a, 9 Abs. 2 Buchst. a DSGVO</Typography>
                             <Divider />
-                            <Typography variant="body2" style={{margin: "0.3em 0 0.3em 0"}}>Hiermit willige ich zu Zwecken der medizinischen Forschung im Bereich der Virologie und der Pandemieforschung in die Verarbeitung meiner personenbezogenen Daten und meiner besonderen personenbezogene Daten (siehe obige Zusammenfassung) ein.</Typography>
-                            <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Im Rahmen der Datenverarbeitung werden Ihre Daten erhoben, gespeichert, gegebenenfalls aggregiert, ausgewertet und an renommierte Forschungsinstitute übermittelt.</Typography>
-                            <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Soweit es zu einer Übermittlung Ihrer personenbezogenen Daten an Forschungsinstitute kommt, erfolgt diese Übermittlung dergestalt, dass den Forschungsinstituten Rückschlüsse auf Ihre Person unmöglich sind.</Typography>
-                            <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Sie können Ihre Einwilligung jederzeit und ohne Nachteile widerrufen. Den Widerruf können Sie formlos beispielsweise an datenschutz@corona-meldung.de richten.</Typography>
-                            <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Sobald Sie Ihre Einwilligung widerrufen, werden sämtliche bei uns gespeicherten personenbezogenen Daten und sämtliche bei uns gespeicherten besonderen personenbezogenen Daten vollständig anonymisiert, so dass auch für uns keinerlei Rückschlüsse mehr auf Ihre Person möglich sind.</Typography>
-                            <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Ein Widerruf Ihrer Einwilligungserklärung berührt nicht die Rechtmäßigkeit der Datenverarbeitungen bis zum Zeitpunkt Ihres Widerrufs. Soweit Ihre personenbezogenen Daten und besonderen personenbezogenen Daten bereits an Forschungsinstitute übermittelt wurden, wird diese Übermittlung rückwirkend ebenfalls nicht rechtswidrig.</Typography>
+                            <Typography variant="body2" style={{fontSize: 12, margin: "0.3em 0 0.3em 0"}}>Hiermit willige ich zu Zwecken der medizinischen Forschung im Bereich der Virologie und der Pandemieforschung in die Verarbeitung meiner personenbezogenen Daten und meiner besonderen personenbezogene Daten (siehe obige Zusammenfassung) ein.</Typography>
+                            <Typography variant="body2" style={{fontSize: 12,margin: "0 0 0.3em 0"}}>Im Rahmen der Datenverarbeitung werden Ihre Daten erhoben, gespeichert, gegebenenfalls aggregiert, ausgewertet und an renommierte Forschungsinstitute übermittelt.</Typography>
+                            <Typography variant="body2" style={{fontSize: 12,margin: "0 0 0.3em 0"}}>Soweit es zu einer Übermittlung Ihrer personenbezogenen Daten an Forschungsinstitute kommt, erfolgt diese Übermittlung dergestalt, dass den Forschungsinstituten Rückschlüsse auf Ihre Person unmöglich sind.</Typography>
+                            <Typography variant="body2" style={{fontSize: 12,margin: "0 0 0.3em 0"}}>Sie können Ihre Einwilligung jederzeit und ohne Nachteile widerrufen. Den Widerruf können Sie formlos beispielsweise an datenschutz@corona-meldung.de richten.</Typography>
+                            <Typography variant="body2" style={{fontSize: 12,margin: "0 0 0.3em 0"}}>Sobald Sie Ihre Einwilligung widerrufen, werden sämtliche bei uns gespeicherten personenbezogenen Daten und sämtliche bei uns gespeicherten besonderen personenbezogenen Daten vollständig anonymisiert, so dass auch für uns keinerlei Rückschlüsse mehr auf Ihre Person möglich sind.</Typography>
+                            <Typography variant="body2" style={{fontSize: 12,margin: "0 0 0.3em 0"}}>Ein Widerruf Ihrer Einwilligungserklärung berührt nicht die Rechtmäßigkeit der Datenverarbeitungen bis zum Zeitpunkt Ihres Widerrufs. Soweit Ihre personenbezogenen Daten und besonderen personenbezogenen Daten bereits an Forschungsinstitute übermittelt wurden, wird diese Übermittlung rückwirkend ebenfalls nicht rechtswidrig.</Typography>
                         </Typography>
                       </Paper>
                   </Grid>
+                  <br />
+                  <center>
+                    <Checkbox checked={this.state.eingewilligt} onClick={()=>{this.setState({eingewilligt: !this.state.eingewilligt})}} />
+                    <Button color="primary" style={{textTransform: "none"}} onClick={()=>{this.setState({eingewilligt: !this.state.eingewilligt})}}><b>Ich willige ein.</b></Button>
+                  </center>
+
+                  <Box style={{marginTop: 25 }}>
+                      <center>
+                      <Button
+                          disabled={activeStep === 0}
+                          onClick={this.handleBack}
+                          className={classes.button}
+                          variant="outlined"
+                          style={{marginRight: 30, textTransform: "none"}}
+                      >
+                          zurück
+                      </Button>
+                      <Button
+                          variant="contained"
+                          color="primary"
+                          disabled={!this.state.eingewilligt}
+                          onClick={() => { return this.handleWeiter() }}
+                          className={classes.button}
+                          style={{textTransform: "none"}}
+                      >
+                          {activeStep === steps.length - 1 ? 'ABSCHICKEN' : 'WEITER'}
+                      </Button>
+                      </center>
+                  </Box>
                 </>
               )}
 
@@ -627,7 +758,7 @@ class Fragebogen extends React.Component {
                 )}
 
                 {/* weiter und zurueck: */}
-                {activeStep<6 && !this.state.processingStep && (
+                {activeStep<5 && !this.state.processingStep && (
                     <Box style={{marginTop: 25 }}>
                         <center>
                         <Button
@@ -667,13 +798,23 @@ class Fragebogen extends React.Component {
                                     backgroundColor: "", color: "#c5cae9", transition: "border .24s ease-in-out", margin: "auto" }}>
                             <Box display="flex" flexDirection="row" style={{ marginLeft: 10, marginTop: 7, marginBottom: 10}}>
                                 <HelpIcon fontSize="small" style={{color: "#5c6bc0"}} />&nbsp;
-                                <Typography style={{color: "#5c6bc0", fontSize: 13 }}><strong>Was bedeutet "pseudonymisiert"?</strong></Typography>
+                                <Typography style={{color: "#5c6bc0", fontSize: 13 }}><strong>Wie sorgen wir dafür, dass deine Daten sicher sind?</strong></Typography>
                             </Box>
-                            <Typography style={{color: "#9fa8da", marginLeft: 10, marginRight: 10, marginBottom: 7, fontSize: 12 }}>Das heißt, dass wir deinen Daten eine Identifikationsnummer zuordnen. Es wird nur verarbeitet, dass z.B. jemand mit bestimmten
-                            Symptomen ein bestimmtes Alter hat. Eine Verbindung zu dir persönlich wird nicht offengelegt.</Typography>
+                            <Typography style={{color: "#9fa8da", marginLeft: 10, marginRight: 10, marginBottom: 7, fontSize: 12 }}>Wir ordnen deine Daten eine Identifikationsnummer zu und
+                            speichern diese verschlüsselt auf einem gesonderten Server in Deutschland. Deine Gesundheits- und Bewegungsdaten können daher nicht mit deiner Mailadresse in Verbindung gebracht werden. </Typography>
                         </div>
                     </Grid>
                 )}
+
+              {/* usercount: */}
+              {/* <Grid container style={{marginTop: 80}}>
+                <Box p={1} style={{ maxWidth: 450, borderWidth: 1, borderStyle: "solid", borderRadius: 3, borderColor: "#eeeee",
+                  backgroundColor: "", color: "green", transition: "border .24s ease-in-out", margin: "auto" }}>
+
+                  <UserCount/>
+                </Box>
+              </Grid> */}
+
             </div>
         </>
     );
