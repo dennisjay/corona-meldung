@@ -4,61 +4,20 @@ import { withStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-// import StepContent from '@material-ui/core/StepContent';
-import Paper from '@material-ui/core/Paper';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
-import TextField from '@material-ui/core/TextField';
-import { Divider, Button, Box, Typography, Link, Grid } from '@material-ui/core';
-import AttachFileIcon from '@material-ui/icons/AttachFile';
-import Dropzone from "react-dropzone";
-import { lightGreen } from "@material-ui/core/colors";
-import Checkbox from '@material-ui/core/Checkbox';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import HelpIcon from '@material-ui/icons/Help';
-import WarningIcon from '@material-ui/icons/Warning';
-import LinearProgress from "@material-ui/core/LinearProgress";
-import CircularProgress from '@material-ui/core/CircularProgress'
-import { v4 as uuidv4 } from 'uuid';
-import { uploadFiles, postData } from '../../lib/upload_helpers';
-import Tooltip from "@material-ui/core/Tooltip";
-import { auth_register, auth_confirm, login_request, login_confirm } from '../../lib/auth_helpers';
-import Overview from "./overview";
 
-import {
-    EmailShareButton,
-    FacebookShareButton,
-    LinkedinShareButton,
-    TelegramShareButton,
-    TwitterShareButton,
-    WhatsappShareButton,
-  } from "react-share";
+import { Typography } from '@material-ui/core';
+
+import Email from "./Steps/email";
+import Verification from "./Steps/verfication";
+import Medical from "./Steps/medical";
+import Personal from "./Steps/personal";
+import SendConfirm from "./Steps/sendConfirm";
+import Upload from "./Steps/upload";
+import ThankYou from "./Steps/thankYou";
 
 
 
 const styles = theme => ({
-//   root: {
-//     width: '90%',
-//   },
-//   button: {
-//     marginTop: theme.spacing.unit,
-//     marginRight: theme.spacing.unit,
-//   },
-//   actionsContainer: {
-//     marginBottom: theme.spacing.unit * 2,
-//   },
-//   resetContainer: {
-//     padding: theme.spacing.unit * 3,
-//   },
-//   connector: {
-//     display: 'none',
-//   },
-//   step: {
-//     marginBottom: theme.spacing.unit * 5,
-//   },
   iconContainer: {
     transform: 'scale(2)',
     marginRight: theme.spacing.unit * 2,
@@ -71,560 +30,168 @@ function getSteps() {
 }
 
 class Fragebogen extends React.Component {
-    constructor() {
-        super();
-        this.onDrop = (files) => {
-            this.setState({
-                files: { files },
-                noFilesWarning: false
-            })
-            };
-        this.defaultState = {
-            vorname: "",
-            nachname: "",
-            plz: "",
-            mail: "",
-            code: "",
-            geburtTag: "",
-            gebMonat: "",
-            gebJahr: "",
-            telefonnummer: "",
-            gebiet: undefined,
-            kontakt: undefined,
-            erkrankt: undefined,
-            begleiterkrankungen: undefined,
-            berufstaetig: undefined,
-            quarantaene: undefined,
-            files: [],
-            activeStep: 0,
-            noFilesWarning: false,
-            uploadProgress: 0,
-            kontaktWann: "",
-            kontaktWo: "",
-            quarantaeneAnordnung: "",
-            quarantaeneBis: "",
-            erkranktTest: "",
-            erkranktSeit: "",
-            begleiterkrankungenText: "",
-            beruf: "",
-            jwk_key: "",
-            loginRequired: false,
-            processingStep: false
-        };
-        this.state = this.defaultState
+  constructor() {
+    super();
+    this.onDrop = (files) => {
+      this.setState({
+        files: { files },
+        noFilesWarning: false
+      })
+    };
+
+    this.defaultState = {
+      activeStep: 0,
+      user: {},
+      personal: {},
+      medical: {},
+      location: {}
+    };
+
+    this.state = JSON.parse(localStorage.getItem('surveyContents')) || this.defaultState;
+
+    //Hack do not cache steps further than 4 because file handles expire during refresh of page
+    //TODO save files in IndexedDB
+    if( this.state.activeStep > 4 && this.state.activeStep < 6 ){
+      this.state.activeStep = 4;
+      this.state.location = {};
     }
 
-  handleNext = () => {
-    this.setState(state => ({
-        activeStep: state.activeStep + 1,
-        processingStep: false
-        }));
-    window.scrollTo(0,0)
+  }
+
+  setState(state) {
+    super.setState(state, () =>{
+      localStorage.setItem('surveyContents', JSON.stringify(this.state) );
+    });
+  }
+
+  handleReset = () => {
+    this.setState(this.defaultState);
   };
 
   handleBack = () => {
-    this.setState(state => ({
-      activeStep: state.activeStep - 1,
-      processingStep: false
-    }));
-  };
-
-  handleReset = () => {
-    this.setState({
-      activeStep: 0,
-      processingStep: false
-    });
-  };
-
-  handleWeiter = () => {
-    console.log(this.state.activeStep);
-    this.setState(state => ({
-      processingStep: true
-    }));
-
-    switch(this.state.activeStep)
-    {
-      case 0:
-        if (this.state.mail.length < 5) {
-          return window.confirm("Bitte gib eine gültige Mail-Adresse ein.")
-        }
-        else {
-          auth_register(this.state.mail)
-            .then(() => {
-              console.log("register");
-              this.handleNext();
-            })
-            .catch( (reason) => {
-              if( reason === 'already_registered') {
-                  this.setState(state => ({
-                    loginRequired: true
-                  }));
-
-                  login_request(this.state.mail)
-                  .then(() => {
-                    console.log("login");
-                    this.handleNext();
-                  })
-                  .catch( () => {
-                    window.confirm("Fehler bei Login.")
-                  });
-              }
-
-              else {
-                window.confirm("Bitte gib eine gültige Mail-Adresse ein. Jede Mail-Adresse kann zudem nur einmal verwendet werden.")
-              }
-            })
-        }
-        break;
-      case 1:
-        console.log( this.state.loginRequired );
-        if( this.state.loginRequired ){
-          login_confirm(this.state.mail, this.state.code)
-            .then((jwk_key) => {
-              console.log("login confirm", jwk_key);
-              this.setState(state => ({
-                jwk_key: jwk_key
-              }));
-
-              this.handleNext();
-            })
-            .catch(() => {
-              window.confirm("Das ist nicht der richtige Code.")
-            });
-
-        }
-        else {
-          auth_confirm(this.state.mail, Number(this.state.code))
-            .then((jwk_key) => {
-              console.log("register confirm", jwk_key);
-              this.setState(state => ({
-                jwk_key: jwk_key
-              }));
-
-              this.handleNext();
-            })
-            .catch(() => {
-              window.confirm("Das ist nicht der richtige Code.")
-            });
-        }
-        break;
-
-      case 5:
-        if (this.state.files.length === 0 && !this.state.noFilesWarning) {
-          this.setState({ noFilesWarning: true })
-        } else {
-          console.log("sending");
-          this.handleNext();
-          this.handlePost(this.state)
-            .then(() => {
-              this.handleNext();
-            })
-            .catch(() => {
-              window.confirm("Fehler beim upload!");
-              this.handleBack();
-            });
-        }
-        break;
-      default:
-        this.handleNext();
-        break;
+    if(this.state.activeStep <= 2){
+      // Registration is atomic and cannot be divided
+      this.handleReset();
     }
-  };
-
-
-
-
-  handlePost = async (data) => {
-    console.log("handlePost", data);
-
-    const user_pseudomym = uuidv4();  //TODO replace with real pseudonym from server
-
-    await postData(user_pseudomym, data);
-    if( data.files.files && data.files.files.length > 0) {
-      await uploadFiles(user_pseudomym, data.files.files, (progress, stats) => {
-        this.setState(state => ({
-          uploadProgress: progress * 100.0,
-        }));
+    else {
+      this.setState({
+        activeStep: this.state.activeStep - 1,
       });
     }
   };
+
+  handleWeiter = (entered_data_key, entered_data) => {
+    if(entered_data_key){
+      let toUpdate = {};
+      toUpdate[entered_data_key] = entered_data;
+      this.setState(toUpdate);
+    }
+    this.setState({
+      activeStep: this.state.activeStep + 1,
+    });
+    if(this.state.activeStep >= 6){
+      localStorage.clear(); //Clean up when form finished
+    }
+
+    window.scrollTo(0, 0);
+  };
+
 
   render() {
     const { classes } = this.props;
     const steps = getSteps();
     const { activeStep } = this.state;
 
-    const promoMessage = "Forscher finden effektiver Maßnahmen gegen COVID-19 dank deinen anonymisierten Standortdaten."
-
     return (
-        <>
-            {/* steps: */}
-            <div className={classes.root}>
-                <Stepper activeStep={activeStep} style={{marginBottom: 15}}>
-                {steps.map((label) => {
-                    return (
-                    <Step key={label} className={classes.step}>
-                        <StepLabel classes={{
-                        iconContainer: classes.iconContainer
-                        }}>
-                        <Typography>{label}</Typography>
-                        </StepLabel>
-                    </Step>
-                    );
-                })}
-                </Stepper>
+      <>
+        {/* steps: */}
+        <div className={classes.root}>
+          <Stepper activeStep={activeStep} style={{ marginBottom: 15 }}>
+            {steps.map((label) => {
+              return (
+                <Step key={label} className={classes.step}>
+                  <StepLabel classes={{
+                    iconContainer: classes.iconContainer
+                  }}>
+                    <Typography>{label}</Typography>
+                  </StepLabel>
+                </Step>
+              );
+            })}
+          </Stepper>
 
-                {/* get step content: */}
-                {/* active step is zero based. */}
+          {/* get step content: */}
+          {/* active step is zero based. */}
 
-                {/* step 1: mail: */}
-                {activeStep===0 && (
-                    <>
-                        <center><Typography variant="h5" color="primary" >Starte mit deiner Mail-Adresse:</Typography></center><br />
-                        <Grid container><Box style={{margin: "auto"}}><TextField variant="outlined" label="Mail" style={{minWidth: 300}} value={this.state.mail} onChange={event=> { this.setState({mail: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }} /></Box></Grid>
-                        <center><Typography style={{marginTop: 10}}>Ich nehme die <Link href="https://corona-meldung.de/datenschutz" target="_blank">Datenschutzerklärung</Link> zur Kenntnis.</Typography></center>
-                    </>
-                )}
+          {/* step 1: mail: */}
+          {activeStep === 0 && (<Email
+            handleWeiter={this.handleWeiter}
+            handleBack={this.handleBack}
+            activeStep={this.state.activeStep}
+          />)}
 
-                {/* step 2: enter mail verification code */}
-                {activeStep===1 && (
-                    <Grid container>
-                    <Box style={{margin: "auto"}}>
-                        <Typography variant="h5" color="primary" >Schau in deine Mails</Typography><br />
-                        <Typography> und gib den <b>Code</b> ein, den wir dir geschickt haben:</Typography><br />
-                        <TextField variant="outlined" label="Code" style={{minWidth: 300}} value={this.state.code} onChange={event=> { this.setState({code: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }} /><br />
-                        <Typography variant="caption" style={{marginLeft: 15, marginTop: 10, color: "#bdbdbd"}}>Schau ggf. in deinen <b>Spam-Ordner</b>.</Typography><br />
-                    </Box>
-                  </Grid>
+          {/* step 2: enter mail verification code */}
+          {activeStep === 1 && (<Verification
+            handleWeiter={this.handleWeiter}
+            handleBack={this.handleBack}
+            activeStep={this.state.activeStep}
+            user={this.state.user}
+          />)}
 
-                )}
+          {/* step 3: data: */}
+          {activeStep === 2 && (<Personal
+            handleWeiter={this.handleWeiter}
+            handleBack={this.handleBack}
+            activeStep={this.state.activeStep}
+            personal={this.state.personal}
+          />)}
 
-                {/* step 3: data: */}
-                {activeStep===2 && (
-                    <Grid container>
-                        <Box style={{ margin: "auto" }}>
-                            <Typography variant="h5" color="primary" >Über dich</Typography><br />
+          {/* step 4: medical info */}
+          {activeStep === 3 && <Medical
+            handleWeiter={this.handleWeiter}
+            handleBack={this.handleBack}
+            activeStep={this.state.activeStep}
+            medical={this.state.medical}
+          />}
 
-                            {/* <TextField variant="outlined" label="Vorname" onChange={event=> { this.setState({vorname: event.target.value}) }} />&nbsp;&nbsp;
-                            <TextField variant="outlined" label="Nachname" onChange={event=> { this.setState({nachname: event.target.value}) }} /><br /><br /> */}
+          {activeStep === 4 && <Upload
+            handleWeiter={this.handleWeiter}
+            handleBack={this.handleBack}
+            activeStep={this.state.activeStep}
+            location={this.state.location}
 
-                            {/* <Typography variant="caption" color="primary" style={{marginLeft: 3}}><b>Geburtsdatum:</b></Typography><br /> */}
-                            {/* <TextField variant="outlined" label="Tag" style={{width: 66}} onChange={event=> { this.setState({gebTag: event.target.value}) }} />&nbsp;
-                            <TextField variant="outlined" label="Monat" style={{width: 66}} onChange={event=> { this.setState({gebMonat: event.target.value}) }} />&nbsp; */}
-
-                            <TextField variant="outlined" label="Geburtsjahr" value={this.state.gebJahr} onChange={event=> { this.setState({gebJahr: event.target.value}) }} /><br />
-                            <Tooltip arrow title="Das benötigen wir, um anhand einer Alterkategorisierung Informationen über die Ausdifferenzierung des Virus zu gewinnen.">
-                                <Typography variant="caption" style={{marginLeft: 15, color: "#5c6bc0"}}>Wofür?</Typography>
-                            </Tooltip>
-                            <br /><br />
-
-                            <TextField variant="outlined" label="Postleitzahl" value={this.state.plz} onChange={event=> { this.setState({plz: event.target.value}) }} onKeyDown={key=>{ if (key.keyCode===13) { this.handleWeiter() } }}/><br />
-                            <Tooltip arrow title="Damit fügen wir deinen Daten zusätzlich die Dimension deines Heimatgebiets hinzu.">
-                                <Typography variant="caption" style={{marginLeft: 15, color: "#5c6bc0"}}>Wofür?</Typography>
-                            </Tooltip>
-                            <br /><br />
-
-                            <FormControl style={{marginLeft: 15}} component="fieldset" onChange={event => { this.setState({ berufstaetig: event.target.value.localeCompare("0")!==0 }) }}>
-                                <FormLabel component="legend">Berufstätig?</FormLabel>
-                                <RadioGroup style={{display: "flex", flexDirection: "row"}}>
-                                    <FormControlLabel control={<Radio />} value="0" checked={!this.state.berufstaetig} label="Nein." />
-                                    <FormControlLabel control={<Radio />} value ="1" checked={this.state.berufstaetig} label="Ja." />
-                                </RadioGroup>
-                            </FormControl><br />
-                            <Tooltip arrow title="So können wir deine Gefährdung einordnen.">
-                                <Typography variant="caption" style={{marginLeft: 15, color: "#5c6bc0"}}>Wofür?</Typography>
-                            </Tooltip>
-
-                            <br /><br />
-
-                            {this.state.berufstaetig && (
-                                <TextField variant="outlined" label="Welcher Beruf?" value={this.state.beruf} onChange={event=> { this.setState({beruf: event.target.value}) }}/>
-                            )}
-
-                        </Box>
-                    </Grid>
-                )}
-
-                {/* step 4: medical info */}
-                {activeStep===3 && (
-                  <Grid container>
-                    <Box style={{margin: "auto"}}>
-                    <Typography variant="h5" color="primary" >Wie es dir geht</Typography><br />
-
-                        <FormControl component="fieldset" onChange={event => { this.setState({ kontakt: event.target.value.localeCompare("0")!==0 }) }}>
-                            <FormLabel component="legend">Hattest Du <b>Kontakt</b> (min. 15min, unter 1,5 Meter Entfernung) zu einer nachweislich an COVID-19 erkrankten Person?</FormLabel>
-                            <RadioGroup>
-                                <FormControlLabel control={<Radio />} value="0" checked={!this.state.kontakt} label="Nein." />
-                                <FormControlLabel control={<Radio />} value ="1" checked={this.state.kontakt} label="Ja." />
-                            </RadioGroup>
-                        </FormControl>
-
-                        <br />
-
-                        {this.state.kontakt && (
-                            <>
-                                <TextField variant="outlined" label="Wo?" value={this.state.kontaktWo} onChange={event=> { this.setState({kontaktWo: event.target.value}) }} />&nbsp;&nbsp;
-                                <TextField variant="outlined" label="Wann?" value={this.state.kontaktWann} onChange={event=> { this.setState({kontaktWann: event.target.value}) }} />
-                            </>
-                        )}
-
-                        <Divider style={{marginTop: 15}} />
-                        <br />
-
-                        <FormControl component="fieldset" onChange={event => { this.setState({ erkrankt: event.target.value.localeCompare("0")!==0 }) }}>
-                            <FormLabel component="legend">Bist Du nachweislich an COVID-19 <b>erkrankt</b>?</FormLabel>
-                            <RadioGroup>
-                                <FormControlLabel control={<Radio />} value="0" checked={!this.state.erkrankt} label="Nein." />
-                                <FormControlLabel control={<Radio />} value ="1" checked={this.state.erkrankt} label="Ja." />
-                            </RadioGroup>
-                        </FormControl>
-
-                        <br />
-
-                        {this.state.erkrankt && (
-                            <>
-                                <TextField variant="outlined" label="Wann wurdest Du getestet?" value={this.state.erkranktTest} onChange={event=> { this.setState({erkranktTest: event.target.value}) }} />&nbsp;&nbsp;
-                                <TextField variant="outlined" label="Seit wann?" value={this.state.erkranktSeit} onChange={event=> { this.setState({erkranktSeit: event.target.value}) }} />
-                            </>
-                        )}
-
-                        <Divider style={{marginTop: 15}} />
-                        <br />
-
-                        <FormControl component="fieldset" onChange={event => { this.setState({ quarantaene: event.target.value.localeCompare("0")!==0 }) }}>
-                            <FormLabel component="legend">Wurde dir vom Arzt <b>Quarantäne verordnet</b>?</FormLabel>
-                            <RadioGroup>
-                                <FormControlLabel control={<Radio />} value="0" checked={!this.state.quarantaene} label="Nein." />
-                                <FormControlLabel control={<Radio />} value ="1" checked={this.state.quarantaene} label="Ja." />
-                            </RadioGroup>
-                        </FormControl>
-
-                        <br />
-
-                        {this.state.quarantaene && (
-                            <>
-                                <TextField variant="outlined" label="Wann wurde sie verordnet?" value={this.state.quarantaeneAnordnung} onChange={event=> { this.setState({quarantaeneAnordnung: event.target.value}) }}/>&nbsp;&nbsp;
-                                <TextField variant="outlined" label="Wann soll sie enden?" value={this.state.quarantaeneBis} onChange={event=> { this.setState({quarantaeneBis: event.target.value}) }} />
-                            </>
-                        )}
-
-                        <Divider style={{marginTop: 15}} />
-                        <br />
-
-                        <FormControl component="fieldset">
-                            <FormLabel component="legend">Welche <b>Symptome</b> bestehen?</FormLabel>
-                            {/* <RadioGroup> */}
-                                <FormControlLabel control={<Checkbox />} value="0" label="Fieber" />
-                                <FormControlLabel control={<Checkbox />} value ="1" label="Schnupfen" />
-                                <FormControlLabel control={<Checkbox />} value ="2" label="Luftnot" />
-                                <FormControlLabel control={<Checkbox />} value ="3" label="Husten" />
-                                <FormControlLabel control={<Checkbox />} value ="4" label="Halsschmerzen" />
-                                <FormControlLabel control={<Checkbox />} value ="5" label="Durchfall" />
-                                <FormControlLabel control={<Checkbox />} value ="6" label="Übelkeit" />
-                                <FormControlLabel control={<Checkbox />} value ="7" label="Erbrechen" />
-                                <FormControlLabel control={<Checkbox />} value ="8" label="Brustenge" />
-                                <FormControlLabel control={<Checkbox />} value ="9" label="Riechen oder Schmecken beeinträchtigt" />
-                                <FormControlLabel control={<Checkbox />} value ="10" label="sonstige" />
-                            {/* </RadioGroup> */}
-                        </FormControl>
-
-                        <br />
-                        <Divider style={{marginTop: 15}} />
-                        <br />
-
-                        <FormControl component="fieldset" onChange={event => { this.setState({ begleiterkrankungen: event.target.value.localeCompare("0")!==0 }) }}>
-                            <FormLabel component="legend">Begleiterkrankungen?</FormLabel>
-                            <RadioGroup>
-                                <FormControlLabel control={<Radio />} value="0" checked={!this.state.begleiterkrankungen} label="Nein." />
-                                <FormControlLabel control={<Radio />} value ="1" checked={this.state.begleiterkrankungen} label="Ja." />
-                            </RadioGroup>
-                        </FormControl>
-
-                        <br />
-
-                        {this.state.begleiterkrankungen && (
-                            <TextField variant="outlined" label="Welche?" style={{width: 400}} value={this.state.begleiterkrankungenText} onChange={event=> { this.setState({begleiterkrankungenText: event.target.value}) }}/>
-                        )}
-
-                    </Box>
-                  </Grid>
-                )}
-
-                {/* step 3: upload */}
-                {activeStep===4 && (
-                    <Grid container>
-                        <Box style={{margin: "auto"}}>
-
-                            <Typography variant="h5" color="primary">Füge deine Bewegungsdaten hinzu</Typography><br />
-                            <Typography style={{color: "#757575"}}>Deine Daten werden noch vor der Übertragung verschlüsselt.</Typography>
-                            <Typography style={{color: "#757575", marginTop: 10}}>Sie werden ausschließlich pseudonymisiert von renomierten<br />Forschungseinrichtungen im Gesamtbild ausgewertet.</Typography><br />
-
-                            {/* explanation: */}
-                            <Paper elevation={10} style={{maxWidth: 450, backgroundColor: "#f7f9ff"}}>
-                                <Typography variant="subtitle1" style={{fontSize: 17, color: "#3f51b5", paddingTop: 10, paddingLeft: 10, paddingBottom: 5 }}><b>So einfach geht's</b></Typography><Divider />
-                                <Typography style={{color: "#5c6bc0", padding: 10}}>
-                                    Geh auf <Link href="https://takeout.google.com" target="_blank" style={{textDecoration: "underline"}}>takeout.google.com</Link>.<br /><br />
-                                    Wähle <strong>Auswahl aufheben</strong> und setze nur bei <strong>Standortverlauf</strong> (fast ganz unten) einen Haken.<br /><br />
-                                    Klicke auf <strong>nächster Schritt</strong> und dann auf <strong>Export</strong>.<br /><br />
-                                    Klicke auf den Link in der <strong>Mail</strong>, die du max. 5 Minuten später erhälst.<br /><br />
-                                    Lade die zip-Datei dann hier hoch:
-                                </Typography>
-                            </Paper>
-                            <br /><br />
-
-                            {/* Dropzone */}
-                            <Dropzone onDrop={this.onDrop}>
-                            {({ getRootProps, getInputProps }) => (
-                            <section className="container">
-                                <div {...getRootProps({ className: 'dropzone' })}
-                                    style={{ minHeight: 30, width: 450, alignItems: "center", borderWidth: 1, borderRadius: 3, borderColor: "#eeeee", borderStyle: "dashed", backgroundColor: "#edf2ff", color: "#757575", transition: "border .24s ease-in-out", cursor: "pointer" }}
-                                >
-                                    <input {...getInputProps()} />
-                                    {this.state.files.length!==0 ? (<Typography variant="body2" style={{marginLeft: 15, marginTop: 5, color: lightGreen["800"]}}><b>erfolgreich hochgeladen!</b></Typography>) : (<Typography align="center" style={{marginTop: 3}}><AttachFileIcon fontSize="small" style={{width: 20, verticalAlign:"middle"}}/> Klicken zum <strong>Auswählen</strong>, oder <strong>hierein ziehen.</strong></Typography>)}
-                                </div>
-                            </section>
-                            )}
-                            </Dropzone>
-
-                            {/* soft no files warning: */}
-                            {this.state.noFilesWarning && (
-                                <Grid container style={{marginTop: 10}}>
-                                    <div style={{ maxWidth: 450, borderWidth: 1, borderStyle: "solid", borderRadius: 3, backgroundColor: "#fff3e0",
-                                                color: "#ff9800", transition: "border .24s ease-in-out", margin: "auto" }}>
-                                        <Box display="flex" flexDirection="row" style={{ marginLeft: 10, marginTop: 7, marginBottom: 10}}>
-                                            <WarningIcon fontSize="small" style={{color: "#ff9800"}} />&nbsp;
-                                            <Typography style={{color: "#ff9800", fontSize: 13 }}><strong>Keine Daten hochgeladen</strong></Typography>
-                                        </Box>
-                                        <Typography style={{color: "#ff9800", marginLeft: 10, marginRight: 10, marginBottom: 7, fontSize: 12 }}>Du hast keine Bewegungsdaten hochgeladen. Du kannst das Formular zwar ohne Bewegungsdaten abschicken. Das hilft der Forschung aber kaum, weil die Bewegungsdaten am wertvollsten für uns sind.</Typography>
-                                    </div>
-                                </Grid>
-                            )}
+          />}
 
 
-                        </Box>
-                    </Grid>
-                )}
+          {activeStep === 5 && <SendConfirm
+            handleWeiter={this.handleWeiter}
+            handleBack={this.handleBack}
+            activeStep={this.state.activeStep}
+            user={this.state.user}
+            personal={this.state.personal}
+            medical={this.state.medical}
+            location={this.state.location}
+          />}
 
 
-              {/* upload progress */}
-              {activeStep===5 && (
-                <>
-                  <Grid container>
-                    <Box style={{margin: "auto"}}>
-
-                      <center><Typography color="primary" style={{marginBottom: 15}}>Folgende Daten werden nach Deiner Bestätigung übermittelt:</Typography></center>
-                      <Overview data={this.state} />
-
-                    </Box>
-                  </Grid>
-                  <br /><br />
-                  <Grid container>
-                    <Paper elevation={10} style={{maxWidth: 1024, backgroundColor: "#f7f9ff", margin: "auto", padding: 1}}>
-                        <Typography style={{color: "#5c6bc0", padding: 5, textAlign: "justify"}}>
-                            <Typography style={{fontSize: 16, marginBottom: "0.3em"}}>Einwilligung gemäß Art. 6 Abs. 1 Buchst. a, 9 Abs. 2 Buchst. a DSGVO in die Verarbeitung meiner personenbezogenen und besonderen personenbezogenen Daten</Typography>
-                            <Divider />
-                            <Typography variant="body2" style={{margin: "0.3em 0 0.3em 0"}}>Hiermit willige ich zu Zwecken der medizinischen Forschung im Bereich der Virologie und der Pandemieforschung in die Verarbeitung meiner personenbezogenen Daten und meiner besonderen personenbezogene Daten (siehe obige Zusammenfassung) ein.</Typography>
-                            <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Im Rahmen der Datenverarbeitung werden Ihre Daten erhoben, gespeichert, gegebenenfalls aggregiert, ausgewertet und an renommierte Forschungsinstitute übermittelt.</Typography>
-                            <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Soweit es zu einer Übermittlung Ihrer personenbezogenen Daten an Forschungsinstitute kommt, erfolgt diese Übermittlung dergestalt, dass den Forschungsinstituten Rückschlüsse auf Ihre Person unmöglich sind.</Typography>
-                            <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Sie können Ihre Einwilligung jederzeit und ohne Nachteile widerrufen. Den Widerruf können Sie formlos beispielsweise an datenschutz@corona-meldung.de richten.</Typography>
-                            <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Sobald Sie Ihre Einwilligung widerrufen, werden sämtliche bei uns gespeicherten personenbezogenen Daten und sämtliche bei uns gespeicherten besonderen personenbezogenen Daten vollständig anonymisiert, so dass auch für uns keinerlei Rückschlüsse mehr auf Ihre Person möglich sind.</Typography>
-                            <Typography variant="body2" style={{margin: "0 0 0.3em 0"}}>Ein Widerruf Ihrer Einwilligungserklärung berührt nicht die Rechtmäßigkeit der Datenverarbeitungen bis zum Zeitpunkt Ihres Widerrufs. Soweit Ihre personenbezogenen Daten und besonderen personenbezogenen Daten bereits an Forschungsinstitute übermittelt wurden, wird diese Übermittlung rückwirkend ebenfalls nicht rechtswidrig.</Typography>
-                        </Typography>
-                      </Paper>
-                  </Grid>
-                </>
-              )}
+          {/* thank you page */}
+          {activeStep === 6 && (<ThankYou
+              handleReset={this.handleReset}
+            />
+          )}
 
 
-                {/* upload progress */}
-                {activeStep===6 && (
-                    <Grid container>
-                    <Box style={{margin: "auto"}}>
-                        <center>
-                            Deine Daten werden übermittelt.
-                            <LinearProgress value={this.state.uploadProgress} variant={'determinate'} />
-                        </center>
-                    </Box>
-                    </Grid>
-                )}
+          {/* usercount: */}
+          {/* <Grid container style={{marginTop: 80}}>
+                <Box p={1} style={{ maxWidth: 450, borderWidth: 1, borderStyle: "solid", borderRadius: 3, borderColor: "#eeeee",
+                  backgroundColor: "", color: "green", transition: "border .24s ease-in-out", margin: "auto" }}>
 
-
-                {/* thank you page */}
-                {activeStep===7 && (
-                  <Grid container>
-                    <Box style={{margin: "auto"}}>
-                        <center>
-                            <CheckCircleIcon style={{fontSize: 100, color: "#81c784"}} />
-                            <Typography variant="h4" style={{color: "#388e3c"}}>Herzlichen Dank!</Typography><br />
-                            <Typography style={{color: "#757575"}}>Deine Daten wurden erfolgreich und sicher übermittelt.</Typography><br />
-                            <Typography style={{color: "#757575"}}>Du kannst zusätzlich helfen, indem du<br /> das Projekt in deinem Umfeld bekannt machst.</Typography><br />
-                            <Typography style={{color: "#7986cb", marginBottom: 5}} variant="subtitle1"><strong>Teilen über:</strong></Typography>
-                            <Box style={{display: "flex"}}>
-                                <FacebookShareButton url={"https://corona-meldung.de"} title={promoMessage}><Button size="small" variant="outlined" color="primary" style={{textTransform: "none", margin: 3}}>Facebook</Button></FacebookShareButton>
-                                <EmailShareButton url={"https://corona-meldung.de"} title={promoMessage}><Button size="small" variant="outlined" color="primary" style={{textTransform: "none", margin: 3}}>E-Mail</Button></EmailShareButton>
-                                <TwitterShareButton url={"https://corona-meldung.de"} title={promoMessage}><Button size="small" variant="outlined" color="primary" style={{textTransform: "none", margin: 3}}>Twitter</Button></TwitterShareButton>
-                                <LinkedinShareButton url={"https://corona-meldung.de"} title={promoMessage}><Button size="small" variant="outlined" color="primary" style={{textTransform: "none", margin: 3}}>Linkedin</Button></LinkedinShareButton>
-                                <TelegramShareButton url={"https://corona-meldung.de"} title={promoMessage}><Button size="small" variant="outlined" color="primary" style={{textTransform: "none", margin: 3}}>Telegram</Button></TelegramShareButton>
-                                <WhatsappShareButton url={"https://corona-meldung.de"} title={promoMessage}><Button size="small" variant="outlined" color="primary" style={{textTransform: "none", margin: 3}}>Whatsapp</Button></WhatsappShareButton>
-                            </Box>
-                            <br />
-
-                            <Button variant="outlined" size="small" onClick={()=>{this.setState(this.defaultState)}} style={{marginTop: 30, textTransform: "none", color: "#9e9e9e"}}>eine weitere Person hinzufügen</Button>
-                        </center>
-                    </Box>
-                  </Grid>
-                )}
-
-                {/* weiter und zurueck: */}
-                {activeStep<6 && !this.state.processingStep && (
-                    <Box style={{marginTop: 25 }}>
-                        <center>
-                        <Button
-                            disabled={activeStep === 0}
-                            onClick={this.handleBack}
-                            className={classes.button}
-                            variant="outlined"
-                            style={{marginRight: 30, textTransform: "none"}}
-                        >
-                            zurück
-                        </Button>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={() => { return this.handleWeiter() }}
-                            className={classes.button}
-                            style={{textTransform: "none"}}
-                        >
-                            {activeStep === steps.length - 1 ? 'ABSCHICKEN' : 'WEITER'}
-                        </Button>
-                        </center>
-                    </Box>
-                )}
-
-              {activeStep<6 && this.state.processingStep && (
-                <Box style={{marginTop: 25 }}>
-                  <center>
-                    <CircularProgress/>
-                  </center>
+                  <UserCount/>
                 </Box>
-              )}
+              </Grid> */}
 
-                {/* further explanations: */}
-                {activeStep===4 && (
-                    <Grid container style={{marginTop: 80}}>
-                        <div style={{ maxWidth: 450, borderWidth: 1, borderStyle: "solid", borderRadius: 3, borderColor: "#eeeee",
-                                    backgroundColor: "", color: "#c5cae9", transition: "border .24s ease-in-out", margin: "auto" }}>
-                            <Box display="flex" flexDirection="row" style={{ marginLeft: 10, marginTop: 7, marginBottom: 10}}>
-                                <HelpIcon fontSize="small" style={{color: "#5c6bc0"}} />&nbsp;
-                                <Typography style={{color: "#5c6bc0", fontSize: 13 }}><strong>Was bedeutet "pseudonymisiert"?</strong></Typography>
-                            </Box>
-                            <Typography style={{color: "#9fa8da", marginLeft: 10, marginRight: 10, marginBottom: 7, fontSize: 12 }}>Das heißt, dass wir deinen Daten eine Identifikationsnummer zuordnen. Es wird nur verarbeitet, dass z.B. jemand mit bestimmten
-                            Symptomen ein bestimmtes Alter hat. Eine Verbindung zu dir persönlich wird nicht offengelegt.</Typography>
-                        </div>
-                    </Grid>
-                )}
-            </div>
-        </>
+        </div>
+      </>
     );
   }
 }

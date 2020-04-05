@@ -15,14 +15,19 @@ const uploader = Evaporate.create({
 });
 
 export const uploadFiles = async (user_pseudonym, files, progress_callback) => {
+  let file_names = []
   const evaporate = await uploader;
   for(let file of files) {
     await evaporate.add({
       file: file,
-      name: file.name,
+      name: user_pseudonym + '/' + file.name,
       progress: progress_callback
-    })
+    });
+
+    file_names.push('s3://corona-meldung-incoming/' + user_pseudonym + '/' + file.name)
   }
+
+  return file_names;
 };
 
 export const postData = (user_pseudonym, data) => {

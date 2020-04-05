@@ -1,74 +1,66 @@
-const workerjs=' \
-  onmessage=function(evt) { \
-		var encrypt=crypto.workersubtle.encrypt({name:"AES-CBC",iv:new Uint8Array(16)},evt.data[0]); \
-		var buffer=evt.data[1]; \
-		var block=XXX; \
-		while (buffer.length) { \
-			encrypt.process(buffer.subarray(0,block)).done(function(result) { \
-				postMessage(result) \
-			}); \
-			buffer=buffer.subarray(Math.min(buffer.length,block)); \
-		}; \
-		encrypt.finish().done(function(result) { \
-			postMessage([result]); \
-		}); \
-	} \
-';
+function arrayBufferToB64(arrayBuffer)
+{
+  return btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+}
+
+function b64ToArrayBuffer(base64_string)
+{
+  return Uint8Array.from(atob(base64_string), c => c.charCodeAt(0));
+}
 
 
-const open_db=function() {
-  const db=formDB.db;
-  return db.transaction(['encrypted_files'],'readwrite').objectStore('encrypted_files');
-};
+export async function encrypt(jwk_key, plain_text) {
+  const data = new TextEncoder().encode(plain_text);
+  const iv = window.crypto.getRandomValues(new Uint8Array(16));
 
-const store_DB=function(request) {
-  const objectStore=open_db();
-  objectStore.put({hash:request.file_hash,type:request.type,blob:request.blob});
-};
+  const key = await window.crypto.subtle.importKey(
+    "jwk", //can be "jwk" or "raw"
+    jwk_key,
+    {   //this is the algorithm options
+      name: "AES-CBC",
+    },
+    false, //whether the key is extractable (i.e. can be used in exportKey)
+    ["encrypt", "decrypt"] //can be "encrypt", "decrypt", "wrapKey", or "unwrapKey"
+  );
 
-const formDB=indexedDB.open('formDB',1);
+  const encryptedBuffer = await window.crypto.subtle.encrypt(
+    {
+      name: "AES-CBC",
+      //Don't re-use initialization vectors!
+      //Always generate a new iv every time your encrypt!
+      iv: iv,
+    },
+    key, //from generateKey or importKey above
+    data //ArrayBuffer of data you want to encrypt
+  );
 
-formDB.onupgradeneeded=function(evt) {
-  const db=evt.target.result;
-  db.createObjectStore('encrypted_files',{keyPath:'hash'});
-};
-
-formDB.onsuccess=function (evt) {
-  demoDB.db=evt.target.result;
-};
-
-
-
-
-export const process_upload = function(file, jwk) {
-  var process=function(key) {
-    var reader=new FileReader();
-    var readed=function() {
-      var request={};
-      var file_enc=[];
-      var size=reader.result.byteLength;
-      var tsize=0;
-      var worker=new Worker(URL.createObjectURL(new Blob([workerjs])));
-      var h=crypto.subtle.digest('SHA-256');
-      worker.onmessage=function(evt) {
-        var res=(evt.data instanceof Array)?evt.data[0]:evt.data;
-        tsize +=res.length;//display a progress bar (tsize/size)*100%
-        file_enc.push(res);
-        h.process(res).then(function() {
-          if (evt.data instanceof Array) { //end
-            request.blob=new Blob(file_enc,{type:'application/octet-binary'});
-            request.type=file.type;
-            this.finish(res).done(function(result) {
-              request.file_hash=result;
-              store_DB(request);
-            });
-          };
-        });
-      };
-      worker.postMessage([key,new Uint8Array(reader.result)]);
-    };
-    reader.addEventListener("loadend",readed,false);
-    reader.readAsArrayBuffer(file);
+  return {
+    encrypted: arrayBufferToB64(encryptedBuffer),
+    iv: arrayBufferToB64(iv)
   };
-  crypto.importKey("raw",TextToArrayBufferView('00112233445566778899aabbccddeeff'),'AES-CBC',false,['encrypt','decrypt']).done(function(result) {process(result)});
-};
+}
+
+
+export async function decrypt(jwk_key, encrypted) {
+
+  const key = await window.crypto.subtle.importKey(
+    "jwk", //can be "jwk" or "raw"
+    jwk_key,
+    {   //this is the algorithm options
+      name: "AES-CBC",
+    },
+    false, //whether the key is extractable (i.e. can be used in exportKey)
+    ["encrypt", "decrypt"] //can be "encrypt", "decrypt", "wrapKey", or "unwrapKey"
+  );
+
+  const decryptedBuffer = await window.crypto.subtle.decrypt(
+    {
+      name: "AES-CBC",
+      iv: b64ToArrayBuffer(encrypted.iv), //The initialization vector you used to encrypt
+    },
+    key, //from generateKey or importKey above
+    b64ToArrayBuffer(encrypted.encrypted) //ArrayBuffer of the data
+  );
+
+  return new TextDecoder().decode(decryptedBuffer);
+}
