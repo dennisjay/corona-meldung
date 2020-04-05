@@ -67,7 +67,8 @@ class Upload extends React.Component {
 
         {this.state.gAccount && (
           <>
-
+            <br /><br />
+            <Typography style={{ color: "#388e3c" }}><b>Dann kannst du Bewegungsdaten hinzufügen!</b></Typography><br />
             <Typography style={{ color: "#757575" }}>Deine Daten werden noch vor der Übertragung
               verschlüsselt.</Typography>
             <Typography style={{ color: "#757575", marginTop: 10 }}>Sie werden ausschließlich pseudonymisiert von
@@ -164,24 +165,22 @@ class Upload extends React.Component {
       </Box>
     </Grid>
 
+    <WizardNavigation validateWeiter={this.validateWeiter} goBack={this.props.handleBack} activeStep={this.props.activeStep}/>
+
+    <Grid container style={{marginTop: 80}}>
+      <div style={{ maxWidth: 450, borderWidth: 1, borderStyle: "solid", borderRadius: 3, borderColor: "#eeeee",
+        backgroundColor: "", color: "#c5cae9", transition: "border .24s ease-in-out", margin: "auto" }}>
+        <Box display="flex" flexDirection="row" style={{ marginLeft: 10, marginTop: 7, marginBottom: 10}}>
+          <HelpIcon fontSize="small" style={{color: "#5c6bc0"}} />&nbsp;
+          <Typography style={{color: "#5c6bc0", fontSize: 13 }}><strong>Wie sorgen wir dafür, dass deine Daten sicher sind?</strong></Typography>
+        </Box>
+        <Typography style={{color: "#9fa8da", marginLeft: 10, marginRight: 10, marginBottom: 7, fontSize: 12 }}>Wir ordnen deine Daten eine Identifikationsnummer zu und
+          speichern diese verschlüsselt auf einem gesonderten Server in Deutschland. Deine Gesundheits- und Bewegungsdaten können daher nicht mit deiner Mailadresse in Verbindung gebracht werden. </Typography>
+      </div>
+    </Grid>
 
 
-
-        <Grid container style={{marginTop: 80}}>
-          <div style={{ maxWidth: 450, borderWidth: 1, borderStyle: "solid", borderRadius: 3, borderColor: "#eeeee",
-            backgroundColor: "", color: "#c5cae9", transition: "border .24s ease-in-out", margin: "auto" }}>
-            <Box display="flex" flexDirection="row" style={{ marginLeft: 10, marginTop: 7, marginBottom: 10}}>
-              <HelpIcon fontSize="small" style={{color: "#5c6bc0"}} />&nbsp;
-              <Typography style={{color: "#5c6bc0", fontSize: 13 }}><strong>Wie sorgen wir dafür, dass deine Daten sicher sind?</strong></Typography>
-            </Box>
-            <Typography style={{color: "#9fa8da", marginLeft: 10, marginRight: 10, marginBottom: 7, fontSize: 12 }}>Wir ordnen deine Daten eine Identifikationsnummer zu und
-              speichern diese verschlüsselt auf einem gesonderten Server in Deutschland. Deine Gesundheits- und Bewegungsdaten können daher nicht mit deiner Mailadresse in Verbindung gebracht werden. </Typography>
-          </div>
-        </Grid>
-
-        <WizardNavigation validateWeiter={this.validateWeiter} goBack={this.props.handleBack} activeStep={this.props.activeStep}/>
-
-      </>
+    </>
     )
   }
 

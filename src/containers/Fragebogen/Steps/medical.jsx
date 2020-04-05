@@ -52,8 +52,6 @@ class Medical extends React.Component {
           <Typography variant="h5" color="primary" >Wie es dir geht</Typography><br />
 
           <br />
-          <Divider style={{marginTop: 15}} />
-          <br/>
 
           <FormControl component="fieldset" onChange={event => { this.setState({ symptome: event.target.value.localeCompare("0")!==0 }) }}>
             <FormLabel component="legend">Hast du <b>Symptome</b>?</FormLabel>
@@ -87,12 +85,16 @@ class Medical extends React.Component {
                 <FormControlLabel control={<Checkbox />} value ="10" label="sonstige" checked={this.state.symptom11} onChange={() => { this.setState({ symptom11: !this.state.symptom11 }) }} />
                 {/* </RadioGroup> */}
               </FormControl>
-              <br />
-              <Divider style={{marginTop: 15}} />
-              <br/>
-              <FormLabel component="legend">Wann traten die ersten Symptome auf?</FormLabel>
 
-              <TextField variant="outlined"  style={{width: 400}} value={this.state.symptomeSeit} onChange={event=> { this.setState({symptomeSeit: event.target.value}) }}/>
+              <br /><br />
+              <Divider fullWidth />
+              <br />
+
+              <FormLabel component="legend">Wann traten die <b>ersten Symptome</b> auf?</FormLabel>
+
+              <br />
+
+              <TextField variant="outlined"  placeholder="vor X Tagen..." style={{minWidth: 250}} value={this.state.symptomeSeit} onChange={event=> { this.setState({symptomeSeit: event.target.value}) }}/>
 
             </>
           )}
@@ -116,8 +118,8 @@ class Medical extends React.Component {
 
           {this.state.kontakt && (
             <>
-              <TextField variant="outlined" label="Wo?" value={this.state.kontaktWo} onChange={event=> { this.setState({kontaktWo: event.target.value}) }} />&nbsp;&nbsp;
-              <TextField variant="outlined" label="Wann?" value={this.state.kontaktWann} onChange={event=> { this.setState({kontaktWann: event.target.value}) }} />
+              <TextField variant="outlined" label="Wo?" style={{minWidth: 250}} value={this.state.kontaktWo} onChange={event=> { this.setState({kontaktWo: event.target.value}) }} />&nbsp;&nbsp;
+              <TextField variant="outlined" label="Wann?" style={{minWidth: 250}} value={this.state.kontaktWann} onChange={event=> { this.setState({kontaktWann: event.target.value}) }} />
             </>
           )}
 
@@ -136,7 +138,7 @@ class Medical extends React.Component {
 
           {this.state.erkrankt && (
             <>
-              <TextField variant="outlined" label="Wann wurdest Du getestet?" value={this.state.erkranktTest} onChange={event=> { this.setState({erkranktTest: event.target.value}) }} />&nbsp;&nbsp;
+              <TextField style={{minWidth: 250}} variant="outlined" label="Wann wurdest Du getestet?" value={this.state.erkranktTest} onChange={event=> { this.setState({erkranktTest: event.target.value}) }} />&nbsp;&nbsp;
             </>
           )}
 
@@ -155,13 +157,13 @@ class Medical extends React.Component {
 
           {this.state.quarantaene && (
             <>
-              <TextField variant="outlined" label="Wann wurde sie verordnet?" value={this.state.quarantaeneAnordnung} onChange={event=> { this.setState({quarantaeneAnordnung: event.target.value}) }}/>&nbsp;&nbsp;
-              <TextField variant="outlined" label="Wann soll sie enden?" value={this.state.quarantaeneBis} onChange={event=> { this.setState({quarantaeneBis: event.target.value}) }} />
+              <TextField variant="outlined" style={{marginBottom: 15, minWidth: 250}} label="Wann wurde sie verordnet?" value={this.state.quarantaeneAnordnung} onChange={event=> { this.setState({quarantaeneAnordnung: event.target.value}) }}/>&nbsp;&nbsp;
+              <TextField variant="outlined" style={{marginBottom: 15, minWidth: 250}} label="Wann soll sie enden?" value={this.state.quarantaeneBis} onChange={event=> { this.setState({quarantaeneBis: event.target.value}) }} />
             </>
           )}
 
           <br />
-          <Divider style={{marginTop: 15}} />
+          <Divider />
           <br />
 
           <FormControl component="fieldset" onChange={event => { this.setState({ begleiterkrankungen: Number(event.target.value) }) }}>
@@ -169,7 +171,7 @@ class Medical extends React.Component {
             <RadioGroup>
               <FormControlLabel control={<Radio />} value="0" checked={this.state.begleiterkrankungen === 0} label="Nein." />
               <FormControlLabel control={<Radio />} value ="1" checked={this.state.begleiterkrankungen === 1} label="Ja." />
-              <FormControlLabel control={<Radio />} value ="2" checked={this.state.begleiterkrankungen === 2} label="Keine Angabe." />
+              <FormControlLabel control={<Radio />} value ="2" checked={this.state.begleiterkrankungen === 2} style={{color: "grey"}} label="Keine Angabe." />
             </RadioGroup>
           </FormControl>
 
