@@ -48,6 +48,18 @@ class Fragebogen extends React.Component {
     };
 
     this.state = JSON.parse(localStorage.getItem('surveyContents')) || this.defaultState;
+
+    //Hack do not cache steps further than 4 because file handles expire during refresh of page
+    //TODO save files in IndexedDB
+    if( this.state.activeStep > 4 && this.state.activeStep < 6 ){
+      this.state.activeStep = 4;
+      this.state.location = {};
+    }
+
+    // Reset on reload when form is already finished
+    if(this.state.activeStep >= 6){
+      this.state = this.defaultState;
+    }
   }
 
   setState(state) {

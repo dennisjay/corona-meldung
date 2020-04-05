@@ -59,7 +59,7 @@ class Medical extends React.Component {
             <FormLabel component="legend">Hast du <b>Symptome</b>?</FormLabel>
             <RadioGroup>
               <FormControlLabel control={<Radio />} value="0" checked={!this.state.symptome} label="Ich fühle mich gesund." />
-              <FormControlLabel control={<Radio />} value ="1" checked={this.state.symptome} label="Ich habe Symptome." />
+              <FormControlLabel control={<Radio />} value="1" checked={this.state.symptome} label="Ich habe Symptome." />
             </RadioGroup>
           </FormControl>
 
