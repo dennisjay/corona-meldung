@@ -24,7 +24,7 @@ class Medical extends React.Component {
       erkranktTest: "",
       erkranktSeit: "",
       begleiterkrankungenText: "",
-      symptome: 0,
+      symptome: false,
       symptom1: false,
       symptom2: false,
       symptom3: false,

@@ -56,10 +56,6 @@ class Fragebogen extends React.Component {
       this.state.location = {};
     }
 
-    // Reset on reload when form is already finished
-    if(this.state.activeStep >= 6){
-      this.state = this.defaultState;
-    }
   }
 
   setState(state) {
@@ -93,6 +89,10 @@ class Fragebogen extends React.Component {
     this.setState({
       activeStep: this.state.activeStep + 1,
     });
+    if(this.state.activeStep >= 6){
+      localStorage.clear(); //Clean up when form finished
+    }
+
     window.scrollTo(0, 0);
   };
 

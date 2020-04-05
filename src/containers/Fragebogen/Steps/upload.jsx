@@ -36,7 +36,7 @@ class Upload extends React.Component {
 
 
   validateWeiter = () =>{
-    if (this.state.files.length === 0 && !this.state.noFilesWarning) {
+    if (this.state.files.length === 0 && !this.state.noFilesWarning && this.state.gAccount) {
       this.setState({ noFilesWarning: true })
     }
     else {
