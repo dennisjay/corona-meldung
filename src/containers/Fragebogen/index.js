@@ -73,9 +73,15 @@ class Fragebogen extends React.Component {
   };
 
   handleBack = () => {
-    this.setState({
-      activeStep: this.state.activeStep - 1,
-    });
+    if(this.state.activeStep <= 2){
+      // Registration is atomic and cannot be divided
+      this.handleReset();
+    }
+    else {
+      this.setState({
+        activeStep: this.state.activeStep - 1,
+      });
+    }
   };
 
   handleWeiter = (entered_data_key, entered_data) => {
