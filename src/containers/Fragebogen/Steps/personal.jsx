@@ -10,14 +10,14 @@ import Radio from "@material-ui/core/Radio";
 import WizardNavigation from "../navigation";
 
 class Personal extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       gebJahr: "",
       plz: "",
       berufstaetig: "",
-      beruf: ""
-
+      beruf: "",
+      ...this.props.personal
     }
 
 

@@ -15,19 +15,33 @@ import HelpIcon from '@material-ui/icons/Help';
 
 
 class Upload extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       gAccount: undefined,
-      files: []
+      files: [],
+      ...this.props.location
     }
 
 
   }
 
+  onDrop = (files) => {
+    this.setState({
+      files: { files },
+      noFilesWarning: false
+    })
+  };
+
+
   validateWeiter = () =>{
-    this.props.handleWeiter();
+    if (this.state.files.length === 0 && !this.state.noFilesWarning) {
+      this.setState({ noFilesWarning: true })
+    }
+    else {
+      this.props.handleWeiter('location', this.state);
+    }
   };
 
   render() {

@@ -10,8 +10,8 @@ import Checkbox from "@material-ui/core/Checkbox";
 import WizardNavigation from "../navigation";
 
 class Medical extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state={
       erkrankt: undefined,
@@ -36,9 +36,8 @@ class Medical extends React.Component {
       symptom9: false,
       symptom10: false,
       symptom11: false,
-
-
-    }
+      ...this.props.medical
+      };
   }
 
   validateWeiter = () =>{
@@ -165,7 +164,7 @@ class Medical extends React.Component {
           <Divider style={{marginTop: 15}} />
           <br />
 
-          <FormControl component="fieldset" onChange={event => { this.setState({ begleiterkrankungen: event.target.value.localeCompare("0")!==0 }) }}>
+          <FormControl component="fieldset" onChange={event => { this.setState({ begleiterkrankungen: Number(event.target.value) }) }}>
             <FormLabel component="legend">Weitere Erkrankungen?</FormLabel>
             <RadioGroup>
               <FormControlLabel control={<Radio />} value="0" checked={this.state.begleiterkrankungen === 0} label="Nein." />

@@ -5,19 +5,94 @@ import Overview from "../overview";
 import Paper from "@material-ui/core/Paper";
 import Checkbox from "@material-ui/core/Checkbox";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import { postData, uploadFiles } from "../../../lib/upload_helpers";
+import { decrypt, encrypt } from "../../../lib/encrypt_helpers";
+
+const KEYS_TO_TRANSMIT = [
+  'gebJahr', 'plz', 'berufstaetig', 'beruf',
+  'kontakt', 'kontaktWo', 'kontaktWann',
+  'erkrankt', 'erkranktSeit', 'erkranktTest',
+  'quarantaene', 'quarantaeneAnordnung', 'quarantaeneBis',
+  'begleiterkrankungen', 'begleiterkrankungenText',
+  'userPseudonym',
+  'symptom1',
+  'symptom2',
+  'symptom3',
+  'symptom4',
+  'symptom5',
+  'symptom6',
+  'symptom7',
+  'symptom8',
+  'symptom9',
+  'symptom10',
+  'symptom11'
+];
+
 
 class SendConfirm extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       eingewilligt: false,
-      uploading: false
+      uploading: false,
+      ...this.props.user,
+      ...this.props.medical,
+      ...this.props.personal,
+      ...this.props.location
     }
   }
 
-  validateWeiter = () =>{
-    this.props.handleWeiter();
-  }
+  validateWeiter = async () =>{
+    this.setState({
+      uploading: true
+    });
+     try {
+       await this.handlePost(this.state);
+       this.props.handleWeiter();
+     }
+     catch(e) {
+       console.error(e);
+       window.confirm("Fehler beim upload!");
+       this.setState({
+         uploading: false
+       })
+     }
+  };
+
+  handlePost = async (data) => {
+    console.log("handlePost", data);
+    let toSend = {
+      'user_pseudonym': data.userPseudonym,
+      'location_file_urls': [],
+      'personal_data': {}
+    };
+
+    if (data.files.files && data.files.files.length > 0) {
+      toSend.location_file_urls = await uploadFiles(data.userPseudonym, data.files.files, (progress, stats) => {
+        this.setState(state => ({
+          uploadProgress: progress * 100.0,
+        }));
+      });
+    }
+
+    for (let key of KEYS_TO_TRANSMIT) {
+      toSend.personal_data[key] = data[key];
+    }
+
+
+    const jwk_key = JSON.parse(data.jwk_key);
+    const encryped = await encrypt(jwk_key, JSON.stringify(toSend.personal_data));
+    console.log("ENCRYPTED", encryped);
+    const decrypted = await decrypt(jwk_key, encryped);
+    console.log("DECRYPTED", decrypted);
+
+    toSend.personal_data = encryped;
+
+    console.log("POSTING", toSend);
+    return postData(data.userPseudonym, toSend);
+
+
+  };
 
   render() {
     const uploading = this.state.uploading ;
@@ -28,7 +103,7 @@ class SendConfirm extends React.Component {
         <>
         <center><Typography color="primary" style={{marginBottom: 15}}>Folgende Daten werden nach Deiner Bestätigung übermittelt:</Typography></center>
 
-        {/*<Overview data={this.state} />*/}
+        <Overview data={this.state} />
 
         <br />
         <center><Typography variant="body" style={{color: "#bdbdbd"}}>Du kannst auf 'zurück' klicken und Änderungen vornehmen,<br />ohne dass du etwas nochmal ganz neu eingeben musst.</Typography></center>
@@ -57,7 +132,7 @@ class SendConfirm extends React.Component {
           <center>
             <Button
               disabled={this.props.activeStep === 0}
-              onClick={this.handleBack}
+              onClick={this.props.handleBack}
               variant="outlined"
               style={{marginRight: 30, textTransform: "none"}}
             >
@@ -67,7 +142,7 @@ class SendConfirm extends React.Component {
               variant="contained"
               color="primary"
               disabled={!this.state.eingewilligt}
-              onClick={() => { return this.validateWeiter() }}
+              onClick={this.validateWeiter}
               style={{textTransform: "none"}}
             >
               ABSCHICKEN
