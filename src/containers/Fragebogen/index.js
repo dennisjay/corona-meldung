@@ -32,13 +32,6 @@ function getSteps() {
 class Fragebogen extends React.Component {
   constructor() {
     super();
-    this.onDrop = (files) => {
-      this.setState({
-        files: { files },
-        noFilesWarning: false
-      })
-    };
-
     this.defaultState = {
       activeStep: 0,
       user: {},
@@ -47,16 +40,22 @@ class Fragebogen extends React.Component {
       location: {}
     };
 
-    this.state = JSON.parse(localStorage.getItem('surveyContents')) || this.defaultState;
+    this.state = this.defaultState;
+  }
+
+  componentDidMount() {
+    let state = JSON.parse(localStorage.getItem('surveyContents')) || this.defaultState;
 
     //Hack do not cache steps further than 4 because file handles expire during refresh of page
     //TODO save files in IndexedDB
-    if( this.state.activeStep > 4 && this.state.activeStep < 6 ){
-      this.state.activeStep = 4;
-      this.state.location = {};
+    if( state.activeStep > 4 && this.state.activeStep < 6 ){
+      state.activeStep = 4;
+      state.location = {};
     }
 
+    this.setState(state);
   }
+
 
   setState(state) {
     super.setState(state, () =>{

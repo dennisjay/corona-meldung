@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Grid, Link, Typography } from "@material-ui/core";
+import { Box, Button, Grid, Typography } from "@material-ui/core";
 import React from "react";
 import {
   EmailShareButton,

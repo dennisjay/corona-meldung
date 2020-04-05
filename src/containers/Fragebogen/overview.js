@@ -3,24 +3,19 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { Divider, Button, Box, Typography, Link, Grid } from '@material-ui/core';
+import { Box, Typography, Grid } from '@material-ui/core';
 
 
 export default (
     class Overview extends Component {
-        constructor() {
-            super();
-        }
-
         render() {
             var d = this.props.data
-            
+
             return (
             <Grid container>
-            <Box style={{margin: "auto"}}>  
+            <Box style={{margin: "auto"}}>
               <Paper elevation={5}>
                 <Box p={2} style={{maxWidth: 620, paddingBottom: 0 }}>
 
@@ -54,7 +49,7 @@ export default (
                                         <TableCell>{d.berufstaetig ? (<>Ja: {d.beruf}</>) : ("Nein")}</TableCell>
                                     </TableRow>
                                 )}
-                                
+
                                 <TableRow style={{backgroundColor: "#f7f9ff"}}>
                                     <TableCell colspan={2}>
                                         <Typography variant="h6"><b>Medizinische Daten</b></Typography>
@@ -88,7 +83,7 @@ export default (
                                 <TableRow style={{backgroundColor: "#ffffff"}}>
                                         <TableCell><b>Symptome</b></TableCell>
                                         <TableCell>
-                                        
+
                                             {d.symptom1 && ("Fieber, ")}
                                             {d.symptom2 && ("Schnupfen, ")}
                                             {d.symptom3 && ("Luftnot, ")}
@@ -100,10 +95,10 @@ export default (
                                             {d.symptom9 && ("Brustenge, ")}
                                             {d.symptom10 && ("beeinträchtigtes Riechen oder Schmecken, ")}
                                             {d.symptom11 && ("sonstiges.")}
-                                            
+
                                         </TableCell>
                                     </TableRow>
-                                
+
                                 {d.files!==null && d.files.length===undefined && (
                                     <TableRow style={{backgroundColor: "#f7f9ff"}}>
                                         <TableCell colspan={2} style={{backgroundColor: "#f7f9ff"}}>
@@ -111,13 +106,13 @@ export default (
                                         </TableCell>
                                     </TableRow>
                                 )}
-                                {d.files!==null && d.files.length===undefined ? (        
+                                {d.files!==null && d.files.length===undefined ? (
                                     <TableRow style={{backgroundColor: "#ffffff"}}>
                                         <TableCell><b>Uploads</b></TableCell>
                                         <TableCell>die hochgeladenen Daten</TableCell>
                                     </TableRow>
-                                    
-                                ) : ( 
+
+                                ) : (
                                     <TableRow style={{backgroundColor: "#ffffff"}}>
                                         <TableCell colSpan={2} style={{borderStyle: "none"}}><br />
                                             <center>Du hast <b>keine Standortdaten</b> hinzugefügt.</center>
