@@ -174,8 +174,8 @@ class Upload extends React.Component {
           <HelpIcon fontSize="small" style={{color: "#5c6bc0"}} />&nbsp;
           <Typography style={{color: "#5c6bc0", fontSize: 13 }}><strong>Wie sorgen wir dafür, dass deine Daten sicher sind?</strong></Typography>
         </Box>
-        <Typography style={{color: "#9fa8da", marginLeft: 10, marginRight: 10, marginBottom: 7, fontSize: 12 }}>Wir ordnen deine Daten eine Identifikationsnummer zu und
-          speichern diese verschlüsselt auf einem gesonderten Server in Deutschland. Deine Gesundheits- und Bewegungsdaten können daher nicht mit deiner Mailadresse in Verbindung gebracht werden. </Typography>
+        <Typography style={{color: "#9fa8da", marginLeft: 10, marginRight: 10, marginBottom: 7, fontSize: 12 }}>Wir ordnen deinen Daten eine Identifikationsnummer zu und
+          speichern diese verschlüsselt auf einem gesonderten Server in Deutschland. Dadurch können deine Gesundheits- und Bewegungsdaten bei der Auswertung nicht mit deiner E-Mailadresse in Verbindung gebracht werden. </Typography>
       </div>
     </Grid>
 

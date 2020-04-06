@@ -80,8 +80,8 @@ const PersonalBlog: React.FunctionComponent<PersonalBlogProps> = ({
           </SectionTitle>
           <SectionContent>
             <p>
-              Der Schutz und die Sicherheit ihrer personenbezogenen Daten haben für uns höchste Priorität.
-              Informationen zu Ihrem Gesundheitszustand und Bewegungsprofile sind hochsensible, persönliche Auskünfte und verdienen den bestmöglichen Schutz. Aus diesem Grund anonymisieren wir Ihre personenbezogenen Daten nach höchsten technischen Standards und verschlüsseln diese zeilenweise, so dass Dritten keinerlei Rückschlüsse auf Ihre Identität möglich sind. Sämtliche die Schlüssel zu Ihren Daten speichern wir ausschließlich auf Hochsicherheitsservern innerhalb Deutschlands.
+              Der Schutz und die Sicherheit Ihrer personenbezogenen Daten haben für uns höchste Priorität.
+              Informationen zu Ihrem Gesundheitszustand und Bewegungsprofile sind hochsensible, persönliche Auskünfte und verdienen den bestmöglichen Schutz. Aus diesem Grund anonymisieren wir Ihre personenbezogenen Daten nach höchsten technischen Standards und verschlüsseln diese zeilenweise, so dass Dritten keinerlei Rückschlüsse auf Ihre Identität möglich sind. Sämtliche Schlüssel zu Ihren Daten speichern wir ausschließlich auf Hochsicherheitsservern innerhalb Deutschlands.
               Dennoch wollen wir zusammen mit Ihnen einen Beitrag zu der Bewältigung der COVID-19 Pandemie und der Forschung über die Ausbreitung von Infektionskrankheiten leisten. Wir stellen Ihre Daten daher in anonymisierter Form renommierten Forschungsinstituten zur Verfügung, so dass diese Institute wichtige Grundlagenforschung leisten können.
               Nähere Informationen zum Datenschutz finden Sie in unserer Datenschutzerklärung sowie in unseren FAQ Datenschutz. Sollten Sie Fragen haben stehen wir Ihnen jederzeit unter <a href={"mailto:datenschutz@corona-meldung.de"}>datenschutz@corona-meldung.de</a> zur Verfügung.
             </p>
