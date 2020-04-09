@@ -82,8 +82,7 @@ class Fragebogen extends React.Component {
   handleWeiter = (entered_data_key, entered_data) => {
     ReactGA.event({
       category: "Fragebogen",
-      action: "Schritt abgeschlossen",
-      label: "Scritt " + this.state.activeStep
+      action: "Schritt" + this.state.activeStep + " abgeschlossen"
     });
 
     if(entered_data_key){
