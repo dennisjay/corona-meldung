@@ -99,7 +99,7 @@ module.exports = {
       reactGaOptions: {
         debug: true,
         gaOptions: {
-          sampleRate: 10
+          sampleRate: 100
         }
       }
     },
