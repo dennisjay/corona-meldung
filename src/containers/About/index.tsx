@@ -26,6 +26,7 @@ import Malte from "../../images/malte.jpg"
 import Dennis from "../../images/dennis.jpg"
 import Florian from "../../images/florian.jpg"
 import Bogdan from "../../images/bogdan.jpg"
+import Nils from "../../images/nils.jpg"
 
 const SocialLinks = [
   {
@@ -172,6 +173,19 @@ const About: React.FunctionComponent<AboutProps> = props => {
           Florian Abel
         </IntroTitle>
         <Desciption>Florian Abel, Ingenieur und Softwareentwickler, möchte mit Software und Data Science helfen Pandemien besser verständlich und greifbarer zu machen.</Desciption>
+        {/* <SocialProfile items={SocialLinks} /> */}
+      </IntroInfo>
+    </IntroWrapper>
+
+    <IntroWrapper>
+      <IntroImage>
+        <img src={Nils} alt="Nils" />
+      </IntroImage>
+      <IntroInfo>
+        <IntroTitle>
+          Nils Larcher
+        </IntroTitle>
+        <Desciption>Nils Larcher ist Produktowner und Manager im Softwarebereich und hilft Firmen sich zu digitalisieren. Hier unterstützt er vor allem im Test und in der Gestaltung.</Desciption>
         {/* <SocialProfile items={SocialLinks} /> */}
       </IntroInfo>
     </IntroWrapper>
