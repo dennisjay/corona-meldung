@@ -14,7 +14,7 @@ import Personal from "./Steps/personal";
 import SendConfirm from "./Steps/sendConfirm";
 import Upload from "./Steps/upload";
 import ThankYou from "./Steps/thankYou";
-
+import ReactGA from 'react-ga';
 
 
 const styles = theme => ({
@@ -80,6 +80,12 @@ class Fragebogen extends React.Component {
   };
 
   handleWeiter = (entered_data_key, entered_data) => {
+    ReactGA.event({
+      category: "Fragebogen",
+      action: "Schritt abgeschlossen",
+      value: this.state.activeStep
+    });
+
     if(entered_data_key){
       let toUpdate = {};
       toUpdate[entered_data_key] = entered_data;
