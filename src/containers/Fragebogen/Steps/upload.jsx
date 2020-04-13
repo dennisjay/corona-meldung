@@ -11,7 +11,9 @@ import AttachFileIcon from "@material-ui/core/SvgIcon/SvgIcon";
 import React from "react";
 import WizardNavigation from "../navigation";
 import WarningIcon from '@material-ui/icons/Warning';
-import HelpIcon from '@material-ui/icons/Help';
+import HelpIcon from "@material-ui/icons/Help";
+import Plyr from "plyr";
+import "./plyr.css";
 
 
 class Upload extends React.Component {
@@ -21,7 +23,8 @@ class Upload extends React.Component {
     this.state = {
       gAccount: undefined,
       files: [],
-      ...this.props.location
+      ...this.props.location,
+      showVideo: false
     }
 
 
@@ -44,7 +47,10 @@ class Upload extends React.Component {
     }
   };
 
-  render() {
+  render() { 
+    
+    const player = new Plyr('#player', {});
+    window.player = player;
 
     return (
       <>
@@ -76,12 +82,20 @@ class Upload extends React.Component {
 
             {/* explanation: */}
             <Paper elevation={10} style={{ maxWidth: 450, backgroundColor: "#f7f9ff" }}>
+
               <Typography variant="subtitle1"
                           style={{ fontSize: 17, color: "#3f51b5", paddingTop: 10, paddingLeft: 10, paddingBottom: 5 }}><b>So
                 einfach geht's</b></Typography><Divider/>
+
               <Typography style={{ color: "#5c6bc0", padding: 10 }}>
                 Geh auf <Link href="https://takeout.google.com" target="_blank"
-                              style={{ textDecoration: "underline" }}>takeout.google.com</Link>.<br/><br/>
+                              style={{ textDecoration: "underline" }}>takeout.google.com</Link>.&nbsp;&nbsp;<Button variant="outlined" style={{textTransform: "none"}} onClick={()=>{ this.setState({ showVideo: true }); this.forceUpdate() }} size="small">Video zeigen</Button>
+                
+                
+                <div class="container" style={{marginTop: 10, marginBottom: 10}}>
+                  <div id="player" data-plyr-provider="youtube" data-plyr-embed-id="pmd6ny5RqMs"></div>
+                </div>
+
                 Wähle <strong>Auswahl aufheben</strong> und setze nur bei <strong>Standortverlauf</strong> (fast ganz
                 unten) einen Haken.<br/><br/>
                 Klicke auf <strong>nächster Schritt</strong> und dann auf <strong>Export</strong>.<br/><br/>
