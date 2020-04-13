@@ -50,7 +50,6 @@ class Upload extends React.Component {
   render() { 
     
     const player = new Plyr('#player', {});
-    window.player = player;
 
     return (
       <>
