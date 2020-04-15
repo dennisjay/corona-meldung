@@ -12,7 +12,6 @@ import React from "react";
 import WizardNavigation from "../navigation";
 import WarningIcon from '@material-ui/icons/Warning';
 import HelpIcon from "@material-ui/icons/Help";
-import Plyr from "plyr";
 import "./plyr.css";
 
 
@@ -47,9 +46,19 @@ class Upload extends React.Component {
     }
   };
 
-  render() { 
-    
-    const player = new Plyr('#player', {});
+  componentDidMount() {
+    import('plyr').then((Plyr) => {
+      this.setState({ Plyr : Plyr.default });
+    });
+  }
+
+
+  render() {
+    const {Plyr} = this.state;
+
+    if( Plyr !== undefined) {
+      new Plyr('#player', {});
+    }
 
     return (
       <>
@@ -89,8 +98,8 @@ class Upload extends React.Component {
               <Typography style={{ color: "#5c6bc0", padding: 10 }}>
                 Geh auf <Link href="https://takeout.google.com" target="_blank"
                               style={{ textDecoration: "underline" }}>takeout.google.com</Link>.&nbsp;&nbsp;<Button variant="outlined" style={{textTransform: "none"}} onClick={()=>{ this.setState({ showVideo: true }); this.forceUpdate() }} size="small">Video zeigen</Button>
-                
-                
+
+
                 <div class="container" style={{marginTop: 10, marginBottom: 10}}>
                   <div id="player" data-plyr-provider="youtube" data-plyr-embed-id="pmd6ny5RqMs"></div>
                 </div>
