@@ -38,7 +38,7 @@ const PersonalBlog: React.FunctionComponent<PersonalBlogProps> = ({
             <p>
               Wir ermöglichen Nutzern Standortdaten zusammen mit einem kurzen medizinischen Fragebogen mit Forschungseinrichtungen der Pandemiebekämpfung zu teilen. Die Standortdaten können rückwirkend geteilt werden. So können Infektionsketten zurückverfolgt und Rückschlüsse auf die Wirksamkeit von Eindämmungsmaßnahmen auf die Virusausbreitung gezogen werden.
 
-{/* 
+{/*
               Herauszufinden, wer wann, wo und wie lange war, hilft den Weg des
               Virus' nachzuvollziehen und die Effektivität von Gegenmaßnahmen zu
               messen. Mit einer ausreichend großen Menge an Daten können
@@ -123,6 +123,7 @@ const PersonalBlog: React.FunctionComponent<PersonalBlogProps> = ({
       {/* </SectionWrapper> */}
       <br />
 
+      <script data-ad-client="ca-pub-5824642278593726" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" />
 
     </PersonalBlogWrapper>
   );
